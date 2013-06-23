@@ -1,0 +1,107 @@
+/**
+ * JDBCPersistence framework for java
+ *   Copyright (C) 2004-2007 Alex Rojkov
+ *
+ *    This library is free software; you can redistribute it and/or
+ *    modify it under the terms of the GNU Lesser General Public
+ *    License as published by the Free Software Foundation; either
+ *    version 2.1 of the License, or (at your option) any later version.
+ *
+ *    This library is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *    Lesser General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Lesser General Public
+ *    License along with this library; if not, write to the Free Software
+ *    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ *    You can contact me by email jdbcpersistence   a t   gmail    d o t    com
+ * */
+
+ CREATE TABLE USERS (
+  ID                                       VARCHAR(40) NOT NULL,
+  USERNAME                      VARCHAR(25) NOT NULL   ,
+  PASSWORD_                    VARCHAR(25) NOT NULL   ,
+  FIRST_NAME                    VARCHAR(100) NOT NULL  ,
+  LAST_NAME                     VARCHAR(100) NOT NULL   ,
+  EMAIL                               VARCHAR(100) NOT NULL   ,
+  AGE                                  VARCHAR(8),
+  SIZE_ 						VARCHAR(5),
+  WEIGHT 						VARCHAR(10),
+  WIDTH 					    float,
+  AGE_MILLIS                    VARCHAR(20),
+  AGEDOUBLE                     double,
+  JAVAPROGRAMMER                int(1),
+  RESUME 						text,
+ BIRTHDATE   					DATE,
+ BIRTHTIME                     DATE,
+ BIRTHTIMESTAMP                DATE,
+ EXTENDEDRESUME                longtext,
+ PICTURE                       BLOB,
+ FAVORITEDECIMAL               decimal,
+  PRIMARY KEY  (ID)
+)
+
+CREATE TABLE USERS (
+  ID                            VARCHAR2(40) NOT NULL,
+  VERSION                       NUMBER(10) NOT NULL,
+  USERNAME                      VARCHAR2(25) NOT NULL   ,
+  PASSWORD_                     VARCHAR2(25) NOT NULL   ,
+  FIRST_NAME                    VARCHAR2(100) NOT NULL  ,
+  LAST_NAME                     VARCHAR2(100) NOT NULL   ,
+  EMAIL                         VARCHAR2(100) NOT NULL   ,
+  AGE                           NUMBER(8),
+  SIZE_ 						NUMBER(5),
+  WEIGHT 						NUMBER(10),
+  WIDTH 					    NUMBER(10,5),
+  AGE_MILLIS                    NUMBER(20),
+  AGEDOUBLE                     NUMBER(38,5),
+  JAVAPROGRAMMER                NUMBER(1),
+  RESUME 						LONG,
+ BIRTHDATE   					DATE,
+ BIRTHTIME                     DATE,
+ BIRTHTIMESTAMP                DATE,
+ EXTENDEDRESUME                CLOB,
+ PICTURE                       BLOB,
+--  SMALLPICTURE                  RAW(2000),
+--  MEDIUMPICTURE                 LONG RAW,
+ FAVORITEDECIMAL               NUMBER(20,2),
+  PRIMARY KEY  (ID)
+)
+
+/**
+* DB2
+*/
+                   CREATE TABLE USERS (
+                     ID                            VARCHAR(40) NOT NULL,
+                     VERSION                       DECIMAL(10) NOT NULL,
+                     USERNAME                      VARCHAR(25) NOT NULL   ,
+                     PASSWORD_                     VARCHAR(25),
+                     FIRST_NAME                    VARCHAR(100) NOT NULL  ,
+                     LAST_NAME                     VARCHAR(100) NOT NULL   ,
+                     EMAIL                         VARCHAR(100) NOT NULL   ,
+                     AGE                           DECIMAL(8),
+                     SIZE_ 						DECIMAL(5),
+                     WEIGHT 						DECIMAL(10),
+                     WIDTH 					    DECIMAL(10,5),
+                     AGE_MILLIS                    DECIMAL(20),
+                     AGEDOUBLE                     DECIMAL(30,5),
+                     JAVAPROGRAMMER                DECIMAL(1),
+                    /*RESUME 						LONG,*/
+                    BIRTHDATE   					DATE,
+                    BIRTHTIME                      DATE,
+                    BIRTHTIMESTAMP                 TIMESTAMP,
+                    /*EXTENDEDRESUME                 CLOB,*/
+                     PICTURE                        VARGRAPHIC(64),
+                    /* SMALLPICTURE                  RAW(2000),*/
+                    /* MEDIUMPICTURE                 LONG RAW,*/
+                     FAVORITEDECIMAL               DECIMAL(31,2),
+                     PRIMARY KEY  (ID)
+                   )
+
+DROP TABLE USERS;
+
+DELETE FROM USERS;
+
+SELECT * FROM USERS
