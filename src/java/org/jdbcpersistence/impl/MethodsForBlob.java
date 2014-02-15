@@ -46,9 +46,9 @@ class MethodsForBlob
     throws NoSuchMethodException
   {
     setBinaryStream = Blob.class.getMethod("setBinaryStream",
-                                                  new Class[]{long.class});
+                                           new Class[]{long.class});
     getBinaryStream = Blob.class.getMethod("getBinaryStream",
-                                                  new Class[0]);
+                                           new Class[0]);
   }
 
 }

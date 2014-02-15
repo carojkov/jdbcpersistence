@@ -858,7 +858,7 @@ final class PersistorGenerator implements Constants
 
     Class constrParam
       = (Class) MethodsForJavaPrimitiveWrappers.WRAPPER_TO_PRIMITIVE
-                                               .get(propertyType);
+      .get(propertyType);
 
     mw.visitMethodInsn(INVOKESPECIAL,
                        Type.getInternalName(propertyType),
@@ -1006,7 +1006,7 @@ final class PersistorGenerator implements Constants
       mw.visitMethodInsn(INVOKEINTERFACE,
                          Type.getInternalName(ResultSet.class),
                          MethodsForResultSet.getCharacterStreamByColumnName
-                                            .getName(),
+                           .getName(),
                          Type.getMethodDescriptor(MethodsForResultSet.getCharacterStreamByColumnName));
     }
     else {
@@ -1014,7 +1014,7 @@ final class PersistorGenerator implements Constants
       mw.visitMethodInsn(INVOKEINTERFACE,
                          Type.getInternalName(ResultSet.class),
                          MethodsForResultSet.getCharacterStreamByColumnIndex
-                                            .getName(),
+                           .getName(),
                          Type.getMethodDescriptor(MethodsForResultSet.getCharacterStreamByColumnIndex));
     }
     mw.visitInsn(DUP);
@@ -1058,7 +1058,7 @@ final class PersistorGenerator implements Constants
       mw.visitMethodInsn(INVOKEINTERFACE,
                          Type.getInternalName(ResultSet.class),
                          MethodsForResultSet.getBinaryStreamByColumnName
-                                            .getName(),
+                           .getName(),
                          Type.getMethodDescriptor(MethodsForResultSet.getBinaryStreamByColumnName));
     }
     else {
@@ -1066,7 +1066,7 @@ final class PersistorGenerator implements Constants
       mw.visitMethodInsn(INVOKEINTERFACE,
                          Type.getInternalName(ResultSet.class),
                          MethodsForResultSet.getBinaryStreamByColumnIndex
-                                            .getName(),
+                           .getName(),
                          Type.getMethodDescriptor(MethodsForResultSet.getBinaryStreamByColumnIndex));
     }
     mw.visitInsn(DUP);
@@ -1719,7 +1719,7 @@ final class PersistorGenerator implements Constants
       mw.visitMethodInsn(INVOKEINTERFACE,
                          Type.getInternalName(java.sql.Statement.class),
                          MethodsForPreparedStatement.executeBatch
-                                                    .getName(),
+                           .getName(),
                          Type.getMethodDescriptor(MethodsForPreparedStatement.executeBatch));
       mw.visitVarInsn(ASTORE, resultIdx);
     }
@@ -1736,7 +1736,7 @@ final class PersistorGenerator implements Constants
         mw.visitMethodInsn(INVOKEINTERFACE,
                            Type.getInternalName(java.sql.PreparedStatement.class),
                            MethodsForPreparedStatement.getUpdateCount
-                                                      .getName(),
+                             .getName(),
                            Type.getMethodDescriptor(
                              MethodsForPreparedStatement.getUpdateCount));
         mw.visitVarInsn(ISTORE, resultIdx);
@@ -1746,7 +1746,7 @@ final class PersistorGenerator implements Constants
         mw.visitMethodInsn(INVOKEINTERFACE,
                            Type.getInternalName(java.sql.PreparedStatement.class),
                            MethodsForPreparedStatement.executeUpdate
-                                                      .getName(),
+                             .getName(),
                            Type.getMethodDescriptor(
                              MethodsForPreparedStatement.executeUpdate));
         mw.visitVarInsn(ISTORE, resultIdx);
@@ -2143,7 +2143,7 @@ final class PersistorGenerator implements Constants
       mw.visitMethodInsn(INVOKEINTERFACE,
                          Type.getInternalName(java.sql.Statement.class),
                          MethodsForPreparedStatement.executeBatch
-                                                    .getName(),
+                           .getName(),
                          Type.getMethodDescriptor(MethodsForPreparedStatement.executeBatch));
       mw.visitVarInsn(ASTORE, resultIdx);
     }
@@ -2160,7 +2160,7 @@ final class PersistorGenerator implements Constants
         mw.visitMethodInsn(INVOKEINTERFACE,
                            Type.getInternalName(java.sql.PreparedStatement.class),
                            MethodsForPreparedStatement.getUpdateCount
-                                                      .getName(),
+                             .getName(),
                            Type.getMethodDescriptor(
                              MethodsForPreparedStatement.getUpdateCount));
         mw.visitVarInsn(ISTORE, resultIdx);
@@ -2170,7 +2170,7 @@ final class PersistorGenerator implements Constants
         mw.visitMethodInsn(INVOKEINTERFACE,
                            Type.getInternalName(java.sql.PreparedStatement.class),
                            MethodsForPreparedStatement.executeUpdate
-                                                      .getName(),
+                             .getName(),
                            Type.getMethodDescriptor(
                              MethodsForPreparedStatement.executeUpdate));
         mw.visitVarInsn(ISTORE, resultIdx);
@@ -2530,7 +2530,7 @@ final class PersistorGenerator implements Constants
       mw.visitMethodInsn(INVOKEINTERFACE,
                          Type.getInternalName(PreparedStatement.class),
                          MethodsForPreparedStatement.executeUpdate
-                                                    .getName(),
+                           .getName(),
                          Type.getMethodDescriptor(MethodsForPreparedStatement.executeUpdate));
       mw.visitInsn(POP);
     }
@@ -2760,7 +2760,7 @@ final class PersistorGenerator implements Constants
       mw.visitMethodInsn(INVOKEINTERFACE,
                          Type.getInternalName(java.sql.Statement.class),
                          MethodsForPreparedStatement.executeBatch
-                                                    .getName(),
+                           .getName(),
                          Type.getMethodDescriptor(MethodsForPreparedStatement.executeBatch));
       mw.visitVarInsn(ASTORE, resultIdx);
     }
@@ -2777,7 +2777,7 @@ final class PersistorGenerator implements Constants
         mw.visitMethodInsn(INVOKEINTERFACE,
                            Type.getInternalName(java.sql.PreparedStatement.class),
                            MethodsForPreparedStatement.getUpdateCount
-                                                      .getName(),
+                             .getName(),
                            Type.getMethodDescriptor(
                              MethodsForPreparedStatement.getUpdateCount));
         mw.visitVarInsn(ISTORE, resultIdx);
@@ -2787,7 +2787,7 @@ final class PersistorGenerator implements Constants
         mw.visitMethodInsn(INVOKEINTERFACE,
                            Type.getInternalName(java.sql.PreparedStatement.class),
                            MethodsForPreparedStatement.executeUpdate
-                                                      .getName(),
+                             .getName(),
                            Type.getMethodDescriptor(
                              MethodsForPreparedStatement.executeUpdate));
         mw.visitVarInsn(ISTORE, resultIdx);
@@ -3327,7 +3327,7 @@ final class PersistorGenerator implements Constants
 
     Method primitiveGetter
       = (Method) MethodsForJavaPrimitiveWrappers.WRAPPER_TO_PRIM_GETTER
-                                                .get(type);
+      .get(type);
     Method psSetter = MethodsForPreparedStatement.findSetter(
       type);
 

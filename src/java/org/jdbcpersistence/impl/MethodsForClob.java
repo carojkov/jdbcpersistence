@@ -46,8 +46,8 @@ class MethodsForClob
     throws NoSuchMethodException
   {
     getCharacterStream = Clob.class.getMethod("getCharacterStream",
-                                                     new Class[0]);
+                                              new Class[0]);
     setCharacterStream = Clob.class.getMethod("setCharacterStream",
-                                                     new Class[]{long.class});
+                                              new Class[]{long.class});
   }
 }

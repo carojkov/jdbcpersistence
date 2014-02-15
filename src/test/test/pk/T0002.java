@@ -10,7 +10,7 @@ import test.BaseTest;
 import java.sql.SQLException;
 
 /**
- * title: @Id.value > PK.zise()
+ * title: @Id.value > PK.size()
  */
 public class T0002 extends BaseTest
 {
@@ -20,7 +20,8 @@ public class T0002 extends BaseTest
     try {
       _persistence.register(T0002Bean.class);
     } catch (Exception e) {
-      Assert.assertEquals(e.toString(), "java.lang.IllegalArgumentException: @Id.value (100) for column 'ID' must be less than number of columns in primary key");
+      Assert.assertEquals(e.toString(),
+                          "java.lang.IllegalArgumentException: @Id.value (100) for column 'ID' must be less than number of columns in primary key");
     }
   }
 

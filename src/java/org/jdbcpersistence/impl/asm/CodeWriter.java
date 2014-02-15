@@ -447,9 +447,9 @@ public class CodeWriter
   /**
    * Constructs a CodeWriter.
    *
-   * @param cw the class writer in which the method must be added.
+   * @param cw          the class writer in which the method must be added.
    * @param computeMaxs <tt>true</tt> if the maximum stack size and number of
-   * local variables must be automatically computed.
+   *                    local variables must be automatically computed.
    */
   protected CodeWriter(final ClassWriter cw, final boolean computeMaxs)
   {
@@ -474,12 +474,12 @@ public class CodeWriter
    * Initializes this CodeWriter to define the bytecode of the specified
    * method.
    *
-   * @param access the method's access flags (see {@link Constants}).
-   * @param name the method's name.
-   * @param desc the method's descriptor (see {@link Type Type}).
+   * @param access     the method's access flags (see {@link Constants}).
+   * @param name       the method's name.
+   * @param desc       the method's descriptor (see {@link Type Type}).
    * @param exceptions the internal names of the method's exceptions. May be
-   * <tt>null</tt>.
-   * @param attrs the non standard attributes of the method.
+   *                   <tt>null</tt>.
+   * @param attrs      the non standard attributes of the method.
    */
   protected void init(final int access,
                       final String name,
@@ -1060,10 +1060,10 @@ public class CodeWriter
    *
    * @param desc the descriptor of a method.
    * @return the size of the arguments of the method (plus one for the
-   *         implicit this argument), argSize, and the size of its return
-   *         value, retSize, packed into a single int i = <tt>(argSize << 2) |
-   *         retSize</tt> (argSize is therefore equal to <tt>i >> 2</tt>, and
-   *         retSize to <tt>i & 0x03</tt>).
+   * implicit this argument), argSize, and the size of its return
+   * value, retSize, packed into a single int i = <tt>(argSize << 2) |
+   * retSize</tt> (argSize is therefore equal to <tt>i >> 2</tt>, and
+   * retSize to <tt>i & 0x03</tt>).
    */
   private static int getArgumentsAndReturnSizes(final String desc)
   {
@@ -1182,7 +1182,7 @@ public class CodeWriter
    * Puts the bytecode of this method in the given byte vector.
    *
    * @param out the byte vector into which the bytecode of this method must be
-   * copied.
+   *            copied.
    */
   final void put(final ByteVector out)
   {
@@ -1286,21 +1286,21 @@ public class CodeWriter
    * called.
    *
    * @param indexes current positions of the instructions to be resized. Each
-   * instruction must be designated by the index of its <i>last</i> byte, plus
-   * one (or, in other words, by the index of the <i>first</i> byte of the
-   * <i>next</i> instruction).
-   * @param sizes the number of bytes to be <i>added</i> to the above
-   * instructions. More precisely, for each i &lt; <tt>len</tt>,
-   * <tt>sizes</tt>[i] bytes will be added at the end of the instruction
-   * designated by <tt>indexes</tt>[i] or, if <tt>sizes</tt>[i] is negative,
-   * the <i>last</i> |<tt>sizes[i]</tt>| bytes of the instruction will be
-   * removed (the instruction size <i>must not</i> become negative or null).
-   * The gaps introduced by this method must be filled in "manually" in the
-   * array returned by the {@link #getCode getCode} method.
-   * @param len the number of instruction to be resized. Must be smaller than
-   * or equal to <tt>indexes</tt>.length and <tt>sizes</tt>.length.
+   *                instruction must be designated by the index of its <i>last</i> byte, plus
+   *                one (or, in other words, by the index of the <i>first</i> byte of the
+   *                <i>next</i> instruction).
+   * @param sizes   the number of bytes to be <i>added</i> to the above
+   *                instructions. More precisely, for each i &lt; <tt>len</tt>,
+   *                <tt>sizes</tt>[i] bytes will be added at the end of the instruction
+   *                designated by <tt>indexes</tt>[i] or, if <tt>sizes</tt>[i] is negative,
+   *                the <i>last</i> |<tt>sizes[i]</tt>| bytes of the instruction will be
+   *                removed (the instruction size <i>must not</i> become negative or null).
+   *                The gaps introduced by this method must be filled in "manually" in the
+   *                array returned by the {@link #getCode getCode} method.
+   * @param len     the number of instruction to be resized. Must be smaller than
+   *                or equal to <tt>indexes</tt>.length and <tt>sizes</tt>.length.
    * @return the <tt>indexes</tt> array, which now contains the new positions
-   *         of the resized instructions (designated as above).
+   * of the resized instructions (designated as above).
    */
   protected int[] resizeInstructions(final int[] indexes,
                                      final int[] sizes,
@@ -1522,8 +1522,8 @@ public class CodeWriter
           }
           else {
             newCode.putByte(opcode <= 166
-                            ? ((opcode + 1) ^ 1) - 1
-                            : opcode ^ 1);
+                              ? ((opcode + 1) ^ 1) - 1
+                              : opcode ^ 1);
             newCode.putShort(8);   // jump offset
             newCode.putByte(200); // GOTO_W
             newOffset -= 3;    // newOffset now computed from start of GOTO_W
@@ -1710,7 +1710,7 @@ public class CodeWriter
   /**
    * Reads an unsigned short value in the given byte array.
    *
-   * @param b a byte array.
+   * @param b     a byte array.
    * @param index the start index of the value to be read.
    * @return the read value.
    */
@@ -1722,7 +1722,7 @@ public class CodeWriter
   /**
    * Reads a signed short value in the given byte array.
    *
-   * @param b a byte array.
+   * @param b     a byte array.
    * @param index the start index of the value to be read.
    * @return the read value.
    */
@@ -1734,7 +1734,7 @@ public class CodeWriter
   /**
    * Reads a signed int value in the given byte array.
    *
-   * @param b a byte array.
+   * @param b     a byte array.
    * @param index the start index of the value to be read.
    * @return the read value.
    */
@@ -1749,9 +1749,9 @@ public class CodeWriter
   /**
    * Writes a short value in the given byte array.
    *
-   * @param b a byte array.
+   * @param b     a byte array.
    * @param index where the first byte of the short value must be written.
-   * @param s the value to be written in the given byte array.
+   * @param s     the value to be written in the given byte array.
    */
   static void writeShort(final byte[] b, final int index, final int s)
   {
@@ -1767,17 +1767,17 @@ public class CodeWriter
    * (index=a,size=b') are equivalent to a single entry (index=a,size=b+b').
    *
    * @param indexes current positions of the instructions to be resized. Each
-   * instruction must be designated by the index of its <i>last</i> byte, plus
-   * one (or, in other words, by the index of the <i>first</i> byte of the
-   * <i>next</i> instruction).
-   * @param sizes the number of bytes to be <i>added</i> to the above
-   * instructions. More precisely, for each i < <tt>len</tt>,
-   * <tt>sizes</tt>[i] bytes will be added at the end of the instruction
-   * designated by <tt>indexes</tt>[i] or, if <tt>sizes</tt>[i] is negative,
-   * the <i>last</i> |<tt>sizes[i]</tt>| bytes of the instruction will be
-   * removed (the instruction size <i>must not</i> become negative or null).
-   * @param begin index of the first byte of the source instruction.
-   * @param end index of the first byte of the target instruction.
+   *                instruction must be designated by the index of its <i>last</i> byte, plus
+   *                one (or, in other words, by the index of the <i>first</i> byte of the
+   *                <i>next</i> instruction).
+   * @param sizes   the number of bytes to be <i>added</i> to the above
+   *                instructions. More precisely, for each i < <tt>len</tt>,
+   *                <tt>sizes</tt>[i] bytes will be added at the end of the instruction
+   *                designated by <tt>indexes</tt>[i] or, if <tt>sizes</tt>[i] is negative,
+   *                the <i>last</i> |<tt>sizes[i]</tt>| bytes of the instruction will be
+   *                removed (the instruction size <i>must not</i> become negative or null).
+   * @param begin   index of the first byte of the source instruction.
+   * @param end     index of the first byte of the target instruction.
    * @return the future value of the given bytecode offset.
    */
   static int getNewOffset(final int[] indexes,
@@ -1816,8 +1816,8 @@ public class CodeWriter
    * LineNumberTable, Synthetic and Deprecated attributes, if present.
    *
    * @return the current bytecode of this method. The bytecode is contained
-   *         between the index 0 (inclusive) and the index {@link #getCodeSize
-   *         getCodeSize} (exclusive).
+   * between the index 0 (inclusive) and the index {@link #getCodeSize
+   * getCodeSize} (exclusive).
    */
   public byte[] getCode()
   {

@@ -26,7 +26,8 @@ import java.io.*;
 /**
  * Author Alex Rojkov Date: 1-Oct-2005 Time: 11:18:22 AM
  */
-class CodeGenUtils {
+class CodeGenUtils
+{
   public final static String getShortName(final Class clazz)
   {
     final String name = clazz.getName();
@@ -42,27 +43,28 @@ class CodeGenUtils {
   {
     try {
       final Process p = Runtime.getRuntime()
-        .exec("/Users/alex/bin/jad -o " + className.replace('/', '_') + ".class");
+                               .exec("/Users/alex/bin/jad -o "
+                                     + className.replace('/', '_')
+                                     + ".class");
       attachToSystemOut(p.getInputStream());
       attachToSystemOut(p.getErrorStream());
       p.waitFor();
       echo(new FileReader(CodeGenUtils.getShortName(className) + ".jad"),
            new PrintWriter(System.out));
-    }
-    catch (Throwable e) {
+    } catch (Throwable e) {
       e.printStackTrace();
     }
   }
 
   private final static void attachToSystemOut(final InputStream is)
   {
-    new Thread() {
+    new Thread()
+    {
       public void run()
       {
         try {
           echo(new InputStreamReader(is), new PrintWriter(System.out));
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
           throw new RuntimeException(e);
         }
       }
@@ -91,8 +93,7 @@ class CodeGenUtils {
       fos = new FileOutputStream(className.replace('/', '_') + ".class");
       fos.write(bytes);
       fos.flush();
-    }
-    finally {
+    } finally {
       if (fos != null) {
         fos.close();
       }

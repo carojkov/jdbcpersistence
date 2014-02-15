@@ -358,12 +358,12 @@ public class ClassWriter
    * Constructs a new {@link ClassWriter ClassWriter} object.
    *
    * @param computeMaxs <tt>true</tt> if the maximum stack size and the
-   * maximum number of local variables must be automatically computed. If this
-   * flag is <tt>true</tt>, then the arguments of the {@link
-   * CodeVisitor#visitMaxs visitMaxs} method of the {@link CodeVisitor
-   * CodeVisitor} returned by the {@link #visitMethod visitMethod} method will
-   * be ignored, and computed automatically from the signature and the
-   * bytecode of each method.
+   *                    maximum number of local variables must be automatically computed. If this
+   *                    flag is <tt>true</tt>, then the arguments of the {@link
+   *                    CodeVisitor#visitMaxs visitMaxs} method of the {@link CodeVisitor
+   *                    CodeVisitor} returned by the {@link #visitMethod visitMethod} method will
+   *                    be ignored, and computed automatically from the signature and the
+   *                    bytecode of each method.
    */
   public ClassWriter(final boolean computeMaxs)
   {
@@ -373,16 +373,16 @@ public class ClassWriter
   /**
    * Constructs a new {@link ClassWriter ClassWriter} object.
    *
-   * @param computeMaxs <tt>true</tt> if the maximum stack size and the
-   * maximum number of local variables must be automatically computed. If this
-   * flag is <tt>true</tt>, then the arguments of the {@link
-   * CodeVisitor#visitMaxs visitMaxs} method of the {@link CodeVisitor
-   * CodeVisitor} returned by the {@link #visitMethod visitMethod} method will
-   * be ignored, and computed automatically from the signature and the
-   * bytecode of each method.
+   * @param computeMaxs           <tt>true</tt> if the maximum stack size and the
+   *                              maximum number of local variables must be automatically computed. If this
+   *                              flag is <tt>true</tt>, then the arguments of the {@link
+   *                              CodeVisitor#visitMaxs visitMaxs} method of the {@link CodeVisitor
+   *                              CodeVisitor} returned by the {@link #visitMethod visitMethod} method will
+   *                              be ignored, and computed automatically from the signature and the
+   *                              bytecode of each method.
    * @param skipUnknownAttributes <tt>true</tt> to silently ignore unknown
-   * attributes, or <tt>false</tt> to throw an exception if an unknown
-   * attribute is found.
+   *                              attributes, or <tt>false</tt> to throw an exception if an unknown
+   *                              attribute is found.
    */
   public ClassWriter(final boolean computeMaxs,
                      final boolean skipUnknownAttributes)
@@ -605,9 +605,9 @@ public class ClassWriter
    * item.
    *
    * @param cst the value of the constant to be added to the constant pool.
-   * This parameter must be an {@link Integer Integer}, a {@link
-   * java.lang.Float Float}, a {@link Long Long}, a {@link java.lang.Double
-   * Double}, a {@link String String} or a {@link Type}.
+   *            This parameter must be an {@link Integer Integer}, a {@link
+   *            java.lang.Float Float}, a {@link Long Long}, a {@link java.lang.Double
+   *            Double}, a {@link String String} or a {@link Type}.
    * @return a new or already existing constant item with the given value.
    */
   Item newConstItem(final Object cst)
@@ -650,8 +650,8 @@ public class ClassWriter
     else if (cst instanceof Type) {
       Type t = (Type) cst;
       return newClassItem(t.getSort() == Type.OBJECT
-                          ? t.getInternalName()
-                          : t.getDescriptor());
+                            ? t.getInternalName()
+                            : t.getDescriptor());
     }
     else {
       throw new IllegalArgumentException("value " + cst);
@@ -665,11 +665,11 @@ public class ClassWriter
    * normally not needed by class generators or adapters.</i>
    *
    * @param cst the value of the constant to be added to the constant pool.
-   * This parameter must be an {@link Integer Integer}, a {@link
-   * java.lang.Float Float}, a {@link Long Long}, a {@link java.lang.Double
-   * Double} or a {@link String String}.
+   *            This parameter must be an {@link Integer Integer}, a {@link
+   *            java.lang.Float Float}, a {@link Long Long}, a {@link java.lang.Double
+   *            Double} or a {@link String String}.
    * @return the index of a new or already existing constant item with the
-   *         given value.
+   * given value.
    */
   public int newConst(final Object cst)
   {
@@ -759,8 +759,8 @@ public class ClassWriter
    * normally not needed by class generators or adapters.</i>
    *
    * @param owner the internal name of the field's owner class.
-   * @param name the field's name.
-   * @param desc the field's descriptor.
+   * @param name  the field's name.
+   * @param desc  the field's descriptor.
    * @return the index of a new or already existing field reference item.
    */
   public int newField(final String owner, final String name, final String desc)
@@ -780,9 +780,9 @@ public class ClassWriter
    * Does nothing if the constant pool already contains a similar item.
    *
    * @param owner the internal name of the method's owner class.
-   * @param name the method's name.
-   * @param desc the method's descriptor.
-   * @param itf <tt>true</tt> if <tt>owner</tt> is an interface.
+   * @param name  the method's name.
+   * @param desc  the method's descriptor.
+   * @param itf   <tt>true</tt> if <tt>owner</tt> is an interface.
    * @return a new or already existing method reference item.
    */
   Item newMethodItem(final String owner,
@@ -807,9 +807,9 @@ public class ClassWriter
    * normally not needed by class generators or adapters.</i>
    *
    * @param owner the internal name of the method's owner class.
-   * @param name the method's name.
-   * @param desc the method's descriptor.
-   * @param itf <tt>true</tt> if <tt>owner</tt> is an interface.
+   * @param name  the method's name.
+   * @param desc  the method's descriptor.
+   * @param itf   <tt>true</tt> if <tt>owner</tt> is an interface.
    * @return the index of a new or already existing method reference item.
    */
   public int newMethod(final String owner,
@@ -945,7 +945,7 @@ public class ClassWriter
    *
    * @param key a constant pool item.
    * @return the constant pool's hash table item which is equal to the given
-   *         item, or <tt>null</tt> if there is no such item.
+   * item, or <tt>null</tt> if there is no such item.
    */
   private Item get(final Item key)
   {
@@ -991,7 +991,7 @@ public class ClassWriter
   /**
    * Puts one byte and two shorts into the constant pool.
    *
-   * @param b a byte.
+   * @param b  a byte.
    * @param s1 a short.
    * @param s2 another short.
    */

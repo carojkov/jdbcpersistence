@@ -20,7 +20,8 @@ public class T0003 extends BaseTest
     try {
       _persistence.register(T0003Bean.class);
     } catch (Exception e) {
-      Assert.assertEquals(e.toString(), "java.lang.IllegalArgumentException: columns ID2 and ID1 must have different @Id.value");
+      Assert.assertEquals(e.toString(),
+                          "java.lang.IllegalArgumentException: columns ID2 and ID1 must have different @Id.value");
     }
   }
 

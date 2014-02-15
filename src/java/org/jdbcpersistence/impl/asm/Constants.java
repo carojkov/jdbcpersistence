@@ -40,7 +40,8 @@ package org.jdbcpersistence.impl.asm;
  *
  * @author Eric Bruneton, Eugene Kuleshov
  */
-public interface Constants {
+public interface Constants
+{
 
   // versions
   int V1_1 = 3 << 16 | 45;

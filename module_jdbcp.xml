@@ -1,46 +1,55 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="module_jdbcp" default="compile.module.jdbcp">
   <dirname property="module.jdbcp.basedir" file="${ant.file.module_jdbcp}"/>
-  
+
   <property name="module.jdk.home.jdbcp" value="${jdk.home.1.5}"/>
   <property name="module.jdk.bin.jdbcp" value="${jdk.bin.1.5}"/>
   <property name="module.jdk.classpath.jdbcp" value="jdk.classpath.1.5"/>
-  
+
   <property name="compiler.args.jdbcp" value="${compiler.args}"/>
-  
+
   <property name="jdbcp.output.dir" value="${module.jdbcp.basedir}/classes"/>
-  <property name="jdbcp.testoutput.dir" value="${module.jdbcp.basedir}/classes"/>
-  
+  <property name="jdbcp.testoutput.dir"
+            value="${module.jdbcp.basedir}/classes"/>
+
   <path id="jdbcp.module.bootclasspath">
     <!-- Paths to be included in compilation bootclasspath -->
   </path>
-  
+
   <path id="jdbcp.module.classpath">
     <path refid="${module.jdk.classpath.jdbcp}"/>
-    <pathelement location="${module.jdbcp.basedir}/../../../jars/commons-math-1.1/commons-math-1.1.jar"/>
-    <pathelement location="${module.jdbcp.basedir}/../../../jars/hsqldb_1_8_0_7/lib/hsqldb.jar"/>
-    <pathelement location="${module.jdbcp.basedir}/../../../mysql-conne ctor-java-3.1.13/mysql-connector-java-3.1.13-bin.jar"/>
-    <pathelement location="${module.jdbcp.basedir}/../../../jars/hsqldb/lib/hsqldb.jar"/>
+    <pathelement
+      location="${module.jdbcp.basedir}/../../../jars/commons-math-1.1/commons-math-1.1.jar"/>
+    <pathelement
+      location="${module.jdbcp.basedir}/../../../jars/hsqldb_1_8_0_7/lib/hsqldb.jar"/>
+    <pathelement
+      location="${module.jdbcp.basedir}/../../../mysql-conne ctor-java-3.1.13/mysql-connector-java-3.1.13-bin.jar"/>
+    <pathelement
+      location="${module.jdbcp.basedir}/../../../jars/hsqldb/lib/hsqldb.jar"/>
   </path>
-  
+
   <path id="jdbcp.runtime.module.classpath">
     <pathelement location="${jdbcp.output.dir}"/>
-    <pathelement location="${module.jdbcp.basedir}/../../../jars/commons-math-1.1/commons-math-1.1.jar"/>
-    <pathelement location="${module.jdbcp.basedir}/../../../jars/hsqldb_1_8_0_7/lib/hsqldb.jar"/>
-    <pathelement location="${module.jdbcp.basedir}/../../../mysql-connector-java-3.1.13/mysql-connector-java-3.1.13-bin.jar"/>
-    <pathelement location="${module.jdbcp.basedir}/../../../jars/hsqldb/lib/hsqldb.jar"/>
+    <pathelement
+      location="${module.jdbcp.basedir}/../../../jars/commons-math-1.1/commons-math-1.1.jar"/>
+    <pathelement
+      location="${module.jdbcp.basedir}/../../../jars/hsqldb_1_8_0_7/lib/hsqldb.jar"/>
+    <pathelement
+      location="${module.jdbcp.basedir}/../../../mysql-connector-java-3.1.13/mysql-connector-java-3.1.13-bin.jar"/>
+    <pathelement
+      location="${module.jdbcp.basedir}/../../../jars/hsqldb/lib/hsqldb.jar"/>
   </path>
-  
-  
+
+
   <patternset id="excluded.from.module.jdbcp">
     <patternset refid="ignored.files"/>
   </patternset>
-  
+
   <patternset id="excluded.from.compilation.jdbcp">
     <patternset refid="compiler.excluded"/>
     <patternset refid="excluded.from.module.jdbcp"/>
   </patternset>
-  
+
   <path id="jdbcp.module.sourcepath">
     <dirset dir="${module.jdbcp.basedir}">
       <include name="example/java"/>
@@ -50,20 +59,26 @@
       <include name="src/utils"/>
     </dirset>
   </path>
-  
-  
-  <target name="compile.module.jdbcp" depends="compile.module.jdbcp.production,compile.module.jdbcp.tests" description="Compile module jdbcp"/>
-  
-  <target name="compile.module.jdbcp.production" description="Compile module jdbcp; production classes">
+
+
+  <target name="compile.module.jdbcp"
+          depends="compile.module.jdbcp.production,compile.module.jdbcp.tests"
+          description="Compile module jdbcp"/>
+
+  <target name="compile.module.jdbcp.production"
+          description="Compile module jdbcp; production classes">
     <mkdir dir="${jdbcp.output.dir}"/>
-    <javac2 destdir="${jdbcp.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.jdbcp}/javac">
+    <javac2 destdir="${jdbcp.output.dir}" debug="${compiler.debug}"
+            nowarn="${compiler.generate.no.warnings}"
+            memorymaximumsize="${compiler.max.memory}" fork="true"
+            executable="${module.jdk.bin.jdbcp}/javac">
       <compilerarg line="${compiler.args.jdbcp}"/>
       <bootclasspath refid="jdbcp.module.bootclasspath"/>
       <classpath refid="jdbcp.module.classpath"/>
       <src refid="jdbcp.module.sourcepath"/>
       <patternset refid="excluded.from.compilation.jdbcp"/>
     </javac2>
-    
+
     <copy todir="${jdbcp.output.dir}">
       <fileset dir="${module.jdbcp.basedir}/example/java">
         <patternset refid="compiler.resources"/>
@@ -92,9 +107,11 @@
       </fileset>
     </copy>
   </target>
-  
-  <target name="compile.module.jdbcp.tests" depends="compile.module.jdbcp.production" description="compile module jdbcp; test classes" unless="skip.tests"/>
-  
+
+  <target name="compile.module.jdbcp.tests"
+          depends="compile.module.jdbcp.production"
+          description="compile module jdbcp; test classes" unless="skip.tests"/>
+
   <target name="clean.module.jdbcp" description="cleanup module">
     <delete dir="${jdbcp.output.dir}"/>
     <delete dir="${jdbcp.testoutput.dir}"/>

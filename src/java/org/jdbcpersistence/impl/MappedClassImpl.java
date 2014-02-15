@@ -67,10 +67,10 @@ final class MappedClassImpl<T> implements MappedClass<T>
   private MappedAttribute _versionControlColumn = null;
   private Entity _entity;
 
-  public MappedClassImpl(final Class<T> clazz)
+  public MappedClassImpl(final Class<T> clazz, Entity entity)
   {
     _mappedClass = clazz;
-    _entity = (Entity) clazz.getAnnotation(Entity.class);
+    _entity = entity;
 
     init();
   }
@@ -256,7 +256,8 @@ final class MappedClassImpl<T> implements MappedClass<T>
    *
    * @return name of the underlying schema
    */
-  @Override public String getSchema()
+  @Override
+  public String getSchema()
   {
     return _entity.schema();
   }
@@ -268,7 +269,8 @@ final class MappedClassImpl<T> implements MappedClass<T>
    * @param columnName
    * @return Column
    */
-  @Override public MappedAttribute getColumn(final String columnName)
+  @Override
+  public MappedAttribute getColumn(final String columnName)
   {
     for (MappedAttribute column : _columns) {
       if (columnName.equals(column.getName()))
@@ -284,7 +286,8 @@ final class MappedClassImpl<T> implements MappedClass<T>
    *
    * @return an array of <code>MappedClass.MappedAttribute</code>
    */
-  @Override public MappedAttribute[] getRegularColumns()
+  @Override
+  public MappedAttribute[] getRegularColumns()
   {
     if (_regularColumns != null)
       return _regularColumns;
@@ -308,7 +311,8 @@ final class MappedClassImpl<T> implements MappedClass<T>
    *
    * @return an array of <code>MappedClass.MappedAttribute</code>
    */
-  @Override public MappedAttribute[] getColumns()
+  @Override
+  public MappedAttribute[] getColumns()
   {
     return _columns;
   }
@@ -319,7 +323,8 @@ final class MappedClassImpl<T> implements MappedClass<T>
    *
    * @return an array of <code>MappedClass.MappedAttribute</code>
    */
-  @Override public MappedAttribute[] getIdentifyingColumns()
+  @Override
+  public MappedAttribute[] getIdentifyingColumns()
   {
     return _identifyingColumns;
   }
@@ -330,7 +335,8 @@ final class MappedClassImpl<T> implements MappedClass<T>
    *
    * @return a <code>MappedClass.MappedAttribute</code>
    */
-  @Override public MappedAttribute getVersionControlColumn()
+  @Override
+  public MappedAttribute getVersionControlColumn()
   {
     if (_versionControlColumn == null) {
       MappedAttribute[] columns = getRegularColumns();
@@ -352,7 +358,8 @@ final class MappedClassImpl<T> implements MappedClass<T>
    *
    * @return mapped class
    */
-  @Override public final Class<T> getMappedClass()
+  @Override
+  public final Class<T> getMappedClass()
   {
     return _mappedClass;
   }
@@ -363,7 +370,8 @@ final class MappedClassImpl<T> implements MappedClass<T>
    *
    * @return a class implementing Persistor if one was supplied or null
    */
-  @Override public Class getPersistorClass()
+  @Override
+  public Class getPersistorClass()
   {
     return _persistorClass;
   }
@@ -373,7 +381,8 @@ final class MappedClassImpl<T> implements MappedClass<T>
    *
    * @return name of table
    */
-  @Override public String getTableName()
+  @Override
+  public String getTableName()
   {
     return _entity.name();
   }
@@ -412,8 +421,8 @@ final class MappedClassImpl<T> implements MappedClass<T>
      * Returns order of the column in an identifying key
      *
      * @return value of 0 or greater if the column participates in an
-     *         identifying key, value of -1 is returned if the column does
-     *         not part of an identifying key
+     * identifying key, value of -1 is returned if the column does
+     * not part of an identifying key
      */
     public int getIdentifyingOrder()
     {

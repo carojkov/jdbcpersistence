@@ -37,7 +37,8 @@ public final class SQLUtils
   public static void printTableDescriptor(MappedClass jdbcMap)
   {
     System.out.println("SQLUtils.printTableDescriptor primary key {");
-    MappedClass.MappedAttribute[] identifyingColumns = jdbcMap.getIdentifyingColumns();
+    MappedClass.MappedAttribute[] identifyingColumns
+      = jdbcMap.getIdentifyingColumns();
     for (int i = 0; i < identifyingColumns.length; i++) {
       final MappedClass.MappedAttribute column = identifyingColumns[i];
       final int type = column.getSqlType();

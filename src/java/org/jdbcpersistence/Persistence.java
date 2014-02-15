@@ -165,21 +165,20 @@ public interface Persistence
    * Method register register a class to be persisted by the
    * framework.
    *
-   *
-   * @param entityClass              class to be persisted by the framework. This parameter must
-   *                           have value. The value can be a concrete class, an interface or an abstract
-   *                           class. If the <code>clazz</code> parameter is an interface or an abstract
-   *                           class the framework will generateResultSetReader implementation for the
-   *                           <code>clazz</code>. This method requires the <code>clazz</code> be
-   *                           annotated with <code>@Entity</code>
+   * @param entityClass class to be persisted by the framework. This parameter must
+   *                    have value. The value can be a concrete class, an interface or an abstract
+   *                    class. If the <code>clazz</code> parameter is an interface or an abstract
+   *                    class the framework will generateResultSetReader implementation for the
+   *                    <code>clazz</code>. This method requires the <code>clazz</code> be
+   *                    annotated with <code>@Entity</code>
    * @return an instance of MappedClass that describes relationship between class's
-   *         fields and table's columns
+   * fields and table's columns
    * @see MappedClass
    * @see Persistor
    * @see #newInstance(Class)
    * @see #getImplementation(Class)
    */
-   public <T> MappedClass<T> register(Class<T> entityClass);
+  public <T> MappedClass<T> register(Class<T> entityClass);
 
   /**
    * Returns a <code>Connection</code> object.

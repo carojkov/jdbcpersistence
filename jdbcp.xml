@@ -2,180 +2,180 @@
 <project name="jdbcpersistence" default="all">
 
 
-    <!-- Uncomment the following property if no tests compilation is needed -->
-    <!--
-   <property name="skip.tests" value="true"/>
-    -->
+  <!-- Uncomment the following property if no tests compilation is needed -->
+  <!--
+ <property name="skip.tests" value="true"/>
+  -->
 
-    <!-- Compiler options -->
-    <property name="compiler.debug" value="on"/>
-    <property name="compiler.generate.no.warnings" value="off"/>
-    <property name="compiler.args" value=""/>
-    <property name="compiler.max.memory" value="128m"/>
-    <!--property name="jdk.home.1.5" value="C:/Program Files/Java/jdk1.5.0_05"/-->
-    <property name="jdk.home.1.5"
-              value="/System/Library/Frameworks/JavaVM.framework/Versions/1.5/Home"/>
-    <patternset id="compiler.excluded"/>
-    <patternset id="compiler.resources">
-        <include name="**/?*.properties"/>
-        <include name="**/?*.xml"/>
-        <include name="**/?*.html"/>
-        <include name="**/?*.dtd"/>
-        <include name="**/?*.tld"/>
-        <include name="**/?*.gif"/>
-        <include name="**/?*.png"/>
-        <include name="**/?*.jpeg"/>
-        <include name="**/?*.jpg"/>
-    </patternset>
-    <!-- JDK definitions -->
-    <!-- JDK definitions -->
-    <path id="jdk.classpath.1.5">
-        <fileset dir="${jdk.home.1.5}">
-            <include name="jre/lib/charsets.jar"/>
-            <include name="jre/lib/deploy.jar"/>
-            <include name="jre/lib/javaws.jar"/>
-            <include name="jre/lib/jce.jar"/>
-            <include name="jre/lib/jsse.jar"/>
-            <include name="jre/lib/plugin.jar"/>
-            <include name="jre/lib/rt.jar"/>
-            <include name="jre/lib/ext/dnsns.jar"/>
-            <include name="jre/lib/ext/localedata.jar"/>
-            <include name="jre/lib/ext/sunjce_provider.jar"/>
-            <include name="jre/lib/ext/sunpkcs11.jar"/>
-        </fileset>
-    </path>
+  <!-- Compiler options -->
+  <property name="compiler.debug" value="on"/>
+  <property name="compiler.generate.no.warnings" value="off"/>
+  <property name="compiler.args" value=""/>
+  <property name="compiler.max.memory" value="128m"/>
+  <!--property name="jdk.home.1.5" value="C:/Program Files/Java/jdk1.5.0_05"/-->
+  <property name="jdk.home.1.5"
+            value="/System/Library/Frameworks/JavaVM.framework/Versions/1.5/Home"/>
+  <patternset id="compiler.excluded"/>
+  <patternset id="compiler.resources">
+    <include name="**/?*.properties"/>
+    <include name="**/?*.xml"/>
+    <include name="**/?*.html"/>
+    <include name="**/?*.dtd"/>
+    <include name="**/?*.tld"/>
+    <include name="**/?*.gif"/>
+    <include name="**/?*.png"/>
+    <include name="**/?*.jpeg"/>
+    <include name="**/?*.jpg"/>
+  </patternset>
+  <!-- JDK definitions -->
+  <!-- JDK definitions -->
+  <path id="jdk.classpath.1.5">
+    <fileset dir="${jdk.home.1.5}">
+      <include name="jre/lib/charsets.jar"/>
+      <include name="jre/lib/deploy.jar"/>
+      <include name="jre/lib/javaws.jar"/>
+      <include name="jre/lib/jce.jar"/>
+      <include name="jre/lib/jsse.jar"/>
+      <include name="jre/lib/plugin.jar"/>
+      <include name="jre/lib/rt.jar"/>
+      <include name="jre/lib/ext/dnsns.jar"/>
+      <include name="jre/lib/ext/localedata.jar"/>
+      <include name="jre/lib/ext/sunjce_provider.jar"/>
+      <include name="jre/lib/ext/sunpkcs11.jar"/>
+    </fileset>
+  </path>
 
-    <property name="project.jdk.home" value="${jdk.home.1.5}"/>
-    <property name="project.jdk.classpath" value="jdk.classpath.1.5"/>
-    <!-- Project Libraries -->
-    <!-- Global Libraries -->
-    <dirname property="module.jdbcpersistence.basedir" file="${ant.file}"/>
-    <property name="module.jdk.home.jdbcpersistence"
-              value="${project.jdk.home}"/>
-    <property name="module.jdk.classpath.jdbcpersistence"
-              value="${project.jdk.classpath}"/>
-    <property name="compiler.args.jdbcpersistence" value="${compiler.args}"/>
-    <property name="jdbcpersistence.output.dir"
-              value="${module.jdbcpersistence.basedir}/classes"/>
-    <property name="jdbcpersistence.testoutput.dir"
-              value="${module.jdbcpersistence.basedir}/classes"/>
-    <property name="jdbcpersistence.testoutput.dir"
-              value="${module.jdbcpersistence.basedir}/classes"/>
-    <property name="distr.dir" value="jdbcpersistence"/>
-    <path id="jdbcpersistence.module.bootclasspath">
+  <property name="project.jdk.home" value="${jdk.home.1.5}"/>
+  <property name="project.jdk.classpath" value="jdk.classpath.1.5"/>
+  <!-- Project Libraries -->
+  <!-- Global Libraries -->
+  <dirname property="module.jdbcpersistence.basedir" file="${ant.file}"/>
+  <property name="module.jdk.home.jdbcpersistence"
+            value="${project.jdk.home}"/>
+  <property name="module.jdk.classpath.jdbcpersistence"
+            value="${project.jdk.classpath}"/>
+  <property name="compiler.args.jdbcpersistence" value="${compiler.args}"/>
+  <property name="jdbcpersistence.output.dir"
+            value="${module.jdbcpersistence.basedir}/classes"/>
+  <property name="jdbcpersistence.testoutput.dir"
+            value="${module.jdbcpersistence.basedir}/classes"/>
+  <property name="jdbcpersistence.testoutput.dir"
+            value="${module.jdbcpersistence.basedir}/classes"/>
+  <property name="distr.dir" value="jdbcpersistence"/>
+  <path id="jdbcpersistence.module.bootclasspath">
 
-        <!-- Paths to be included in compilation bootclasspath -->
-    </path>
-    <path id="jdbcpersistence.module.classpath">
-        <path refid="${module.jdk.classpath.jdbcpersistence}"/>
-        <pathelement
-                location="${module.jdbcpersistence.basedir}/lib/mysql.jar"/>
-    </path>
-    <patternset id="excluded.from.module.jdbcpersistence"/>
-    <patternset id="excluded.from.compilation.jdbcpersistence">
-        <patternset refid="excluded.from.module.jdbcpersistence"/>
-        <patternset refid="compiler.excluded"/>
-    </patternset>
-    <path id="jdbcpersistence.module.sourcepath">
-        <dirset dir="${module.jdbcpersistence.basedir}">
-            <include name="src/java"/>
-            <include name="src/test"/>
-        </dirset>
-    </path>
-    <target name="compile.module.jdbcpersistence"
-            depends="compile.module.jdbcpersistence.production,compile.module.jdbcpersistence.tests"
-            description="compile module jdbcpersistence"/>
-    <target name="compile.module.jdbcpersistence.production"
-            description="compile module jdbcpersistence production classes">
-        <mkdir dir="${jdbcpersistence.output.dir}"/>
-        <javac destdir="${jdbcpersistence.output.dir}" debug="${compiler.debug}"
-               nowarn="${compiler.generate.no.warnings}"
-               memoryMaximumSize="${compiler.max.memory}" fork="true"
-               executable="${module.jdk.home.jdbcpersistence}/bin/javac"
-               source="1.5" target="1.5"
-               excludes="TestGeneratedCode.java">
-            <compilerarg line="${compiler.args.jdbcpersistence}"/>
-            <bootclasspath refid="jdbcpersistence.module.bootclasspath"/>
-            <classpath refid="jdbcpersistence.module.classpath"/>
-            <src refid="jdbcpersistence.module.sourcepath"/>
-            <patternset refid="excluded.from.compilation.jdbcpersistence"/>
-        </javac>
-        <copy todir="${jdbcpersistence.output.dir}">
-            <fileset dir="${module.jdbcpersistence.basedir}/src/java">
-                <patternset refid="compiler.resources"/>
-                <type type="file"/>
-                <patternset refid="excluded.from.compilation.jdbcpersistence"/>
-            </fileset>
-            <fileset dir="${module.jdbcpersistence.basedir}/src/test">
-                <patternset refid="compiler.resources"/>
-                <type type="file"/>
-                <patternset refid="excluded.from.compilation.jdbcpersistence"/>
-            </fileset>
-        </copy>
-    </target>
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  <path id="jdbcpersistence.module.classpath">
+    <path refid="${module.jdk.classpath.jdbcpersistence}"/>
+    <pathelement
+      location="${module.jdbcpersistence.basedir}/lib/mysql.jar"/>
+  </path>
+  <patternset id="excluded.from.module.jdbcpersistence"/>
+  <patternset id="excluded.from.compilation.jdbcpersistence">
+    <patternset refid="excluded.from.module.jdbcpersistence"/>
+    <patternset refid="compiler.excluded"/>
+  </patternset>
+  <path id="jdbcpersistence.module.sourcepath">
+    <dirset dir="${module.jdbcpersistence.basedir}">
+      <include name="src/java"/>
+      <include name="src/test"/>
+    </dirset>
+  </path>
+  <target name="compile.module.jdbcpersistence"
+          depends="compile.module.jdbcpersistence.production,compile.module.jdbcpersistence.tests"
+          description="compile module jdbcpersistence"/>
+  <target name="compile.module.jdbcpersistence.production"
+          description="compile module jdbcpersistence production classes">
+    <mkdir dir="${jdbcpersistence.output.dir}"/>
+    <javac destdir="${jdbcpersistence.output.dir}" debug="${compiler.debug}"
+           nowarn="${compiler.generate.no.warnings}"
+           memoryMaximumSize="${compiler.max.memory}" fork="true"
+           executable="${module.jdk.home.jdbcpersistence}/bin/javac"
+           source="1.5" target="1.5"
+           excludes="TestGeneratedCode.java">
+      <compilerarg line="${compiler.args.jdbcpersistence}"/>
+      <bootclasspath refid="jdbcpersistence.module.bootclasspath"/>
+      <classpath refid="jdbcpersistence.module.classpath"/>
+      <src refid="jdbcpersistence.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.jdbcpersistence"/>
+    </javac>
+    <copy todir="${jdbcpersistence.output.dir}">
+      <fileset dir="${module.jdbcpersistence.basedir}/src/java">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+        <patternset refid="excluded.from.compilation.jdbcpersistence"/>
+      </fileset>
+      <fileset dir="${module.jdbcpersistence.basedir}/src/test">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+        <patternset refid="excluded.from.compilation.jdbcpersistence"/>
+      </fileset>
+    </copy>
+  </target>
 
-    <target name="compile.module.jdbcpersistence.tests"
-            depends="compile.module.jdbcpersistence.production"
-            description="compile module jdbcpersistence test classes"
-            unless="skip.tests"/>
+  <target name="compile.module.jdbcpersistence.tests"
+          depends="compile.module.jdbcpersistence.production"
+          description="compile module jdbcpersistence test classes"
+          unless="skip.tests"/>
 
-    <target name="clean.module.jdbcpersistence" description="cleanup module">
-        <delete dir="${jdbcpersistence.output.dir}"/>
-        <delete dir="${jdbcpersistence.testoutput.dir}"/>
-        <delete dir="distr"/>
-    </target>
+  <target name="clean.module.jdbcpersistence" description="cleanup module">
+    <delete dir="${jdbcpersistence.output.dir}"/>
+    <delete dir="${jdbcpersistence.testoutput.dir}"/>
+    <delete dir="distr"/>
+  </target>
 
-    <target name="build.distr"
-            depends="init, clean, compile.module.jdbcpersistence">
-        <delete dir="${distr.dir}"/>
-        <mkdir dir="${distr.dir}"/>
-        <copy todir="${distr.dir}/docs/api">
-            <fileset dir="javadoc"/>
-        </copy>
-        <copy todir="${distr.dir}/example">
-            <fileset dir="example"/>
-        </copy>
+  <target name="build.distr"
+          depends="init, clean, compile.module.jdbcpersistence">
+    <delete dir="${distr.dir}"/>
+    <mkdir dir="${distr.dir}"/>
+    <copy todir="${distr.dir}/docs/api">
+      <fileset dir="javadoc"/>
+    </copy>
+    <copy todir="${distr.dir}/example">
+      <fileset dir="example"/>
+    </copy>
 
-        <jar  destfile="${distr.dir}/src.jar">
-            <fileset dir="src/java"/>
-        </jar>
-        
-        <copy file="license.txt" tofile="${distr.dir}/license.txt"></copy>
-        <copy file="asm-license.txt" tofile="${distr.dir}/asm-license.txt"></copy>
-        <copy file="readme.txt" tofile="${distr.dir}/readme.txt"></copy>
-        <copy file="changes.txt" tofile="${distr.dir}/changes.txt"></copy>
-        <copy todir="${distr.dir}/docs">
-            <fileset dir="docs">
-                <include name="JDBCPersistence-programming-guide.pdf"></include>
-            </fileset>
-        </copy>
-        <jar destfile="${distr.dir}/jdbcpersistence.jar">
-            <fileset dir="${jdbcpersistence.output.dir}"
-                     excludes="rojkov/** net/**/*.properties">
-            </fileset>
-        </jar>
-        <zip destfile="jdbcpersistence.zip">
-            <fileset dir="."
-                     includes="${distr.dir}/**">
-            </fileset>
-        </zip>
-    </target>
-    <target name="javadoc">
-         <javadoc packagenames="com.jdbcpersistence.*"
-           sourcepath="./src/java"
-           excludepackagenames="com.dummy.test.doc-files.*"
-           defaultexcludes="yes"
-           destdir="./javadoc"
-           author="true"
-           version="true"
-           use="true">
-  </javadoc>
-    </target>
-    <target name="init" description="Build initialization">
-        <!-- Perform any build initialization in this target -->
-    </target>
-    <target name="clean" depends="clean.module.jdbcpersistence"
-            description="cleanup all"/>
-    <target name="all" depends="init, clean, compile.module.jdbcpersistence"
-            description="build all"/>
+    <jar destfile="${distr.dir}/src.jar">
+      <fileset dir="src/java"/>
+    </jar>
+
+    <copy file="license.txt" tofile="${distr.dir}/license.txt"></copy>
+    <copy file="asm-license.txt" tofile="${distr.dir}/asm-license.txt"></copy>
+    <copy file="readme.txt" tofile="${distr.dir}/readme.txt"></copy>
+    <copy file="changes.txt" tofile="${distr.dir}/changes.txt"></copy>
+    <copy todir="${distr.dir}/docs">
+      <fileset dir="docs">
+        <include name="JDBCPersistence-programming-guide.pdf"></include>
+      </fileset>
+    </copy>
+    <jar destfile="${distr.dir}/jdbcpersistence.jar">
+      <fileset dir="${jdbcpersistence.output.dir}"
+               excludes="rojkov/** net/**/*.properties">
+      </fileset>
+    </jar>
+    <zip destfile="jdbcpersistence.zip">
+      <fileset dir="."
+               includes="${distr.dir}/**">
+      </fileset>
+    </zip>
+  </target>
+  <target name="javadoc">
+    <javadoc packagenames="com.jdbcpersistence.*"
+             sourcepath="./src/java"
+             excludepackagenames="com.dummy.test.doc-files.*"
+             defaultexcludes="yes"
+             destdir="./javadoc"
+             author="true"
+             version="true"
+             use="true">
+    </javadoc>
+  </target>
+  <target name="init" description="Build initialization">
+    <!-- Perform any build initialization in this target -->
+  </target>
+  <target name="clean" depends="clean.module.jdbcpersistence"
+          description="cleanup all"/>
+  <target name="all" depends="init, clean, compile.module.jdbcpersistence"
+          description="build all"/>
 </project>

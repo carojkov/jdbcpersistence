@@ -11,7 +11,8 @@ import java.util.List;
  *
  * @see Query
  */
-public interface ResultSetReader<T> {
+public interface ResultSetReader<T>
+{
   /**
    * Reads data from the result set and creates an instance of mapped entities for
    * each row. The entities instances are then packaged into an instance of

@@ -56,7 +56,7 @@ public final class PersistenceFactory
    * Returns a new, not configured, instance of <code>JDBCPersistence</code>
    *
    * @return <code>JDBCPersistence</code>object
-   * @see Persistence#init(javax.sql.DataSource,java.util.Properties)
+   * @see Persistence#init(javax.sql.DataSource, java.util.Properties)
    */
   public Persistence newJdbcPersistence()
   {

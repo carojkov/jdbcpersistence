@@ -40,7 +40,8 @@ import java.io.InputStream;
  *
  * @author Eric Bruneton
  */
-public class ClassReader {
+public class ClassReader
+{
   /**
    * The class to be parsed. <i>The content of this array must not be
    * modified. This field is intended for {@link Attribute} sub classes, and
@@ -90,7 +91,7 @@ public class ClassReader {
   /**
    * Constructs a new {@link ClassReader ClassReader} object.
    *
-   * @param b the bytecode of the class to be read.
+   * @param b   the bytecode of the class to be read.
    * @param off the start offset of the class data.
    * @param len the length of the class data.
    */
@@ -208,10 +209,10 @@ public class ClassReader {
    * {@link #ClassReader(byte[]) ClassReader}).
    *
    * @param classVisitor the visitor that must visit this class.
-   * @param skipDebug <tt>true</tt> if the debug information of the class must
-   * not be visited. In this case the {@link CodeVisitor#visitLocalVariable
-   * visitLocalVariable} and {@link CodeVisitor#visitLineNumber
-   * visitLineNumber} methods will not be called.
+   * @param skipDebug    <tt>true</tt> if the debug information of the class must
+   *                     not be visited. In this case the {@link CodeVisitor#visitLocalVariable
+   *                     visitLocalVariable} and {@link CodeVisitor#visitLineNumber
+   *                     visitLineNumber} methods will not be called.
    */
   public void accept(final ClassVisitor classVisitor, final boolean skipDebug)
   {
@@ -224,13 +225,13 @@ public class ClassReader {
    * {@link #ClassReader(byte[]) ClassReader}).
    *
    * @param classVisitor the visitor that must visit this class.
-   * @param attrs prototypes of the attributes that must be parsed during the
-   * visit of the class. Any attribute whose type is not equal to the type of
-   * one the prototypes will be ignored.
-   * @param skipDebug <tt>true</tt> if the debug information of the class must
-   * not be visited. In this case the {@link CodeVisitor#visitLocalVariable
-   * visitLocalVariable} and {@link CodeVisitor#visitLineNumber
-   * visitLineNumber} methods will not be called.
+   * @param attrs        prototypes of the attributes that must be parsed during the
+   *                     visit of the class. Any attribute whose type is not equal to the type of
+   *                     one the prototypes will be ignored.
+   * @param skipDebug    <tt>true</tt> if the debug information of the class must
+   *                     not be visited. In this case the {@link CodeVisitor#visitLocalVariable
+   *                     visitLocalVariable} and {@link CodeVisitor#visitLineNumber
+   *                     visitLineNumber} methods will not be called.
    */
   public void accept(final ClassVisitor classVisitor,
                      final Attribute[] attrs,
@@ -324,14 +325,14 @@ public class ClassReader {
       w += 2;
       for (; i > 0; --i) {
         classVisitor.visitInnerClass(readUnsignedShort(w) == 0
-                                     ? null
-                                     : readClass(w, c),
+                                       ? null
+                                       : readClass(w, c),
                                      readUnsignedShort(w + 2) == 0
-                                     ? null
-                                     : readClass(w + 2, c),
+                                       ? null
+                                       : readClass(w + 2, c),
                                      readUnsignedShort(w + 4) == 0
-                                     ? null
-                                     : readUTF8(w + 4, c),
+                                       ? null
+                                       : readUTF8(w + 4, c),
                                      readUnsignedShort(w + 6));
         w += 8;
       }
@@ -378,8 +379,7 @@ public class ClassReader {
       // reads the field's value, if any
       Object
         value
-        = (fieldValueItem == 0 ? null : readConst(fieldValueItem, c))
-        ;
+        = (fieldValueItem == 0 ? null : readConst(fieldValueItem, c));
       // visits the field
       classVisitor.visitField(access, fieldName, fieldDesc, value, fattrs);
     }
@@ -850,7 +850,7 @@ public class ClassReader {
    *
    * @param item the index a constant pool item.
    * @return the start index of the constant pool item in {@link #b b}, plus
-   *         one.
+   * one.
    */
   public int getItem(final int item)
   {
@@ -936,9 +936,9 @@ public class ClassReader {
    * by class generators or adapters.</i>
    *
    * @param index the start index of an unsigned short value in {@link #b b},
-   * whose value is the index of an UTF8 constant pool item.
-   * @param buf buffer to be used to read the item. This buffer must be
-   * sufficiently large. It is not automatically resized.
+   *              whose value is the index of an UTF8 constant pool item.
+   * @param buf   buffer to be used to read the item. This buffer must be
+   *              sufficiently large. It is not automatically resized.
    * @return the String corresponding to the specified UTF8 item.
    */
   public String readUTF8(int index, final char[] buf)
@@ -1000,9 +1000,9 @@ public class ClassReader {
    * class generators or adapters.</i>
    *
    * @param index the start index of an unsigned short value in {@link #b b},
-   * whose value is the index of a class constant pool item.
-   * @param buf buffer to be used to read the item. This buffer must be
-   * sufficiently large. It is not automatically resized.
+   *              whose value is the index of a class constant pool item.
+   * @param buf   buffer to be used to read the item. This buffer must be
+   *              sufficiently large. It is not automatically resized.
    * @return the String corresponding to the specified class item.
    */
   public String readClass(final int index, final char[] buf)
@@ -1019,11 +1019,11 @@ public class ClassReader {
    * needed by class generators or adapters.</i>
    *
    * @param item the index of a constant pool item.
-   * @param buf buffer to be used to read the item. This buffer must be
-   * sufficiently large. It is not automatically resized.
+   * @param buf  buffer to be used to read the item. This buffer must be
+   *             sufficiently large. It is not automatically resized.
    * @return the {@link Integer Integer}, {@link Float Float}, {@link Long
-   *         Long}, {@link Double Double}, {@link String String} or {@link
-   *         Type Type} corresponding to the given constant pool item.
+   * Long}, {@link Double Double}, {@link String String} or {@link
+   * Type Type} corresponding to the given constant pool item.
    */
   public Object readConst(final int item, final char[] buf)
   {
@@ -1049,26 +1049,26 @@ public class ClassReader {
   /**
    * Reads an attribute in {@link #b b}.
    *
-   * @param attrs prototypes of the attributes that must be parsed during the
-   * visit of the class. Any attribute whose type is not equal to the type of
-   * one the prototypes is ignored (i.e. an empty {@link Attribute} instance
-   * is returned).
-   * @param type the type of the attribute.
-   * @param off index of the first byte of the attribute's content in {@link
-   * #b b}. The 6 attribute header bytes, containing the type and the length
-   * of the attribute, are not taken into account here (they have already been
-   * read).
-   * @param len the length of the attribute's content.
-   * @param buf buffer to be used to call {@link #readUTF8 readUTF8}, {@link
-   * #readClass(int,char[]) readClass} or {@link #readConst readConst}.
+   * @param attrs   prototypes of the attributes that must be parsed during the
+   *                visit of the class. Any attribute whose type is not equal to the type of
+   *                one the prototypes is ignored (i.e. an empty {@link Attribute} instance
+   *                is returned).
+   * @param type    the type of the attribute.
+   * @param off     index of the first byte of the attribute's content in {@link
+   *                #b b}. The 6 attribute header bytes, containing the type and the length
+   *                of the attribute, are not taken into account here (they have already been
+   *                read).
+   * @param len     the length of the attribute's content.
+   * @param buf     buffer to be used to call {@link #readUTF8 readUTF8}, {@link
+   *                #readClass(int, char[]) readClass} or {@link #readConst readConst}.
    * @param codeOff index of the first byte of code's attribute content in
-   * {@link #b b}, or -1 if the attribute to be read is not a code attribute.
-   * The 6 attribute header bytes, containing the type and the length of the
-   * attribute, are not taken into account here.
-   * @param labels the labels of the method's code, or <tt>null</tt> if the
-   * attribute to be read is not a code attribute.
+   *                {@link #b b}, or -1 if the attribute to be read is not a code attribute.
+   *                The 6 attribute header bytes, containing the type and the length of the
+   *                attribute, are not taken into account here.
+   * @param labels  the labels of the method's code, or <tt>null</tt> if the
+   *                attribute to be read is not a code attribute.
    * @return the attribute that has been read, or <tt>null</tt> to skip this
-   *         attribute.
+   * attribute.
    */
   protected Attribute readAttribute(final Attribute[] attrs,
                                     final String type,

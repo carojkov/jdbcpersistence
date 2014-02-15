@@ -56,18 +56,18 @@ public final class PersistenceImpl implements Persistence
 
   private static byte[] DUMMY_BYTES = new byte[0];
 
-  private HashMap _jdbcMaps = new HashMap();
+  private HashMap<Class,MappedClass> _jdbcMaps = new HashMap<>();
   private boolean _initialized = false;
   private String _dbname = null;
   private boolean _locatorsUpdateCopy = false;
 
-  private final Map _jdbcPersistors = new HashMap();
+  private final Map<Class,Persistor> _jdbcPersistors = new HashMap<>();
 
   private final Map<Class,Class> _abstractBeanImplementations
-    = new HashMap<Class,Class>();
+    = new HashMap<>();
 
   private final Map<Class,byte[]> _abstractBeanBytes
-    = new HashMap<Class,byte[]>();
+    = new HashMap<>();
 
   private final Map _jdbcQueryResultReaders = new HashMap();
   //
@@ -111,11 +111,11 @@ public final class PersistenceImpl implements Persistence
           try {
             if (resultSetReaderClass == null) {
               Class queryResultType = query.getResultType();
-              Class beanClass = (Class) _abstractBeanImplementations.get(
+              Class beanClass = _abstractBeanImplementations.get(
                 queryResultType);
               if (beanClass == null) {
                 prepare(queryResultType);
-                beanClass = (Class) _abstractBeanImplementations.get(
+                beanClass = _abstractBeanImplementations.get(
                   queryResultType);
               }
               MappedClass jdbcMap
@@ -193,7 +193,7 @@ public final class PersistenceImpl implements Persistence
       }
 
       synchronized (this) {
-        Persistor jdbcPersistor = null;
+        Persistor jdbcPersistor;
         try {
           Class classImpl = clazz;
           if (clazz.isInterface() ||
@@ -260,7 +260,7 @@ public final class PersistenceImpl implements Persistence
         }
       }
     }
-    t = (Class) _abstractBeanImplementations.get(clazz);
+    t = _abstractBeanImplementations.get(clazz);
     try {
       return (T) t.newInstance();
     } catch (InstantiationException e) {
@@ -272,16 +272,16 @@ public final class PersistenceImpl implements Persistence
 
   public byte[] getImplementation(Class entityClass)
   {
-    byte[] bytes = (byte[]) _abstractBeanBytes.get(entityClass);
+    byte[] bytes = _abstractBeanBytes.get(entityClass);
     if (bytes == null) {
       synchronized (this) {
-        bytes = (byte[]) _abstractBeanBytes.get(entityClass);
+        bytes = _abstractBeanBytes.get(entityClass);
         if (bytes == null) {
           prepare(entityClass);
         }
       }
     }
-    bytes = (byte[]) _abstractBeanBytes.get(entityClass);
+    bytes = _abstractBeanBytes.get(entityClass);
     if (bytes == DUMMY_BYTES) {
       throw new RuntimeException("Class [" +
                                  entityClass +
@@ -325,22 +325,14 @@ public final class PersistenceImpl implements Persistence
   @Override
   public <T> MappedClass<T> register(Class<T> entityClass)
   {
-    Entity entityAnn = (Entity) entityClass.getAnnotation(Entity.class);
+    Entity entityAnn = entityClass.getAnnotation(Entity.class);
 
     if (entityAnn == null)
       throw new IllegalArgumentException("Class "
                                          + entityClass
                                          + " must be annotated with @Entitity annotation");
 
-    String name = entityAnn.name();
-
-    if (name.isEmpty())
-      name = entityClass.getSimpleName();
-
-    if (name.endsWith("Impl"))
-      name = name.substring(0, name.length() - 4);
-
-    MappedClass jdbcMap = new MappedClassImpl(entityClass);
+    MappedClass jdbcMap = new MappedClassImpl(entityClass, entityAnn);
 
     _jdbcMaps.put(entityClass, jdbcMap);
 

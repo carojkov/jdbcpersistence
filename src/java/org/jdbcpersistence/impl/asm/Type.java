@@ -37,7 +37,8 @@ import java.lang.reflect.Method;
  *
  * @author Eric Bruneton, Chris Nokleberg
  */
-public class Type {
+public class Type
+{
   /**
    * The sort of the <tt>void</tt> type. See {@link #getSort getSort}.
    */
@@ -160,9 +161,9 @@ public class Type {
    * Constructs a reference type.
    *
    * @param sort the sort of the reference type to be constructed.
-   * @param buf a buffer containing the descriptor of the previous type.
-   * @param off the offset of this descriptor in the previous buffer.
-   * @param len the length of this descriptor.
+   * @param buf  a buffer containing the descriptor of the previous type.
+   * @param off  the offset of this descriptor in the previous buffer.
+   * @param len  the length of this descriptor.
    */
   private Type(final int sort, final char[] buf, final int off, final int len)
   {
@@ -231,7 +232,7 @@ public class Type {
    *
    * @param methodDescriptor a method descriptor.
    * @return the Java types corresponding to the argument types of the given
-   *         method descriptor.
+   * method descriptor.
    */
   public static Type[] getArgumentTypes(final String methodDescriptor)
   {
@@ -269,7 +270,7 @@ public class Type {
    *
    * @param method a method.
    * @return the Java types corresponding to the argument types of the given
-   *         method.
+   * method.
    */
   public static Type[] getArgumentTypes(final Method method)
   {
@@ -287,7 +288,7 @@ public class Type {
    *
    * @param methodDescriptor a method descriptor.
    * @return the Java type corresponding to the return type of the given
-   *         method descriptor.
+   * method descriptor.
    */
   public static Type getReturnType(final String methodDescriptor)
   {
@@ -301,7 +302,7 @@ public class Type {
    *
    * @param method a method.
    * @return the Java type corresponding to the return type of the given
-   *         method.
+   * method.
    */
   public static Type getReturnType(final Method method)
   {
@@ -367,9 +368,9 @@ public class Type {
    * Returns the sort of this Java type.
    *
    * @return {@link #VOID VOID}, {@link #BOOLEAN BOOLEAN}, {@link #CHAR CHAR},
-   *         {@link #BYTE BYTE}, {@link #SHORT SHORT}, {@link #INT INT},
-   *         {@link #FLOAT FLOAT}, {@link #LONG LONG}, {@link #DOUBLE DOUBLE},
-   *         {@link #ARRAY ARRAY} or {@link #OBJECT OBJECT}.
+   * {@link #BYTE BYTE}, {@link #SHORT SHORT}, {@link #INT INT},
+   * {@link #FLOAT FLOAT}, {@link #LONG LONG}, {@link #DOUBLE DOUBLE},
+   * {@link #ARRAY ARRAY} or {@link #OBJECT OBJECT}.
    */
   public int getSort()
   {
@@ -406,7 +407,7 @@ public class Type {
    * Returns the name of the class corresponding to this type.
    *
    * @return the fully qualified name of the class corresponding to this
-   *         type.
+   * type.
    */
   public String getClassName()
   {
@@ -447,7 +448,7 @@ public class Type {
    * replaced by '/'. This method should only be used for an object type.
    *
    * @return the internal name of the class corresponding to this object
-   *         type.
+   * type.
    */
   public String getInternalName()
   {
@@ -474,10 +475,10 @@ public class Type {
    * Returns the descriptor corresponding to the given argument and return
    * types.
    *
-   * @param returnType the return type of the method.
+   * @param returnType    the return type of the method.
    * @param argumentTypes the argument types of the method.
    * @return the descriptor corresponding to the given argument and return
-   *         types.
+   * types.
    */
   public static String getMethodDescriptor(final Type returnType,
                                            final Type[] argumentTypes)
@@ -588,7 +589,7 @@ public class Type {
    * Appends the descriptor of the given class to the given string buffer.
    *
    * @param buf the string buffer to which the descriptor must be appended.
-   * @param c the class whose descriptor must be computed.
+   * @param c   the class whose descriptor must be computed.
    */
   private static void getDescriptor(final StringBuffer buf, final Class c)
   {
@@ -652,7 +653,7 @@ public class Type {
    * Returns the size of values of this type.
    *
    * @return the size of values of this type, i.e., 2 for <tt>long</tt> and
-   *         <tt>double</tt>, and 1 otherwise.
+   * <tt>double</tt>, and 1 otherwise.
    */
   public int getSize()
   {
@@ -663,11 +664,11 @@ public class Type {
    * Returns a JVM instruction opcode adapted to this Java type.
    *
    * @param opcode a JVM instruction opcode. This opcode must be one of ILOAD,
-   * ISTORE, IALOAD, IASTORE, IADD, ISUB, IMUL, IDIV, IREM, INEG, ISHL, ISHR,
-   * IUSHR, IAND, IOR, IXOR and IRETURN.
+   *               ISTORE, IALOAD, IASTORE, IADD, ISUB, IMUL, IDIV, IREM, INEG, ISHL, ISHR,
+   *               IUSHR, IAND, IOR, IXOR and IRETURN.
    * @return an opcode that is similar to the given opcode, but adapted to
-   *         this Java type. For example, if this type is <tt>float</tt> and
-   *         <tt>opcode</tt> is IRETURN, this method returns FRETURN.
+   * this Java type. For example, if this type is <tt>float</tt> and
+   * <tt>opcode</tt> is IRETURN, this method returns FRETURN.
    */
   public int getOpcode(final int opcode)
   {

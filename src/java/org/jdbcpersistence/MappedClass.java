@@ -35,8 +35,8 @@ public interface MappedClass<T>
      * Returns order of the column in an identifying key
      *
      * @return value of 0 or greater if the column participates in an
-     *         identifying key, value of -1 is returned if the column does
-     *         not part of an identifying key
+     * identifying key, value of -1 is returned if the column does
+     * not part of an identifying key
      */
     public int getIdentifyingOrder();
 

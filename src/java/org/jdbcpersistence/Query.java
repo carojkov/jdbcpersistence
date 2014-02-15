@@ -68,8 +68,8 @@ public class Query<T>
    * parameter <code>resultType</code> denotes what result the query will
    * return.
    *
-   * @param query      SQL statement
-   * @param resultType regitered persistent class or <code>java.utils.Map</code>
+   * @param query                SQL statement
+   * @param resultType           regitered persistent class or <code>java.utils.Map</code>
    * @param jdbcQueryReaderClass
    */
   public Query(String query, Class resultType, Class jdbcQueryReaderClass)
@@ -83,11 +83,11 @@ public class Query<T>
    * parameter <code>resultType</code> denotes what result the query will
    * return.
    *
-   * @param query      SQL statement
-   * @param resultType regitered persistent class or <code>java.utils.Map</code>
+   * @param query                SQL statement
+   * @param resultType           regitered persistent class or <code>java.utils.Map</code>
    * @param jdbcQueryReaderClass
-   * @param nullable   when true, query String is changed by placing IS NULL for
-   *                   null values in params @see executeQuery
+   * @param nullable             when true, query String is changed by placing IS NULL for
+   *                             null values in params @see executeQuery
    */
   public Query(String query,
                Class resultType,
@@ -112,6 +112,7 @@ public class Query<T>
 
   /**
    * Returns query string
+   *
    * @return query string
    */
   public String getQuery()

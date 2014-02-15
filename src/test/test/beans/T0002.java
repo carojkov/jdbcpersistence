@@ -102,14 +102,16 @@ public class T0002 extends BaseTest
 
     @Column(name = "ID")
     @Id()
-    public int getId() {
+    public int getId()
+    {
       return id;
     }
 
     public abstract void setId(int id);
 
     @Column(name = "DATA")
-    public String getData() {
+    public String getData()
+    {
       return data;
     }
 

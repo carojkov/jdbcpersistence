@@ -37,23 +37,24 @@ package org.jdbcpersistence.impl.asm;
  *
  * @author Eric Bruneton
  */
-public interface ClassVisitor {
+public interface ClassVisitor
+{
   /**
    * Visits the header of the class.
    *
-   * @param version the class version.
-   * @param access the class's access flags (see {@link Constants}). This
-   * parameter also indicates if the class is deprecated.
-   * @param name the internal name of the class (see {@link
-   * Type#getInternalName() getInternalName}).
-   * @param superName the internal of name of the super class (see {@link
-   * Type#getInternalName() getInternalName}). For interfaces, the super class
-   * is {@link Object}. May be <tt>null</tt>, but only for the {@link Object
-   * java.lang.Object} class.
+   * @param version    the class version.
+   * @param access     the class's access flags (see {@link Constants}). This
+   *                   parameter also indicates if the class is deprecated.
+   * @param name       the internal name of the class (see {@link
+   *                   Type#getInternalName() getInternalName}).
+   * @param superName  the internal of name of the super class (see {@link
+   *                   Type#getInternalName() getInternalName}). For interfaces, the super class
+   *                   is {@link Object}. May be <tt>null</tt>, but only for the {@link Object
+   *                   java.lang.Object} class.
    * @param interfaces the internal names of the class's interfaces (see
-   * {@link Type#getInternalName() getInternalName}). May be <tt>null</tt>.
+   *                   {@link Type#getInternalName() getInternalName}). May be <tt>null</tt>.
    * @param sourceFile the name of the source file from which this class was
-   * compiled. May be <tt>null</tt>.
+   *                   compiled. May be <tt>null</tt>.
    */
   void visit(int version,
              int access,
@@ -66,15 +67,15 @@ public interface ClassVisitor {
    * Visits information about an inner class. This inner class is not
    * necessarily a member of the class being visited.
    *
-   * @param name the internal name of an inner class (see {@link
-   * Type#getInternalName() getInternalName}).
+   * @param name      the internal name of an inner class (see {@link
+   *                  Type#getInternalName() getInternalName}).
    * @param outerName the internal name of the class to which the inner class
-   * belongs (see {@link Type#getInternalName() getInternalName}). May be
-   * <tt>null</tt>.
+   *                  belongs (see {@link Type#getInternalName() getInternalName}). May be
+   *                  <tt>null</tt>.
    * @param innerName the (simple) name of the inner class inside its
-   * enclosing class. May be <tt>null</tt> for anonymous inner classes.
-   * @param access the access flags of the inner class as originally declared
-   * in the enclosing class.
+   *                  enclosing class. May be <tt>null</tt> for anonymous inner classes.
+   * @param access    the access flags of the inner class as originally declared
+   *                  in the enclosing class.
    */
   void visitInnerClass(String name,
                        String outerName,
@@ -85,19 +86,19 @@ public interface ClassVisitor {
    * Visits a field of the class.
    *
    * @param access the field's access flags (see {@link Constants}). This
-   * parameter also indicates if the field is synthetic and/or deprecated.
-   * @param name the field's name.
-   * @param desc the field's descriptor (see {@link Type Type}).
-   * @param value the field's initial value. This parameter, which may be
-   * <tt>null</tt> if the field does not have an initial value, must be an
-   * {@link Integer Integer}, a {@link Float Float}, a {@link Long Long}, a
-   * {@link Double Double} or a {@link String String} (for <tt>int</tt>,
-   * <tt>float</tt>, <tt>long</tt> or <tt>String</tt> fields respectively).
-   * <i>This parameter is only used for static fields</i>. Its value is
-   * ignored for non static fields, which must be initialized through bytecode
-   * instructions in constructors or methods.
-   * @param attrs the non standard method attributes, linked together by their
-   * <tt>next</tt> field. May be <tt>null</tt>.
+   *               parameter also indicates if the field is synthetic and/or deprecated.
+   * @param name   the field's name.
+   * @param desc   the field's descriptor (see {@link Type Type}).
+   * @param value  the field's initial value. This parameter, which may be
+   *               <tt>null</tt> if the field does not have an initial value, must be an
+   *               {@link Integer Integer}, a {@link Float Float}, a {@link Long Long}, a
+   *               {@link Double Double} or a {@link String String} (for <tt>int</tt>,
+   *               <tt>float</tt>, <tt>long</tt> or <tt>String</tt> fields respectively).
+   *               <i>This parameter is only used for static fields</i>. Its value is
+   *               ignored for non static fields, which must be initialized through bytecode
+   *               instructions in constructors or methods.
+   * @param attrs  the non standard method attributes, linked together by their
+   *               <tt>next</tt> field. May be <tt>null</tt>.
    */
   void visitField(int access,
                   String name,
@@ -110,18 +111,18 @@ public interface ClassVisitor {
    * CodeVisitor CodeVisitor} instance (or <tt>null</tt>) each time it is
    * called, i.e., it should not return a previously returned visitor.
    *
-   * @param access the method's access flags (see {@link Constants}). This
-   * parameter also indicates if the method is synthetic and/or deprecated.
-   * @param name the method's name.
-   * @param desc the method's descriptor (see {@link Type Type}).
+   * @param access     the method's access flags (see {@link Constants}). This
+   *                   parameter also indicates if the method is synthetic and/or deprecated.
+   * @param name       the method's name.
+   * @param desc       the method's descriptor (see {@link Type Type}).
    * @param exceptions the internal names of the method's exception classes
-   * (see {@link Type#getInternalName() getInternalName}). May be
-   * <tt>null</tt>.
-   * @param attrs the non standard method attributes, linked together by their
-   * <tt>next</tt> field. May be <tt>null</tt>.
+   *                   (see {@link Type#getInternalName() getInternalName}). May be
+   *                   <tt>null</tt>.
+   * @param attrs      the non standard method attributes, linked together by their
+   *                   <tt>next</tt> field. May be <tt>null</tt>.
    * @return an object to visit the byte code of the method, or <tt>null</tt>
-   *         if this class visitor is not interested in visiting the code of
-   *         this method.
+   * if this class visitor is not interested in visiting the code of
+   * this method.
    */
   CodeVisitor visitMethod(int access,
                           String name,

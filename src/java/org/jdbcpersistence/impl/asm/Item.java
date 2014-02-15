@@ -35,7 +35,8 @@ package org.jdbcpersistence.impl.asm;
  *
  * @author Eric Bruneton
  */
-final class Item {
+final class Item
+{
   /**
    * Index of this item in the constant pool.
    */
@@ -99,7 +100,7 @@ final class Item {
    * Constructs a copy of the given item.
    *
    * @param index index of the item to be constructed.
-   * @param i the item that must be copied into the item to be constructed.
+   * @param i     the item that must be copied into the item to be constructed.
    */
   Item(final short index, final Item i)
   {
@@ -166,7 +167,7 @@ final class Item {
   /**
    * Sets this item to an item that do not hold a primitive value.
    *
-   * @param type the type of this item.
+   * @param type    the type of this item.
    * @param strVal1 first part of the value of this item.
    * @param strVal2 second part of the value of this item.
    * @param strVal3 third part of the value of this item.
@@ -204,7 +205,7 @@ final class Item {
    *
    * @param i the item to be compared to this one.
    * @return <tt>true</tt> if the given item if equal to this one,
-   *         <tt>false</tt> otherwise.
+   * <tt>false</tt> otherwise.
    */
   boolean isEqualTo(final Item i)
   {

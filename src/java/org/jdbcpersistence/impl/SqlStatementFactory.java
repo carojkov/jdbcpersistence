@@ -18,8 +18,10 @@ public class SqlStatementFactory
   public static final String makeInsert(MappedClass jdbcMap)
   {
     final StringBuffer sb = new StringBuffer("INSERT INTO ").append(
-      makeSchemaClause(jdbcMap)).
-      append(jdbcMap.getTableName()).append(" (");
+      makeSchemaClause(jdbcMap))
+                                                            .
+                                                              append(jdbcMap.getTableName())
+                                                            .append(" (");
     final StringBuffer values = new StringBuffer();
     MappedClass.MappedAttribute[] columns = jdbcMap.getColumns();
     final int l = columns.length;

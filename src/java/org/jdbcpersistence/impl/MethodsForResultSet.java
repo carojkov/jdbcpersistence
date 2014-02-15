@@ -254,7 +254,7 @@ class MethodsForResultSet
   }
 
   static final Method findGetter(Class type,
-                                        boolean useColumnNames)
+                                 boolean useColumnNames)
   {
     if (type.isPrimitive())
       type = JavaTypesMap.toWrapperMap.get(type);

@@ -60,8 +60,8 @@ public interface Persistor<T>
    *
    * @param batch array of <code>Object</code>s to insert
    * @return an array of update counts containing one element for each object
-   *         in the batch. The elements of the array are ordered according to
-   *         the order in which objects appeared in the batch.
+   * in the batch. The elements of the array are ordered according to
+   * the order in which objects appeared in the batch.
    * @throws SQLException                  any <code>SQLException</code> that should occur
    *                                       during the insert propogates up the call chain
    * @throws java.sql.BatchUpdateException any <code>BatchUpdateException</code>
@@ -90,8 +90,8 @@ public interface Persistor<T>
    *
    * @param batch array of <code>Object</code>s to update
    * @return an array of update counts containing one element for each object
-   *         in the batch. The elements of the array are ordered according to
-   *         the order in which objects appeared in the batch.
+   * in the batch. The elements of the array are ordered according to
+   * the order in which objects appeared in the batch.
    * @throws SQLException         any <code>SQLException</code> that should occur
    *                              during the insert propogates up the call chain
    * @throws BatchUpdateException any <code>BatchUpdateException</code> that
@@ -119,8 +119,8 @@ public interface Persistor<T>
    *
    * @param batch array of <code>Object</code>s to delete
    * @return an array of update counts containing one element for each object
-   *         in the batch. The elements of the array are ordered according to
-   *         the order in which objects appeared in the batch.
+   * in the batch. The elements of the array are ordered according to
+   * the order in which objects appeared in the batch.
    * @throws SQLException         any <code>SQLException</code> that should occur
    *                              during the insert propogates up the call chain
    * @throws BatchUpdateException any <code>BatchUpdateException</code> that
@@ -139,8 +139,8 @@ public interface Persistor<T>
    * @param primaryKey array of objects where each object represents a column
    *                   of a primary key in the order of columns in primary key
    * @return an instance of mapped entities with all the fields initialized with
-   *         the values read from the database or null if no such object was
-   *         found
+   * the values read from the database or null if no such object was
+   * found
    * @throws SQLException any <code>SQLException</code> that should occur
    *                      during the insert propogates up the call chain
    */

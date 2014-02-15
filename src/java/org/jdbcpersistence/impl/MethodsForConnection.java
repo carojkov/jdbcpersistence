@@ -31,7 +31,7 @@ class MethodsForConnection
   static {
     try {
       prepareStatement = Connection.class.getMethod("prepareStatement",
-                                                           new Class[]{String.class});
+                                                    new Class[]{String.class});
     } catch (Throwable t) {
       if (t instanceof RuntimeException) {
         throw (RuntimeException) t;

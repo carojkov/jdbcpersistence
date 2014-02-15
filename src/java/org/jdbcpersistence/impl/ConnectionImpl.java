@@ -25,349 +25,35 @@ import org.jdbcpersistence.Persistor;
 import org.jdbcpersistence.Query;
 import org.jdbcpersistence.ResultSetReader;
 
-import java.sql.Array;
 import java.sql.BatchUpdateException;
-import java.sql.Blob;
-import java.sql.CallableStatement;
-import java.sql.Clob;
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.NClob;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
-import java.sql.SQLClientInfoException;
 import java.sql.SQLException;
-import java.sql.SQLWarning;
-import java.sql.SQLXML;
-import java.sql.Savepoint;
-import java.sql.Statement;
-import java.sql.Struct;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.logging.Logger;
 
 /**
  * @author Alex Rojkov Date: 21-Aug-2005 Time: 4:05:49 PM
  */
-final class ConnectionImpl
+final class ConnectionImpl extends ConnectionWrapper
   implements org.jdbcpersistence.Connection
 {
+
   private static Logger _log
     = Logger.getLogger(ConnectionImpl.class.getName());
 
-  private final java.sql.Connection _conn;
   private final PersistenceImpl _jdbcPersistence;
 
   ConnectionImpl(java.sql.Connection conn,
                  PersistenceImpl jdbcPersistence)
   {
-    this._conn = conn;
+    super(conn);
+
     this._jdbcPersistence = jdbcPersistence;
-  }
-
-  Connection getUnderlyingConnection()
-  {
-    return _conn;
-  }
-
-  public Statement createStatement()
-    throws SQLException
-  {
-    return _conn.createStatement();
-  }
-
-  public PreparedStatement prepareStatement(String sql)
-    throws SQLException
-  {
-    return _conn.prepareStatement(sql);
-  }
-
-  public CallableStatement prepareCall(String sql)
-    throws SQLException
-  {
-    return _conn.prepareCall(sql);
-  }
-
-  public String nativeSQL(String sql)
-    throws SQLException
-  {
-    return _conn.nativeSQL(sql);
-  }
-
-  public void setAutoCommit(boolean autoCommit)
-    throws SQLException
-  {
-    _conn.setAutoCommit(autoCommit);
-  }
-
-  public boolean getAutoCommit()
-    throws SQLException
-  {
-    return _conn.getAutoCommit();
-  }
-
-  public boolean isClosed()
-    throws SQLException
-  {
-    return _conn.isClosed();
-  }
-
-  public boolean isValid(int timeout)
-    throws SQLException
-  {
-    return _conn.isValid(timeout);
-  }
-
-  public DatabaseMetaData getMetaData()
-    throws SQLException
-  {
-    return _conn.getMetaData();
-  }
-
-  public void setReadOnly(boolean readOnly)
-    throws SQLException
-  {
-    _conn.setReadOnly(readOnly);
-  }
-
-  public boolean isReadOnly()
-    throws SQLException
-  {
-    return _conn.isReadOnly();
-  }
-
-  public void setCatalog(String catalog)
-    throws SQLException
-  {
-    _conn.setCatalog(catalog);
-  }
-
-  public String getCatalog()
-    throws SQLException
-  {
-    return _conn.getCatalog();
-  }
-
-  public void setTransactionIsolation(int level)
-    throws SQLException
-  {
-    _conn.setTransactionIsolation(level);
-  }
-
-  public int getTransactionIsolation()
-    throws SQLException
-  {
-    return _conn.getTransactionIsolation();
-  }
-
-  public SQLWarning getWarnings()
-    throws SQLException
-  {
-    return _conn.getWarnings();
-  }
-
-  public void clearWarnings()
-    throws SQLException
-  {
-    _conn.clearWarnings();
-  }
-
-  public void setClientInfo(String name, String value)
-    throws SQLClientInfoException
-  {
-    _conn.setClientInfo(name, value);
-  }
-
-  public void setClientInfo(Properties properties)
-    throws SQLClientInfoException
-  {
-    _conn.setClientInfo(properties);
-  }
-
-  public String getClientInfo(String name)
-    throws SQLException
-  {
-    return _conn.getClientInfo(name);
-  }
-
-  public Properties getClientInfo()
-    throws SQLException
-  {
-    return _conn.getClientInfo();
-  }
-
-  public <T> T unwrap(Class<T> iface)
-    throws SQLException
-  {
-    return _conn.unwrap(iface);
-  }
-
-  public boolean isWrapperFor(Class<?> iface)
-    throws SQLException
-  {
-    return _conn.isWrapperFor(iface);
-  }
-
-  public Statement createStatement(int resultSetType, int resultSetConcurrency)
-    throws SQLException
-  {
-    return _conn.createStatement(resultSetType, resultSetConcurrency);
-  }
-
-  public Struct createStruct(String typeName, Object[] attributes)
-    throws SQLException
-  {
-    return _conn.createStruct(typeName, attributes);
-  }
-
-  public Clob createClob()
-    throws SQLException
-  {
-    return _conn.createClob();
-  }
-
-  public Blob createBlob()
-    throws SQLException
-  {
-    return _conn.createBlob();
-  }
-
-  public NClob createNClob()
-    throws SQLException
-  {
-    return _conn.createNClob();
-  }
-
-  public SQLXML createSQLXML()
-    throws SQLException
-  {
-    return _conn.createSQLXML();
-  }
-
-  public Array createArrayOf(String typeName, Object[] elements)
-    throws SQLException
-  {
-    return _conn.createArrayOf(typeName, elements);
-  }
-
-  public PreparedStatement prepareStatement(String sql,
-                                            int resultSetType,
-                                            int resultSetConcurrency)
-    throws SQLException
-  {
-    return _conn.prepareStatement(sql, resultSetType, resultSetConcurrency);
-  }
-
-  public CallableStatement prepareCall(String sql,
-                                       int resultSetType,
-                                       int resultSetConcurrency)
-    throws SQLException
-  {
-    return _conn.prepareCall(sql, resultSetType, resultSetConcurrency);
-  }
-
-  public Map getTypeMap()
-    throws SQLException
-  {
-    return _conn.getTypeMap();
-  }
-
-  public void setTypeMap(Map map)
-    throws SQLException
-  {
-    _conn.setTypeMap(map);
-  }
-
-  public void setHoldability(int holdability)
-    throws SQLException
-  {
-    _conn.setHoldability(holdability);
-  }
-
-  public int getHoldability()
-    throws SQLException
-  {
-    return _conn.getHoldability();
-  }
-
-  public Savepoint setSavepoint()
-    throws SQLException
-  {
-    return _conn.setSavepoint();
-  }
-
-  public Savepoint setSavepoint(String name)
-    throws SQLException
-  {
-    return _conn.setSavepoint(name);
-  }
-
-  public void rollback(Savepoint savepoint)
-    throws SQLException
-  {
-    _conn.rollback(savepoint);
-  }
-
-  public void releaseSavepoint(Savepoint savepoint)
-    throws SQLException
-  {
-    _conn.releaseSavepoint(savepoint);
-  }
-
-  public Statement createStatement(int resultSetType,
-                                   int resultSetConcurrency,
-                                   int resultSetHoldability)
-    throws SQLException
-  {
-    return _conn.createStatement(resultSetType,
-                                 resultSetConcurrency,
-                                 resultSetHoldability);
-  }
-
-  public PreparedStatement prepareStatement(String sql,
-                                            int resultSetType,
-                                            int resultSetConcurrency,
-                                            int resultSetHoldability)
-    throws SQLException
-  {
-    return _conn.prepareStatement(sql,
-                                  resultSetType,
-                                  resultSetConcurrency,
-                                  resultSetHoldability);
-  }
-
-  public CallableStatement prepareCall(String sql,
-                                       int resultSetType,
-                                       int resultSetConcurrency,
-                                       int resultSetHoldability)
-    throws SQLException
-  {
-    return _conn.prepareCall(sql,
-                             resultSetType,
-                             resultSetConcurrency,
-                             resultSetHoldability);
-  }
-
-  public PreparedStatement prepareStatement(String sql, int autoGeneratedKeys)
-    throws SQLException
-  {
-    return _conn.prepareStatement(sql, autoGeneratedKeys);
-  }
-
-  public PreparedStatement prepareStatement(String sql, int[] columnIndexes)
-    throws SQLException
-  {
-    return _conn.prepareStatement(sql, columnIndexes);
-  }
-
-  public PreparedStatement prepareStatement(String sql, String[] columnNames)
-    throws SQLException
-  {
-    return _conn.prepareStatement(sql, columnNames);
   }
 
   public int insert(Object object)
@@ -634,18 +320,6 @@ final class ConnectionImpl
     } finally {
       SQLUtils.close(null, ps);
     }
-  }
-
-  public void commit()
-    throws SQLException
-  {
-    _conn.commit();
-  }
-
-  public void rollback()
-    throws SQLException
-  {
-    _conn.rollback();
   }
 
   public void close()

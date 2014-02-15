@@ -20,26 +20,26 @@ public class T0004 extends BaseTest
   @Before
   public void myInit() throws SQLException
   {
-    dropCreate("DROP TABLE T0003",
-               "CREATE TABLE T0003 (ID INT, DATA VARCHAR(16), PRIMARY KEY(ID))");
+    dropCreate("DROP TABLE T0004",
+               "CREATE TABLE T0004 (ID INT, DATA VARCHAR(16), PRIMARY KEY(ID))");
   }
 
   @Test
   public void insert() throws SQLException
   {
-    _persistence.register(T0003Bean.class);
+    _persistence.register(T0004Bean.class);
     Connection conn = _persistence.getConnection();
-    T0003Bean bean = _persistence.newInstance(T0003Bean.class);
+    T0004Bean bean = _persistence.newInstance(T0004Bean.class);
     bean.setId(1);
-    bean.setData("T0003");
+    bean.setData("T0004");
     conn.insert(bean);
     conn.commit();
 
-    bean = (T0003Bean) conn.load(T0003Bean.class, 1);
+    bean = (T0004Bean) conn.load(T0004Bean.class, 1);
 
     Assert.assertNotNull(bean);
     Assert.assertEquals(1, bean.getId());
-    Assert.assertEquals("T0003", bean.getData());
+    Assert.assertEquals("T0004", bean.getData());
 
     conn.close();
   }
@@ -47,22 +47,22 @@ public class T0004 extends BaseTest
   @Test
   public void update() throws SQLException
   {
-    _persistence.register(T0003Bean.class);
+    _persistence.register(T0004Bean.class);
 
-    T0003Bean bean = _persistence.newInstance(T0003Bean.class);
+    T0004Bean bean = _persistence.newInstance(T0004Bean.class);
     bean.setId(1);
-    bean.setData("T0003");
+    bean.setData("T0004");
 
     Connection conn = _persistence.getConnection();
     conn.insert(bean);
 
-    bean.setData("new T0003");
+    bean.setData("new T0004");
     conn.update(bean);
 
-    bean = conn.load(T0003Bean.class, 1);
+    bean = conn.load(T0004Bean.class, 1);
     Assert.assertNotNull(bean);
     Assert.assertEquals(1, bean.getId());
-    Assert.assertEquals("new T0003", bean.getData());
+    Assert.assertEquals("new T0004", bean.getData());
 
     conn.close();
   }
@@ -70,18 +70,18 @@ public class T0004 extends BaseTest
   @Test
   public void delete() throws SQLException
   {
-    _persistence.register(T0003Bean.class);
+    _persistence.register(T0004Bean.class);
     Connection conn = _persistence.getConnection();
-    T0003Bean bean = _persistence.newInstance(T0003Bean.class);
+    T0004Bean bean = _persistence.newInstance(T0004Bean.class);
     bean.setId(1);
-    bean.setData("T0003");
+    bean.setData("T0004");
     conn.insert(bean);
     conn.commit();
 
     conn.delete(bean);
     conn.commit();
 
-    bean = (T0003Bean) conn.load(T0003Bean.class, new Integer(1));
+    bean = (T0004Bean) conn.load(T0004Bean.class, new Integer(1));
 
     Assert.assertNull(bean);
 
@@ -94,11 +94,11 @@ public class T0004 extends BaseTest
 
   }
 
-  @Entity(name = "T0003")
-  public static abstract class T0003Bean
+  @Entity(name = "T0004")
+  public static abstract class T0004Bean
   {
-    private int id;
-    private String data;
+    protected int id;
+    protected String data;
 
     @Column(name = "ID")
     @Id()
