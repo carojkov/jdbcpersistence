@@ -21,6 +21,7 @@
 
 package org.jdbcpersistence.impl;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,22 +30,24 @@ import java.util.Map;
  */
 class JavaTypesMap
 {
-  public static final Map<Class,Class> toWrapperMap
-    = new HashMap<Class,Class>();
+  public static final Map<Class,Class> toWrapperMap;
 
-  static {
-    initialize();
+  public static Class toWrapper(Class primitive)
+  {
+    return toWrapperMap.get(primitive);
   }
 
-  private static void initialize()
-  {
-    toWrapperMap.put(boolean.class, Boolean.class);
-    toWrapperMap.put(byte.class, Byte.class);
-    toWrapperMap.put(short.class, Short.class);
-    toWrapperMap.put(char.class, Character.class);
-    toWrapperMap.put(int.class, Integer.class);
-    toWrapperMap.put(long.class, Long.class);
-    toWrapperMap.put(float.class, Float.class);
-    toWrapperMap.put(double.class, Double.class);
+  static {
+    Map<Class,Class> map = new HashMap<>();
+    map.put(boolean.class, Boolean.class);
+    map.put(byte.class, Byte.class);
+    map.put(short.class, Short.class);
+    map.put(char.class, Character.class);
+    map.put(int.class, Integer.class);
+    map.put(long.class, Long.class);
+    map.put(float.class, Float.class);
+    map.put(double.class, Double.class);
+
+    toWrapperMap = Collections.unmodifiableMap(map);
   }
 }

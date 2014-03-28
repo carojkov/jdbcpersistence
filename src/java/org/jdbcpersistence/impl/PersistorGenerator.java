@@ -909,13 +909,13 @@ final class PersistorGenerator implements Constants
       mw.visitIntInsn(SIPUSH, colPos + 1);
     }
     final Method getterFromResultSet
-      = MethodsForResultSet.findGetter(
-      dateTimeClass,
-      useColumnName);
+      = MethodsForResultSet.findGetter(dateTimeClass, useColumnName);
+
     mw.visitMethodInsn(INVOKEINTERFACE,
                        Type.getInternalName(java.sql.ResultSet.class),
                        getterFromResultSet.getName(),
                        Type.getMethodDescriptor(getterFromResultSet));
+
     mw.visitInsn(DUP);
     mw.visitVarInsn(ASTORE, dateIndex);
     Label nullHandler = new Label();

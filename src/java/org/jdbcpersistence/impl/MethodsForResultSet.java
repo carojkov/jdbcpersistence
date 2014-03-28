@@ -257,7 +257,7 @@ class MethodsForResultSet
                                  boolean useColumnNames)
   {
     if (type.isPrimitive())
-      type = JavaTypesMap.toWrapperMap.get(type);
+      type = JavaTypesMap.toWrapper(type);
 
     Method method;
 

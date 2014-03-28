@@ -29,6 +29,8 @@ import java.io.Reader;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.lang.reflect.Method;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * @author Alex Rojkov Date: 20-Aug-2005 Time: 1:25:18 PM
@@ -38,6 +40,7 @@ final class IOUtils
   public final static int BUFFER_SIZE = 4096;
   public final static Method M_READ_FROM_READER_TO_STRING;
   public final static Method M_READ_FROM_INPUTSTREAM_TO_BYTES;
+  public final static Logger log = Logger.getLogger(IOUtils.class.getName());
 
   static {
     try {
@@ -95,6 +98,7 @@ final class IOUtils
       try {
         closeable.close();
       } catch (Throwable e) {
+        log.log(Level.WARNING, e.getMessage(), e);
       }
     }
   }
@@ -106,6 +110,7 @@ final class IOUtils
         try {
           c.close();
         } catch (Throwable e) {
+          log.log(Level.WARNING, e.getMessage(), e);
         }
       }
     }
