@@ -12,9 +12,6 @@ import test.BaseTest;
 
 import java.sql.SQLException;
 
-/**
- * title: float->Types.FLOAT
- */
 public class T0006 extends BaseTest
 {
   @Before

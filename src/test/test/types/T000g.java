@@ -12,9 +12,6 @@ import test.BaseTest;
 
 import java.sql.SQLException;
 
-/**
- * title: byte->Types.TINYINT
- */
 public class T000g extends BaseTest
 {
   @Before

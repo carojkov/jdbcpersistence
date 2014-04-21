@@ -21,9 +21,6 @@
 
 package org.jdbcpersistence.impl.gen;
 
-/**
- * Author Alex Rojkov
- */
 public interface Generator
 {
   public void generateHead();

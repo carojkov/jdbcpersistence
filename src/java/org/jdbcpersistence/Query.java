@@ -37,12 +37,13 @@ package org.jdbcpersistence;
  * statement with <code>JDBCQuery</code> using <code>addFlavour</code> method.
  * <BR><BR>
  *
- * @author Alex Rojkov Date: 21-Aug-2005 Time: 9:19:05 PM
  * @see Connection#executeBatchUpdate(Query, Object[]...)
  * @see Connection#executeQuery(Query, java.util.List, Object...)
  * @see Connection#executeUpdate(Query, Object[])
  * @see Persistence
+ *
  */
+
 public class Query<T>
 {
   protected String _query;

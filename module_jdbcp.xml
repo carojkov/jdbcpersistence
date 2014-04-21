@@ -40,7 +40,6 @@
       location="${module.jdbcp.basedir}/../../../jars/hsqldb/lib/hsqldb.jar"/>
   </path>
 
-
   <patternset id="excluded.from.module.jdbcp">
     <patternset refid="ignored.files"/>
   </patternset>
@@ -59,7 +58,6 @@
       <include name="src/utils"/>
     </dirset>
   </path>
-
 
   <target name="compile.module.jdbcp"
           depends="compile.module.jdbcp.production,compile.module.jdbcp.tests"

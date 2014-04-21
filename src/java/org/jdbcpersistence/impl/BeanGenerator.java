@@ -44,9 +44,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Author Alex Rojkov
- */
 class BeanGenerator implements Constants
 {
   private ClassWriter _classWriter;

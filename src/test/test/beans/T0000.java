@@ -12,9 +12,6 @@ import test.BaseTest;
 
 import java.sql.SQLException;
 
-/**
- * title: interface
- */
 public class T0000 extends BaseTest
 {
   @Before

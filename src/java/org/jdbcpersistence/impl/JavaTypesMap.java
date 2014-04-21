@@ -25,9 +25,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * @author Alex Rojkov
- */
 class JavaTypesMap
 {
   public static final Map<Class,Class> toWrapperMap;

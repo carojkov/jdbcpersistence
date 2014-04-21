@@ -9,9 +9,6 @@ import test.BaseTest;
 
 import java.sql.SQLException;
 
-/**
- * title: @Id.value > PK.size()
- */
 public class T0002 extends BaseTest
 {
   @Test

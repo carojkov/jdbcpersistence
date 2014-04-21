@@ -13,9 +13,6 @@ import test.BaseTest;
 import java.math.BigDecimal;
 import java.sql.SQLException;
 
-/**
- * title: java.math.BigDecimal->Types.DECIMAL
- */
 public class T000h extends BaseTest
 {
   @Before

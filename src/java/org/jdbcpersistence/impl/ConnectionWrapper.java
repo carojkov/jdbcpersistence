@@ -40,10 +40,6 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.Executor;
 
-/**
- * Created by Alex Rojkov on 2/14/2014.
- */
-
 class ConnectionWrapper implements Connection
 {
   protected final Connection _conn;

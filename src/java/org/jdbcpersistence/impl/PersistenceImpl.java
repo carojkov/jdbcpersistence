@@ -45,9 +45,6 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- * @author Alex Rojkov Date: 21-Jul-2005 Time: 10:38:55 PM
- */
 public final class PersistenceImpl implements Persistence
 {
   public static final String DB_ORACLE = "oracle";

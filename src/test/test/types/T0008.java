@@ -12,9 +12,6 @@ import test.BaseTest;
 
 import java.sql.SQLException;
 
-/**
- * title: double->Types.DOUBLE
- */
 public class T0008 extends BaseTest
 {
   @Before

@@ -32,9 +32,6 @@ import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * @author Alex Rojkov Date: 20-Aug-2005 Time: 6:04:52 PM
- */
 final class MethodsForPreparedStatement
 {
   public static Method setBoolean;

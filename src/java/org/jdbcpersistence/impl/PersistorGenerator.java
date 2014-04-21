@@ -54,9 +54,6 @@ import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @author Alex Rojkov Date: 6-Aug-2005 Time: 10:51:06 AM
- */
 public final class PersistorGenerator implements Constants
 {
   private static final String[] INSERT_DELETE_UPDATE_EXCEPTIONS = new String[]{

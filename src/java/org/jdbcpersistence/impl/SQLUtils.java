@@ -29,9 +29,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Types;
 
-/**
- * @author Alex Rojkov Date: 8-Aug-2005 Time: 8:17:23 AM
- */
 public final class SQLUtils
 {
   public static void printTableDescriptor(MappedClass jdbcMap)

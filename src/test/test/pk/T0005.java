@@ -13,9 +13,6 @@ import test.BaseTest;
 import java.sql.SQLException;
 import java.sql.Types;
 
-/**
- * title: Single column PK + 2 Columns
- */
 public class T0005 extends BaseTest
 {
   @Before

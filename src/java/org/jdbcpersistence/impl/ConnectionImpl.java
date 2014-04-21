@@ -36,9 +36,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
-/**
- * @author Alex Rojkov Date: 21-Aug-2005 Time: 4:05:49 PM
- */
 final class ConnectionImpl extends ConnectionWrapper
   implements org.jdbcpersistence.Connection
 {

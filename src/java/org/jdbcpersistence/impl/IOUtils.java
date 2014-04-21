@@ -32,9 +32,6 @@ import java.lang.reflect.Method;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- * @author Alex Rojkov Date: 20-Aug-2005 Time: 1:25:18 PM
- */
 final class IOUtils
 {
   public final static int BUFFER_SIZE = 4096;

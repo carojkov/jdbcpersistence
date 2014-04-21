@@ -12,9 +12,6 @@ import test.BaseTest;
 
 import java.sql.SQLException;
 
-/**
- * title: boolean->Types.BOOLEAN
- */
 public class T000a extends BaseTest
 {
   @Before

@@ -23,9 +23,6 @@ package org.jdbcpersistence.impl;
 
 import java.io.*;
 
-/**
- * Author Alex Rojkov Date: 1-Oct-2005 Time: 11:18:22 AM
- */
 class CodeGenUtils
 {
   public final static String getShortName(final Class clazz)

@@ -12,9 +12,6 @@ import test.BaseTest;
 
 import java.sql.SQLException;
 
-/**
- * title: java.lang.Short->Types.Short
- */
 public class T000b extends BaseTest
 {
   @Before

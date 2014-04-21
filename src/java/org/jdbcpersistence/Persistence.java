@@ -107,7 +107,6 @@ import java.util.Properties;
  * <p/>
  * An instance of <code>Persistence</code> is thread safe.
  *
- * @author Alex Rojkov Date: 21-Jul-2005 Time: 10:20:35 PM
  * @see MappedClass
  * @see PersistenceFactory#newJdbcPersistence()
  * @see Persistor

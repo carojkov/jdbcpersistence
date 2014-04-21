@@ -34,7 +34,6 @@ import org.jdbcpersistence.impl.PersistenceImpl;
  * application it is to be held on to by the application for the rest of
  * application's lifecycle.
  *
- * @author Alex Rojkov Date: 21-Jul-2005 Time: 10:36:03 PM
  * @see Persistence
  */
 public final class PersistenceFactory

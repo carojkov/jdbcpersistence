@@ -41,7 +41,6 @@ import java.util.List;
  * </pre>
  * <p/>
  *
- * @author Alex Rojkov Date: 21-Aug-2005 Time: 10:26:28 AM
  * @see Persistence#getConnection()
  * @see Query
  */

@@ -11,6 +11,7 @@ import java.util.List;
  *
  * @see Query
  */
+
 public interface ResultSetReader<T>
 {
   /**

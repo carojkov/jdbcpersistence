@@ -51,7 +51,6 @@ import java.util.Set;
  * </code>
  * </pre>
  *
- * @author Alex Rojkov
  * @see org.jdbcpersistence.Persistence#register(Class
  * @see org.jdbcpersistence.MappedClass.MappedAttribute
  */

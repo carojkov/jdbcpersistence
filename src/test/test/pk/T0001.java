@@ -12,9 +12,6 @@ import test.BaseTest;
 
 import java.sql.SQLException;
 
-/**
- * title: Double column PK with Entity@complete=true
- */
 public class T0001 extends BaseTest
 {
   @Before
