@@ -1,6 +1,6 @@
 /**
  * JDBCPersistence framework for java
- *   Copyright (C) 2004-2010 Alex Rojkov
+ *   Copyright (C) 2004-2014 Alex Rojkov
  *
  *    This library is free software; you can redistribute it and/or
  *    modify it under the terms of the GNU Lesser General Public
@@ -26,6 +26,7 @@ import org.jdbcpersistence.impl.asm.CodeVisitor;
 import org.jdbcpersistence.impl.asm.Constants;
 import org.jdbcpersistence.impl.asm.Label;
 import org.jdbcpersistence.impl.asm.Type;
+import org.jdbcpersistence.impl.gen.Generator;
 
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
@@ -161,9 +162,11 @@ class BeanGenerator implements Constants
                                                     Type.getMethodDescriptor(
                                                       Type.getType(
                                                         void.class),
-                                                      new Type[]{}),
+                                                      new Type[]{}
+                                                    ),
                                                     null,
-                                                    null);
+                                                    null
+    );
     mw.visitVarInsn(ALOAD, 0);
     mw.visitMethodInsn(INVOKESPECIAL,
                        Type.getInternalName(_superClass),
@@ -215,7 +218,8 @@ class BeanGenerator implements Constants
                                               method.getName(),
                                               Type.getMethodDescriptor(method),
                                               toInternalNames(method.getExceptionTypes()),
-                                              null);
+                                              null
+    );
     Class type = getClassOfMethodSubject(method);
     if (isPrimitive(method)) {
       if (isReader(method)) {
@@ -273,7 +277,8 @@ class BeanGenerator implements Constants
                        Type.getInternalName(OutputStream.class),
                        "write",
                        Type.getMethodDescriptor(Type.VOID_TYPE,
-                                                new Type[]{Type.getType(byte[].class)}));
+                                                new Type[]{Type.getType(byte[].class)})
+    );
     mw.visitLabel(l);
     mw.visitInsn(RETURN);
     mw.visitMaxs(0, 0);
@@ -304,7 +309,8 @@ class BeanGenerator implements Constants
                        Type.getInternalName(InputStream.class),
                        "read",
                        Type.getMethodDescriptor(Type.INT_TYPE,
-                                                new Type[]{Type.getType(byte[].class)}));
+                                                new Type[]{Type.getType(byte[].class)})
+    );
     int readBytesLIdx = idx++;
     mw.visitInsn(DUP);
     mw.visitVarInsn(ISTORE, readBytesLIdx);
@@ -320,7 +326,9 @@ class BeanGenerator implements Constants
                        Type.getMethodDescriptor(Type.VOID_TYPE,
                                                 new Type[]{Type.getType(byte[].class),
                                                            Type.getType(int.class),
-                                                           Type.getType(int.class)}));
+                                                           Type.getType(int.class)}
+                       )
+    );
     mw.visitJumpInsn(GOTO, startWhile);
     mw.visitLabel(afterAWhile);
     mw.visitVarInsn(ALOAD, 0);
@@ -329,7 +337,8 @@ class BeanGenerator implements Constants
                        Type.getInternalName(ByteArrayOutputStream.class),
                        "toByteArray",
                        Type.getMethodDescriptor(Type.getType(byte[].class),
-                                                new Type[]{}));
+                                                new Type[]{})
+    );
     mw.visitFieldInsn(PUTFIELD,
                       className,
                       fieldName,
@@ -360,7 +369,8 @@ class BeanGenerator implements Constants
                        Type.getInternalName(Writer.class),
                        "write",
                        Type.getMethodDescriptor(Type.VOID_TYPE,
-                                                new Type[]{Type.getType(String.class)}));
+                                                new Type[]{Type.getType(String.class)})
+    );
     mw.visitLabel(l);
     mw.visitInsn(RETURN);
     mw.visitMaxs(0, 0);
@@ -391,7 +401,8 @@ class BeanGenerator implements Constants
                        Type.getInternalName(Reader.class),
                        "read",
                        Type.getMethodDescriptor(Type.INT_TYPE,
-                                                new Type[]{Type.getType(char[].class)}));
+                                                new Type[]{Type.getType(char[].class)})
+    );
     int readCharsLIdx = idx++;
     mw.visitInsn(DUP);
     mw.visitVarInsn(ISTORE, readCharsLIdx);
@@ -407,7 +418,9 @@ class BeanGenerator implements Constants
                        Type.getMethodDescriptor(Type.VOID_TYPE,
                                                 new Type[]{Type.getType(char[].class),
                                                            Type.getType(int.class),
-                                                           Type.getType(int.class)}));
+                                                           Type.getType(int.class)}
+                       )
+    );
     mw.visitJumpInsn(GOTO, startWhile);
     mw.visitLabel(afterAWhile);
     mw.visitVarInsn(ALOAD, 0);
@@ -416,12 +429,14 @@ class BeanGenerator implements Constants
                        Type.getInternalName(StringWriter.class),
                        "getBuffer",
                        Type.getMethodDescriptor(Type.getType(StringBuffer.class),
-                                                new Type[]{}));
+                                                new Type[]{})
+    );
     mw.visitMethodInsn(INVOKEVIRTUAL,
                        Type.getInternalName(StringBuffer.class),
                        "toString",
                        Type.getMethodDescriptor(Type.getType(String.class),
-                                                new Type[]{}));
+                                                new Type[]{})
+    );
     mw.visitFieldInsn(PUTFIELD,
                       className,
                       fieldName,

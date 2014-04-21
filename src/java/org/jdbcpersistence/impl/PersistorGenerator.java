@@ -1,6 +1,6 @@
 /**
  * JDBCPersistence framework for java
- *   Copyright (C) 2004-2010 Alex Rojkov
+ *   Copyright (C) 2004-2014 Alex Rojkov
  *
  *    This library is free software; you can redistribute it and/or
  *    modify it under the terms of the GNU Lesser General Public
@@ -28,6 +28,7 @@ import org.jdbcpersistence.impl.asm.CodeVisitor;
 import org.jdbcpersistence.impl.asm.Constants;
 import org.jdbcpersistence.impl.asm.Label;
 import org.jdbcpersistence.impl.asm.Type;
+import org.jdbcpersistence.impl.gen.Generator;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -82,32 +83,40 @@ final class PersistorGenerator implements Constants
     try {
       M_JDBCP_INSERT = Persistor.class.getMethod("insert",
                                                  new Class[]{Connection.class,
-                                                             Object.class});
+                                                             Object.class}
+      );
       M_JDBCP_BATCH_INSERT = Persistor.class.getMethod("insert",
                                                        new Class[]{
                                                          Connection.class,
-                                                         Object[].class});
+                                                         Object[].class}
+      );
       M_JDBCP_UPDATE = Persistor.class.getMethod("update",
                                                  new Class[]{Connection.class,
-                                                             Object.class});
+                                                             Object.class}
+      );
       M_JDBCP_BATCH_UPDATE = Persistor.class.getMethod("update",
                                                        new Class[]{
                                                          Connection.class,
-                                                         Object[].class});
+                                                         Object[].class}
+      );
       M_JDBCP_DELETE = Persistor.class.getMethod("delete",
                                                  new Class[]{Connection.class,
-                                                             Object.class});
+                                                             Object.class}
+      );
       M_JDBCP_BATCH_DELETE = Persistor.class.getMethod("delete",
                                                        new Class[]{
                                                          Connection.class,
-                                                         Object[].class});
+                                                         Object[].class}
+      );
       M_JDBCP_LOAD = Persistor.class.getMethod("load",
                                                new Class[]{Connection.class,
-                                                           Object[].class});
+                                                           Object[].class}
+      );
       M_JDBCP_LOAD_FROM_RS = ResultSetReader.class.getMethod("read",
                                                              new Class[]{
                                                                ResultSet.class,
-                                                               List.class});
+                                                               List.class}
+      );
     } catch (NoSuchMethodException e) {
       throw new IllegalStateException(e);
     }
@@ -121,14 +130,16 @@ final class PersistorGenerator implements Constants
     final CodeVisitor mw = cw.visitMethod(ACC_PUBLIC,
                                           "read",
                                           Type.getMethodDescriptor(Type.getType(
-                                            java.util.List.class),
+                                                                     java.util.List.class),
                                                                    new Type[]{
                                                                      Type.getType(
                                                                        ResultSet.class),
                                                                      Type.getType(
-                                                                       List.class)}),
+                                                                       List.class)}
+                                          ),
                                           INSERT_DELETE_UPDATE_EXCEPTIONS,
-                                          null);
+                                          null
+    );
     final Label methodStart = new Label();
     final Label methodEnd = new Label();
     mw.visitLabel(methodStart);
@@ -189,7 +200,8 @@ final class PersistorGenerator implements Constants
                        Type.getInternalName(java.util.List.class),
                        "add",
                        Type.getMethodDescriptor(Type.BOOLEAN_TYPE,
-                                                new Type[]{Type.getType(Object.class)}));
+                                                new Type[]{Type.getType(Object.class)})
+    );
     mw.visitInsn(POP);
     mw.visitJumpInsn(GOTO, whileStart);
     //mw.visitInsn(NOP);
@@ -224,7 +236,9 @@ final class PersistorGenerator implements Constants
                        "<init>",
                        Type.getMethodDescriptor(Type.VOID_TYPE,
                                                 new Type[]{Type.getType(
-                                                  Throwable.class)}));
+                                                  Throwable.class)}
+                       )
+    );
     final int persExcIdx = codeInfo._varindx++;
     mw.visitVarInsn(ASTORE, persExcIdx);
     mw.visitVarInsn(ALOAD, persExcIdx);
@@ -272,17 +286,16 @@ final class PersistorGenerator implements Constants
                                   final MappedClass jdbcMap)
   {
     final int valueArrayIdx = 2;
-    final CodeVisitor mw = cw.visitMethod(ACC_PUBLIC,
-                                          "load",
-                                          Type.getMethodDescriptor(Type.getType(
-                                            Object.class),
-                                                                   new Type[]{
-                                                                     Type.getType(
-                                                                       Connection.class),
-                                                                     Type.getType(
-                                                                       Object[].class)}),
-                                          INSERT_DELETE_UPDATE_EXCEPTIONS,
-                                          null);
+    final CodeVisitor mw
+      = cw.visitMethod(ACC_PUBLIC, "load",
+                       Type.getMethodDescriptor(Type.getType(Object.class),
+                                                new Type[]{Type.getType(
+                                                  Connection.class), Type.getType(
+                                                  Object[].class)}
+                       ),
+                       INSERT_DELETE_UPDATE_EXCEPTIONS,
+                       null
+    );
     if (jdbcMap.getIdentifyingColumns().length == 0) {
       writeThrowNoPKException(mw, jdbcMap);
       return;
@@ -440,7 +453,9 @@ final class PersistorGenerator implements Constants
                        "<init>",
                        Type.getMethodDescriptor(Type.VOID_TYPE,
                                                 new Type[]{Type.getType(
-                                                  Throwable.class)}));
+                                                  Throwable.class)}
+                       )
+    );
     final int persExcIdx = codeInfo._varindx++;
     mw.visitVarInsn(ASTORE, persExcIdx);
     mw.visitVarInsn(ALOAD, persExcIdx);
@@ -617,7 +632,8 @@ final class PersistorGenerator implements Constants
         getter +
         "].\n If this columnName is a CLOB or a BLOB please refer to the manual "
         +
-        "for detail of handling these columns");
+        "for detail of handling these columns"
+      );
     }
   }
 
@@ -818,7 +834,8 @@ final class PersistorGenerator implements Constants
       throw new RuntimeException(
         "Type '" +
         propertyType.getName() +
-        "' is not supported in writeSetBeanPrimitiveWrapperProperty");
+        "' is not supported in writeSetBeanPrimitiveWrapperProperty"
+      );
 
     mw.visitVarInsn(ALOAD, rsIdx);
     mw.visitMethodInsn(INVOKEINTERFACE,
@@ -865,7 +882,9 @@ final class PersistorGenerator implements Constants
                        "<init>",
                        Type.getMethodDescriptor(Type.VOID_TYPE,
                                                 new Type[]{Type.getType(
-                                                  constrParam)}));
+                                                  constrParam)}
+                       )
+    );
 
     mw.visitMethodInsn(INVOKEVIRTUAL,
                        Type.getInternalName(cl),
@@ -932,7 +951,8 @@ final class PersistorGenerator implements Constants
                        Type.getInternalName(java.util.Date.class),
                        "<init>",
                        Type.getMethodDescriptor(Type.VOID_TYPE,
-                                                new Type[]{Type.LONG_TYPE}));
+                                                new Type[]{Type.LONG_TYPE})
+    );
     Method setter = column.getSetter();
     mw.visitMethodInsn(INVOKEVIRTUAL,
                        Type.getInternalName(cl),
@@ -1007,7 +1027,8 @@ final class PersistorGenerator implements Constants
                          Type.getInternalName(ResultSet.class),
                          MethodsForResultSet.getCharacterStreamByColumnName
                            .getName(),
-                         Type.getMethodDescriptor(MethodsForResultSet.getCharacterStreamByColumnName));
+                         Type.getMethodDescriptor(MethodsForResultSet.getCharacterStreamByColumnName)
+      );
     }
     else {
       mw.visitIntInsn(SIPUSH, colPos + 1);
@@ -1015,7 +1036,8 @@ final class PersistorGenerator implements Constants
                          Type.getInternalName(ResultSet.class),
                          MethodsForResultSet.getCharacterStreamByColumnIndex
                            .getName(),
-                         Type.getMethodDescriptor(MethodsForResultSet.getCharacterStreamByColumnIndex));
+                         Type.getMethodDescriptor(MethodsForResultSet.getCharacterStreamByColumnIndex)
+      );
     }
     mw.visitInsn(DUP);
     mw.visitVarInsn(ASTORE, charStreamIdx);
@@ -1059,7 +1081,8 @@ final class PersistorGenerator implements Constants
                          Type.getInternalName(ResultSet.class),
                          MethodsForResultSet.getBinaryStreamByColumnName
                            .getName(),
-                         Type.getMethodDescriptor(MethodsForResultSet.getBinaryStreamByColumnName));
+                         Type.getMethodDescriptor(MethodsForResultSet.getBinaryStreamByColumnName)
+      );
     }
     else {
       mw.visitIntInsn(SIPUSH, colPos + 1);
@@ -1067,7 +1090,8 @@ final class PersistorGenerator implements Constants
                          Type.getInternalName(ResultSet.class),
                          MethodsForResultSet.getBinaryStreamByColumnIndex
                            .getName(),
-                         Type.getMethodDescriptor(MethodsForResultSet.getBinaryStreamByColumnIndex));
+                         Type.getMethodDescriptor(MethodsForResultSet.getBinaryStreamByColumnIndex)
+      );
     }
     mw.visitInsn(DUP);
     mw.visitVarInsn(ASTORE, binStreamIdx);
@@ -1224,7 +1248,8 @@ final class PersistorGenerator implements Constants
                          Type.getInternalName(Boolean.class),
                          "booleanValue",
                          Type.getMethodDescriptor(Type.BOOLEAN_TYPE,
-                                                  new Type[]{}));
+                                                  new Type[]{})
+      );
     }
     else if (returnType == char.class) {
       mw.visitTypeInsn(CHECKCAST, Type.getInternalName(Character.class));
@@ -1232,7 +1257,8 @@ final class PersistorGenerator implements Constants
                          Type.getInternalName(Character.class),
                          "charValue",
                          Type.getMethodDescriptor(Type.CHAR_TYPE,
-                                                  new Type[]{}));
+                                                  new Type[]{})
+      );
     }
     else if (returnType == byte.class) {
       mw.visitTypeInsn(CHECKCAST, Type.getInternalName(Byte.class));
@@ -1240,7 +1266,8 @@ final class PersistorGenerator implements Constants
                          Type.getInternalName(Byte.class),
                          "byteValue",
                          Type.getMethodDescriptor(Type.BYTE_TYPE,
-                                                  new Type[]{}));
+                                                  new Type[]{})
+      );
     }
     else if (returnType == short.class) {
       mw.visitTypeInsn(CHECKCAST, Type.getInternalName(Short.class));
@@ -1248,7 +1275,8 @@ final class PersistorGenerator implements Constants
                          Type.getInternalName(Short.class),
                          "shortValue",
                          Type.getMethodDescriptor(Type.SHORT_TYPE,
-                                                  new Type[]{}));
+                                                  new Type[]{})
+      );
     }
     else if (returnType == int.class) {
       mw.visitTypeInsn(CHECKCAST, Type.getInternalName(Integer.class));
@@ -1263,7 +1291,8 @@ final class PersistorGenerator implements Constants
                          Type.getInternalName(Long.class),
                          "longValue",
                          Type.getMethodDescriptor(Type.LONG_TYPE,
-                                                  new Type[]{}));
+                                                  new Type[]{})
+      );
     }
     else if (returnType == float.class) {
       mw.visitTypeInsn(CHECKCAST, Type.getInternalName(Float.class));
@@ -1271,7 +1300,8 @@ final class PersistorGenerator implements Constants
                          Type.getInternalName(Float.class),
                          "floatValue",
                          Type.getMethodDescriptor(Type.FLOAT_TYPE,
-                                                  new Type[]{}));
+                                                  new Type[]{})
+      );
     }
     else if (returnType == double.class) {
       mw.visitTypeInsn(CHECKCAST, Type.getInternalName(Double.class));
@@ -1279,7 +1309,8 @@ final class PersistorGenerator implements Constants
                          Type.getInternalName(Double.class),
                          "doubleValue",
                          Type.getMethodDescriptor(Type.DOUBLE_TYPE,
-                                                  new Type[]{}));
+                                                  new Type[]{})
+      );
     }
     mw.visitMethodInsn(INVOKEVIRTUAL,
                        Type.getInternalName(cl),
@@ -1343,7 +1374,8 @@ final class PersistorGenerator implements Constants
         getter +
         "].\n If this columnName is a CLOB or a BLOB please refer to the manual "
         +
-        "for detail of handling these columns");
+        "for detail of handling these columns"
+      );
     }
   }
 
@@ -1364,7 +1396,8 @@ final class PersistorGenerator implements Constants
                          Type.getInternalName(Boolean.class),
                          "booleanValue",
                          Type.getMethodDescriptor(Type.BOOLEAN_TYPE,
-                                                  new Type[]{}));
+                                                  new Type[]{})
+      );
     }
     else if (returnType == char.class) {
       mw.visitTypeInsn(CHECKCAST, Type.getInternalName(Character.class));
@@ -1372,7 +1405,8 @@ final class PersistorGenerator implements Constants
                          Type.getInternalName(Character.class),
                          "charValue",
                          Type.getMethodDescriptor(Type.CHAR_TYPE,
-                                                  new Type[]{}));
+                                                  new Type[]{})
+      );
     }
     else if (returnType == byte.class) {
       mw.visitTypeInsn(CHECKCAST, Type.getInternalName(Byte.class));
@@ -1380,7 +1414,8 @@ final class PersistorGenerator implements Constants
                          Type.getInternalName(Byte.class),
                          "byteValue",
                          Type.getMethodDescriptor(Type.BYTE_TYPE,
-                                                  new Type[]{}));
+                                                  new Type[]{})
+      );
     }
     else if (returnType == short.class) {
       mw.visitTypeInsn(CHECKCAST, Type.getInternalName(Short.class));
@@ -1388,7 +1423,8 @@ final class PersistorGenerator implements Constants
                          Type.getInternalName(Short.class),
                          "shortValue",
                          Type.getMethodDescriptor(Type.SHORT_TYPE,
-                                                  new Type[]{}));
+                                                  new Type[]{})
+      );
     }
     else if (returnType == int.class) {
       mw.visitTypeInsn(CHECKCAST, Type.getInternalName(Integer.class));
@@ -1403,7 +1439,8 @@ final class PersistorGenerator implements Constants
                          Type.getInternalName(Long.class),
                          "longValue",
                          Type.getMethodDescriptor(Type.LONG_TYPE,
-                                                  new Type[]{}));
+                                                  new Type[]{})
+      );
     }
     else if (returnType == float.class) {
       mw.visitTypeInsn(CHECKCAST, Type.getInternalName(Float.class));
@@ -1411,7 +1448,8 @@ final class PersistorGenerator implements Constants
                          Type.getInternalName(Float.class),
                          "floatValue",
                          Type.getMethodDescriptor(Type.FLOAT_TYPE,
-                                                  new Type[]{}));
+                                                  new Type[]{})
+      );
     }
     else if (returnType == double.class) {
       mw.visitTypeInsn(CHECKCAST, Type.getInternalName(Double.class));
@@ -1419,7 +1457,8 @@ final class PersistorGenerator implements Constants
                          Type.getInternalName(Double.class),
                          "doubleValue",
                          Type.getMethodDescriptor(Type.DOUBLE_TYPE,
-                                                  new Type[]{}));
+                                                  new Type[]{})
+      );
     }
     final Method targetSetter
       = MethodsForPreparedStatement.findSetter(
@@ -1490,7 +1529,8 @@ final class PersistorGenerator implements Constants
                        Type.getInternalName(dateExtendedClass),
                        "<init>",
                        Type.getMethodDescriptor(Type.VOID_TYPE,
-                                                new Type[]{Type.getType(long.class)}));
+                                                new Type[]{Type.getType(long.class)})
+    );
     final Method targetSetter
       = MethodsForPreparedStatement.findSetter(
       dateExtendedClass);
@@ -1512,7 +1552,8 @@ final class PersistorGenerator implements Constants
                        Type.getInternalName(IllegalArgumentException.class),
                        "<init>",
                        Type.getMethodDescriptor(Type.VOID_TYPE,
-                                                new Type[]{Type.getType(String.class)}));
+                                                new Type[]{Type.getType(String.class)})
+    );
     mw.visitInsn(ATHROW);
     mw.visitMaxs(3, 3);
   }
@@ -1529,7 +1570,8 @@ final class PersistorGenerator implements Constants
                        Type.getInternalName(IllegalArgumentException.class),
                        "<init>",
                        Type.getMethodDescriptor(Type.VOID_TYPE,
-                                                new Type[]{Type.getType(String.class)}));
+                                                new Type[]{Type.getType(String.class)})
+    );
     mw.visitInsn(ATHROW);
     mw.visitMaxs(3, 3);
   }
@@ -1552,9 +1594,11 @@ final class PersistorGenerator implements Constants
                                                    new Type[]{Type.getType(
                                                      Connection.class),
                                                               Type.getType(
-                                                                Object[].class)}),
+                                                                Object[].class)}
+                          ),
                           INSERT_DELETE_UPDATE_BATCH_EXCEPTIONS,
-                          null);
+                          null
+      );
     }
     else {
       mw = cw.visitMethod(ACC_PUBLIC,
@@ -1563,9 +1607,11 @@ final class PersistorGenerator implements Constants
                                                    new Type[]{Type.getType(
                                                      Connection.class),
                                                               Type.getType(
-                                                                Object.class)}),
+                                                                Object.class)}
+                          ),
                           INSERT_DELETE_UPDATE_EXCEPTIONS,
-                          null);
+                          null
+      );
     }
     final Label methodStart = new Label();
     final Label methodEnd = new Label();
@@ -1720,7 +1766,8 @@ final class PersistorGenerator implements Constants
                          Type.getInternalName(java.sql.Statement.class),
                          MethodsForPreparedStatement.executeBatch
                            .getName(),
-                         Type.getMethodDescriptor(MethodsForPreparedStatement.executeBatch));
+                         Type.getMethodDescriptor(MethodsForPreparedStatement.executeBatch)
+      );
       mw.visitVarInsn(ASTORE, resultIdx);
     }
     else {
@@ -1730,7 +1777,8 @@ final class PersistorGenerator implements Constants
                            Type.getInternalName(java.sql.PreparedStatement.class),
                            MethodsForPreparedStatement.execute.getName(),
                            Type.getMethodDescriptor(
-                             MethodsForPreparedStatement.execute));
+                             MethodsForPreparedStatement.execute)
+        );
         mw.visitInsn(POP);
         mw.visitVarInsn(ALOAD, psInsertOrUpdateIdx);
         mw.visitMethodInsn(INVOKEINTERFACE,
@@ -1738,7 +1786,8 @@ final class PersistorGenerator implements Constants
                            MethodsForPreparedStatement.getUpdateCount
                              .getName(),
                            Type.getMethodDescriptor(
-                             MethodsForPreparedStatement.getUpdateCount));
+                             MethodsForPreparedStatement.getUpdateCount)
+        );
         mw.visitVarInsn(ISTORE, resultIdx);
       }
       else {
@@ -1748,7 +1797,8 @@ final class PersistorGenerator implements Constants
                            MethodsForPreparedStatement.executeUpdate
                              .getName(),
                            Type.getMethodDescriptor(
-                             MethodsForPreparedStatement.executeUpdate));
+                             MethodsForPreparedStatement.executeUpdate)
+        );
         mw.visitVarInsn(ISTORE, resultIdx);
       }
     }
@@ -1798,7 +1848,9 @@ final class PersistorGenerator implements Constants
                        "<init>",
                        Type.getMethodDescriptor(Type.VOID_TYPE,
                                                 new Type[]{Type.getType(
-                                                  Throwable.class)}));
+                                                  Throwable.class)}
+                       )
+    );
     final int persExcIdx = codeInfo._varindx++;
     mw.visitVarInsn(ASTORE, persExcIdx);
     mw.visitVarInsn(ALOAD, persExcIdx);
@@ -1821,7 +1873,8 @@ final class PersistorGenerator implements Constants
       methodClose
       = SQLUtils.class.getDeclaredMethod("close",
                                          new Class[]{ResultSet.class,
-                                                     Statement.class});
+                                                     Statement.class}
+    );
     mw.visitInsn(ACONST_NULL);
     mw.visitVarInsn(ALOAD, psInsertOrUpdateIdx);
     mw.visitMethodInsn(INVOKESTATIC,
@@ -1917,9 +1970,11 @@ final class PersistorGenerator implements Constants
                                                    new Type[]{Type.getType(
                                                      Connection.class),
                                                               Type.getType(
-                                                                Object[].class)}),
+                                                                Object[].class)}
+                          ),
                           INSERT_DELETE_UPDATE_BATCH_EXCEPTIONS,
-                          null);
+                          null
+      );
     }
     else {
       mw = cw.visitMethod(ACC_PUBLIC,
@@ -1928,9 +1983,11 @@ final class PersistorGenerator implements Constants
                                                    new Type[]{Type.getType(
                                                      Connection.class),
                                                               Type.getType(
-                                                                Object.class)}),
+                                                                Object.class)}
+                          ),
                           INSERT_DELETE_UPDATE_EXCEPTIONS,
-                          null);
+                          null
+      );
     }
     if (jdbcMap.getIdentifyingColumns().length == 0) {
       writeThrowNoPKException(mw, jdbcMap);
@@ -2144,7 +2201,8 @@ final class PersistorGenerator implements Constants
                          Type.getInternalName(java.sql.Statement.class),
                          MethodsForPreparedStatement.executeBatch
                            .getName(),
-                         Type.getMethodDescriptor(MethodsForPreparedStatement.executeBatch));
+                         Type.getMethodDescriptor(MethodsForPreparedStatement.executeBatch)
+      );
       mw.visitVarInsn(ASTORE, resultIdx);
     }
     else {
@@ -2154,7 +2212,8 @@ final class PersistorGenerator implements Constants
                            Type.getInternalName(java.sql.PreparedStatement.class),
                            MethodsForPreparedStatement.execute.getName(),
                            Type.getMethodDescriptor(
-                             MethodsForPreparedStatement.execute));
+                             MethodsForPreparedStatement.execute)
+        );
         mw.visitInsn(POP);
         mw.visitVarInsn(ALOAD, psUpdateIdx);
         mw.visitMethodInsn(INVOKEINTERFACE,
@@ -2162,7 +2221,8 @@ final class PersistorGenerator implements Constants
                            MethodsForPreparedStatement.getUpdateCount
                              .getName(),
                            Type.getMethodDescriptor(
-                             MethodsForPreparedStatement.getUpdateCount));
+                             MethodsForPreparedStatement.getUpdateCount)
+        );
         mw.visitVarInsn(ISTORE, resultIdx);
       }
       else {
@@ -2172,7 +2232,8 @@ final class PersistorGenerator implements Constants
                            MethodsForPreparedStatement.executeUpdate
                              .getName(),
                            Type.getMethodDescriptor(
-                             MethodsForPreparedStatement.executeUpdate));
+                             MethodsForPreparedStatement.executeUpdate)
+        );
         mw.visitVarInsn(ISTORE, resultIdx);
       }
     }
@@ -2236,7 +2297,9 @@ final class PersistorGenerator implements Constants
                        "<init>",
                        Type.getMethodDescriptor(Type.VOID_TYPE,
                                                 new Type[]{Type.getType(
-                                                  Throwable.class)}));
+                                                  Throwable.class)}
+                       )
+    );
     final int persExcIdx = codeInfo._varindx++;
     mw.visitVarInsn(ASTORE, persExcIdx);
     mw.visitVarInsn(ALOAD, persExcIdx);
@@ -2259,7 +2322,8 @@ final class PersistorGenerator implements Constants
       methodClose
       = SQLUtils.class.getDeclaredMethod("close",
                                          new Class[]{ResultSet.class,
-                                                     Statement.class});
+                                                     Statement.class}
+    );
     mw.visitInsn(ACONST_NULL);
     mw.visitVarInsn(ALOAD, psUpdateIdx);
     mw.visitMethodInsn(INVOKESTATIC,
@@ -2335,7 +2399,8 @@ final class PersistorGenerator implements Constants
                                                    (oracle ?
                                                      " FOR UPDATE" :
                                                      null),
-                                                   jdbcMap));
+                                                   jdbcMap
+    ));
     final Method target = Connection.class.getMethod("prepareStatement",
                                                      new Class[]{String.class});
     mw.visitMethodInsn(INVOKEINTERFACE,
@@ -2390,7 +2455,8 @@ final class PersistorGenerator implements Constants
                            Type.getInternalName(ResultSet.class),
                            MethodsForResultSet.getClobByColumnIndex.getName(),
                            Type.getMethodDescriptor(
-                             MethodsForResultSet.getClobByColumnIndex));
+                             MethodsForResultSet.getClobByColumnIndex)
+        );
         mw.visitVarInsn(ASTORE, lobIdx);
         mw.visitVarInsn(ALOAD, inso);
         mw.visitVarInsn(ALOAD, lobIdx);
@@ -2400,7 +2466,8 @@ final class PersistorGenerator implements Constants
                              I_C_N_ORA_SQL_CLOB,
                              "getCharacterOutputStream",
                              Type.getMethodDescriptor(Type.getType(Writer.class),
-                                                      new Type[]{}));
+                                                      new Type[]{})
+          );
         }
         else {
           mw.visitIntInsn(BIPUSH, 1);
@@ -2409,7 +2476,8 @@ final class PersistorGenerator implements Constants
                              Type.getInternalName(Clob.class),
                              MethodsForClob.setCharacterStream.getName(),
                              Type.getMethodDescriptor(
-                               MethodsForClob.setCharacterStream));
+                               MethodsForClob.setCharacterStream)
+          );
         }
         mw.visitInsn(DUP);
         final int writerIdx = codeInfo._varindx++;
@@ -2424,12 +2492,14 @@ final class PersistorGenerator implements Constants
                            Type.getInternalName(Writer.class),
                            "flush",
                            Type.getMethodDescriptor(Type.VOID_TYPE,
-                                                    new Type[]{}));
+                                                    new Type[]{})
+        );
         mw.visitMethodInsn(INVOKEVIRTUAL,
                            Type.getInternalName(Writer.class),
                            "close",
                            Type.getMethodDescriptor(Type.VOID_TYPE,
-                                                    new Type[]{}));
+                                                    new Type[]{})
+        );
       }
       else {
         clobs[i] = false;
@@ -2439,7 +2509,8 @@ final class PersistorGenerator implements Constants
                            Type.getInternalName(ResultSet.class),
                            MethodsForResultSet.getBlobByColumnIndex.getName(),
                            Type.getMethodDescriptor(
-                             MethodsForResultSet.getBlobByColumnIndex));
+                             MethodsForResultSet.getBlobByColumnIndex)
+        );
         mw.visitVarInsn(ASTORE, lobIdx);
         mw.visitVarInsn(ALOAD, inso);
         mw.visitVarInsn(ALOAD, lobIdx);
@@ -2449,7 +2520,8 @@ final class PersistorGenerator implements Constants
                              I_C_N_ORA_SQL_BLOB,
                              "getBinaryOutputStream",
                              Type.getMethodDescriptor(Type.getType(OutputStream.class),
-                                                      new Type[]{}));
+                                                      new Type[]{})
+          );
         }
         else {
           mw.visitIntInsn(BIPUSH, 1);
@@ -2458,7 +2530,8 @@ final class PersistorGenerator implements Constants
                              Type.getInternalName(Blob.class),
                              MethodsForBlob.setBinaryStream.getName(),
                              Type.getMethodDescriptor(
-                               MethodsForBlob.setBinaryStream));
+                               MethodsForBlob.setBinaryStream)
+          );
         }
         mw.visitInsn(DUP);
         final int outputStreamIdx = codeInfo._varindx++;
@@ -2473,12 +2546,14 @@ final class PersistorGenerator implements Constants
                            Type.getInternalName(OutputStream.class),
                            "flush",
                            Type.getMethodDescriptor(Type.VOID_TYPE,
-                                                    new Type[]{}));
+                                                    new Type[]{})
+        );
         mw.visitMethodInsn(INVOKEVIRTUAL,
                            Type.getInternalName(OutputStream.class),
                            "close",
                            Type.getMethodDescriptor(Type.VOID_TYPE,
-                                                    new Type[]{}));
+                                                    new Type[]{})
+        );
       }
     }
     if (locatorsUpdateCopy) {
@@ -2501,14 +2576,16 @@ final class PersistorGenerator implements Constants
                              Type.getInternalName(PreparedStatement.class),
                              MethodsForPreparedStatement.setClob.getName(),
                              Type.getMethodDescriptor(
-                               MethodsForPreparedStatement.setClob));
+                               MethodsForPreparedStatement.setClob)
+          );
         }
         else {
           mw.visitMethodInsn(INVOKEINTERFACE,
                              Type.getInternalName(PreparedStatement.class),
                              MethodsForPreparedStatement.setBlob.getName(),
                              Type.getMethodDescriptor(
-                               MethodsForPreparedStatement.setBlob));
+                               MethodsForPreparedStatement.setBlob)
+          );
         }
       }
       for (int i = 0; i < identifyingColumns.length; i++) {
@@ -2531,7 +2608,8 @@ final class PersistorGenerator implements Constants
                          Type.getInternalName(PreparedStatement.class),
                          MethodsForPreparedStatement.executeUpdate
                            .getName(),
-                         Type.getMethodDescriptor(MethodsForPreparedStatement.executeUpdate));
+                         Type.getMethodDescriptor(MethodsForPreparedStatement.executeUpdate)
+      );
       mw.visitInsn(POP);
     }
   }
@@ -2611,9 +2689,11 @@ final class PersistorGenerator implements Constants
                                                    new Type[]{Type.getType(
                                                      Connection.class),
                                                               Type.getType(
-                                                                Object[].class)}),
+                                                                Object[].class)}
+                          ),
                           INSERT_DELETE_UPDATE_BATCH_EXCEPTIONS,
-                          null);
+                          null
+      );
     }
     else {
       mw = cw.visitMethod(ACC_PUBLIC,
@@ -2622,9 +2702,11 @@ final class PersistorGenerator implements Constants
                                                    new Type[]{Type.getType(
                                                      Connection.class),
                                                               Type.getType(
-                                                                Object.class)}),
+                                                                Object.class)}
+                          ),
                           INSERT_DELETE_UPDATE_EXCEPTIONS,
-                          null);
+                          null
+      );
     }
 
     if (jdbcMap.getIdentifyingColumns().length == 0) {
@@ -2661,7 +2743,8 @@ final class PersistorGenerator implements Constants
                        Type.getInternalName(java.sql.Connection.class),
                        "prepareStatement",
                        Type.getMethodDescriptor(Type.getType(PreparedStatement.class),
-                                                new Type[]{Type.getType(String.class)}));
+                                                new Type[]{Type.getType(String.class)})
+    );
     mw.visitVarInsn(ASTORE, psDeleteIdx);
     //
     //to operate in batch mode an index on the object array is required.
@@ -2761,7 +2844,8 @@ final class PersistorGenerator implements Constants
                          Type.getInternalName(java.sql.Statement.class),
                          MethodsForPreparedStatement.executeBatch
                            .getName(),
-                         Type.getMethodDescriptor(MethodsForPreparedStatement.executeBatch));
+                         Type.getMethodDescriptor(MethodsForPreparedStatement.executeBatch)
+      );
       mw.visitVarInsn(ASTORE, resultIdx);
     }
     else {
@@ -2771,7 +2855,8 @@ final class PersistorGenerator implements Constants
                            Type.getInternalName(java.sql.PreparedStatement.class),
                            MethodsForPreparedStatement.execute.getName(),
                            Type.getMethodDescriptor(
-                             MethodsForPreparedStatement.execute));
+                             MethodsForPreparedStatement.execute)
+        );
         mw.visitInsn(POP);
         mw.visitVarInsn(ALOAD, psDeleteIdx);
         mw.visitMethodInsn(INVOKEINTERFACE,
@@ -2779,7 +2864,8 @@ final class PersistorGenerator implements Constants
                            MethodsForPreparedStatement.getUpdateCount
                              .getName(),
                            Type.getMethodDescriptor(
-                             MethodsForPreparedStatement.getUpdateCount));
+                             MethodsForPreparedStatement.getUpdateCount)
+        );
         mw.visitVarInsn(ISTORE, resultIdx);
       }
       else {
@@ -2789,7 +2875,8 @@ final class PersistorGenerator implements Constants
                            MethodsForPreparedStatement.executeUpdate
                              .getName(),
                            Type.getMethodDescriptor(
-                             MethodsForPreparedStatement.executeUpdate));
+                             MethodsForPreparedStatement.executeUpdate)
+        );
         mw.visitVarInsn(ISTORE, resultIdx);
       }
     }
@@ -2825,7 +2912,9 @@ final class PersistorGenerator implements Constants
                        "<init>",
                        Type.getMethodDescriptor(Type.VOID_TYPE,
                                                 new Type[]{Type.getType(
-                                                  Throwable.class)}));
+                                                  Throwable.class)}
+                       )
+    );
     final int persExcIdx = codeInfo._varindx++;
     mw.visitVarInsn(ASTORE, persExcIdx);
     mw.visitVarInsn(ALOAD, persExcIdx);
@@ -2848,7 +2937,8 @@ final class PersistorGenerator implements Constants
       methodClose
       = SQLUtils.class.getDeclaredMethod("close",
                                          new Class[]{ResultSet.class,
-                                                     Statement.class});
+                                                     Statement.class}
+    );
     mw.visitInsn(ACONST_NULL);
     mw.visitVarInsn(ALOAD, psDeleteIdx);
     mw.visitMethodInsn(INVOKESTATIC,
@@ -3007,7 +3097,8 @@ final class PersistorGenerator implements Constants
         getter +
         "].\n If this columnName is a CLOB or a BLOB please refer to the manual "
         +
-        "for detail of handling these columns");
+        "for detail of handling these columns"
+      );
     }
   }
 
@@ -3057,12 +3148,14 @@ final class PersistorGenerator implements Constants
                          Type.getInternalName(java.util.Date.class),
                          "getTime",
                          Type.getMethodDescriptor(Type.LONG_TYPE,
-                                                  new Type[]{}));
+                                                  new Type[]{})
+      );
       mw.visitMethodInsn(INVOKESPECIAL,
                          Type.getInternalName(dateExtendedClass),
                          "<init>",
                          Type.getMethodDescriptor(Type.VOID_TYPE,
-                                                  new Type[]{Type.getType(long.class)}));
+                                                  new Type[]{Type.getType(long.class)})
+      );
       Method
         targetSetter
         = MethodsForPreparedStatement.findSetter(
@@ -3078,7 +3171,8 @@ final class PersistorGenerator implements Constants
       mw.visitIntInsn(SIPUSH, colSqlType);
       targetSetter = PreparedStatement.class.getMethod("setNull",
                                                        new Class[]{int.class,
-                                                                   int.class});
+                                                                   int.class}
+      );
       mw.visitMethodInsn(INVOKEINTERFACE,
                          Type.getInternalName(PreparedStatement.class),
                          targetSetter.getName(),
@@ -3099,12 +3193,14 @@ final class PersistorGenerator implements Constants
                          Type.getInternalName(java.util.Date.class),
                          "getTime",
                          Type.getMethodDescriptor(Type.LONG_TYPE,
-                                                  new Type[]{}));
+                                                  new Type[]{})
+      );
       mw.visitMethodInsn(INVOKESPECIAL,
                          Type.getInternalName(dateExtendedClass),
                          "<init>",
                          Type.getMethodDescriptor(Type.VOID_TYPE,
-                                                  new Type[]{Type.getType(long.class)}));
+                                                  new Type[]{Type.getType(long.class)})
+      );
       Method targetSetter = MethodsForPreparedStatement.findSetter(
         dateExtendedClass);
       mw.visitMethodInsn(INVOKEINTERFACE,
@@ -3157,14 +3253,16 @@ final class PersistorGenerator implements Constants
                        Type.getInternalName(StringReader.class),
                        "<init>",
                        Type.getMethodDescriptor(Type.VOID_TYPE,
-                                                new Type[]{Type.getType(String.class)}));
+                                                new Type[]{Type.getType(String.class)})
+    );
     mw.visitVarInsn(ILOAD, slenidx);
     Method
       targetSetter
       = PreparedStatement.class.getMethod("setCharacterStream",
                                           new Class[]{int.class,
                                                       Reader.class,
-                                                      int.class});
+                                                      int.class}
+    );
     mw.visitMethodInsn(INVOKEINTERFACE,
                        Type.getInternalName(java.sql.PreparedStatement.class),
                        targetSetter.getName(),
@@ -3177,7 +3275,8 @@ final class PersistorGenerator implements Constants
       mw.visitIntInsn(SIPUSH, Types.LONGVARCHAR);
       targetSetter = PreparedStatement.class.getMethod("setNull",
                                                        new Class[]{int.class,
-                                                                   int.class});
+                                                                   int.class}
+      );
       mw.visitMethodInsn(INVOKEINTERFACE,
                          Type.getInternalName(PreparedStatement.class),
                          targetSetter.getName(),
@@ -3225,14 +3324,16 @@ final class PersistorGenerator implements Constants
                        Type.getInternalName(ByteArrayInputStream.class),
                        "<init>",
                        Type.getMethodDescriptor(Type.VOID_TYPE,
-                                                new Type[]{Type.getType(byte[].class)}));
+                                                new Type[]{Type.getType(byte[].class)})
+    );
     mw.visitVarInsn(ILOAD, balenidx);
     Method
       targetSetter
       = PreparedStatement.class.getMethod("setBinaryStream",
                                           new Class[]{int.class,
                                                       InputStream.class,
-                                                      int.class});
+                                                      int.class}
+    );
     mw.visitMethodInsn(INVOKEINTERFACE,
                        Type.getInternalName(java.sql.PreparedStatement.class),
                        targetSetter.getName(),
@@ -3245,7 +3346,8 @@ final class PersistorGenerator implements Constants
       mw.visitIntInsn(SIPUSH, Types.LONGVARBINARY);
       targetSetter = PreparedStatement.class.getMethod("setNull",
                                                        new Class[]{int.class,
-                                                                   int.class});
+                                                                   int.class}
+      );
       mw.visitMethodInsn(INVOKEINTERFACE,
                          Type.getInternalName(PreparedStatement.class),
                          targetSetter.getName(),
@@ -3356,7 +3458,8 @@ final class PersistorGenerator implements Constants
     final Method targetSetter
       = PreparedStatement.class.getMethod("setString",
                                           new Class[]{int.class,
-                                                      String.class});
+                                                      String.class}
+    );
     mw.visitMethodInsn(INVOKEINTERFACE,
                        Type.getInternalName(java.sql.PreparedStatement.class),
                        targetSetter.getName(),
@@ -3378,7 +3481,8 @@ final class PersistorGenerator implements Constants
     final Method targetSetter
       = PreparedStatement.class.getMethod("setBytes",
                                           new Class[]{int.class,
-                                                      byte[].class});
+                                                      byte[].class}
+    );
     mw.visitMethodInsn(INVOKEINTERFACE,
                        Type.getInternalName(java.sql.PreparedStatement.class),
                        targetSetter.getName(),
@@ -3425,7 +3529,8 @@ final class PersistorGenerator implements Constants
       mw.visitIntInsn(SIPUSH, colSqlType);
       targetSetter = PreparedStatement.class.getMethod("setNull",
                                                        new Class[]{int.class,
-                                                                   int.class});
+                                                                   int.class}
+      );
       mw.visitMethodInsn(INVOKEINTERFACE,
                          Type.getInternalName(PreparedStatement.class),
                          targetSetter.getName(),
@@ -3486,7 +3591,8 @@ final class PersistorGenerator implements Constants
                                           Type.getMethodDescriptor(Type.getType(
                                             void.class), new Type[]{}),
                                           null,
-                                          null);
+                                          null
+    );
     mw.visitVarInsn(ALOAD, 0);
     mw.visitMethodInsn(INVOKESPECIAL,
                        Type.getInternalName(persistorSuperClass),
@@ -3505,7 +3611,8 @@ final class PersistorGenerator implements Constants
                                           Type.getMethodDescriptor(Type.getType(
                                             void.class), new Type[]{}),
                                           null,
-                                          null);
+                                          null
+    );
     mw.visitIntInsn(BIPUSH, 1);
     mw.visitIntInsn(NEWARRAY, 8);
     mw.visitFieldInsn(PUTSTATIC,

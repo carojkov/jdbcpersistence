@@ -1,6 +1,6 @@
 /**
  * JDBCPersistence framework for java
- *   Copyright (C) 2004-2010 Alex Rojkov
+ *   Copyright (C) 2004-2014 Alex Rojkov
  *
  *    This library is free software; you can redistribute it and/or
  *    modify it under the terms of the GNU Lesser General Public
@@ -118,8 +118,7 @@ public final class PersistenceImpl implements Persistence
                 beanClass = _abstractBeanImplementations.get(
                   queryResultType);
               }
-              MappedClass jdbcMap
-                = (MappedClass) _jdbcMaps.get(queryResultType);
+              MappedClass jdbcMap = _jdbcMaps.get(queryResultType);
               String[] columnNames = SQLUtils.getColumns(rsMeta);
               resultSetReaderClass
                 = PersistorGenerator.generateResultSetReader(
