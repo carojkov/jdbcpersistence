@@ -21,7 +21,7 @@
 
 package org.jdbcpersistence.impl;
 
-class PersistenceClassLoader
+public class PersistenceClassLoader
   extends ClassLoader
 {
   public PersistenceClassLoader()

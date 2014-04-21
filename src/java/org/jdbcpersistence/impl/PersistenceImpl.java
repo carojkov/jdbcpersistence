@@ -28,6 +28,7 @@ import org.jdbcpersistence.Persistence;
 import org.jdbcpersistence.Persistor;
 import org.jdbcpersistence.Query;
 import org.jdbcpersistence.ResultSetReader;
+import org.jdbcpersistence.impl.gen.JDBCPersistorGenerator;
 
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -217,13 +218,18 @@ public final class PersistenceImpl implements Persistence
 
             boolean oracle = _dbname.indexOf(DB_ORACLE) != -1;
 
-            persistorClass
-              = PersistorGenerator.generateJDBCPersistor(classImpl,
-                                                         jdbcMap,
-                                                         _locatorsUpdateCopy,
-                                                         oracle,
-                                                         _cl,
-                                                         false);
+            JDBCPersistorGenerator generator
+              = new JDBCPersistorGenerator(classImpl,
+                                           jdbcMap,
+                                           _locatorsUpdateCopy,
+                                           oracle,
+                                           _cl,
+                                           false);
+
+            generator.generateHead();
+            generator.generateBody();
+            generator.generateTail();
+            persistorClass = generator.getPersistor();
           }
           jdbcPersistor = (Persistor) persistorClass.newInstance();
           _jdbcPersistors.put(clazz, jdbcPersistor);
