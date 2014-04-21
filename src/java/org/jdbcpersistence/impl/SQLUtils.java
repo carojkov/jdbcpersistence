@@ -106,6 +106,7 @@ public final class SQLUtils
         System.out.println("SQLUtils.close----------------------------");
         new Exception().printStackTrace();
 */
+
     if (rs != null) {
       try {
         rs.close();
