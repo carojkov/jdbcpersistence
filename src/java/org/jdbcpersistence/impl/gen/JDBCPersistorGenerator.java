@@ -30,6 +30,12 @@ public class JDBCPersistorGenerator implements Generator
     _isUseExecute = useExecute;
   }
 
+  public void generate() {
+    generateHead();
+    generateBody();
+    generateTail();
+  }
+
   @Override
   public void generateHead()
   {

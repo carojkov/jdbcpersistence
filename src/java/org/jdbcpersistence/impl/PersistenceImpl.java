@@ -226,9 +226,7 @@ public final class PersistenceImpl implements Persistence
                                            _cl,
                                            false);
 
-            generator.generateHead();
-            generator.generateBody();
-            generator.generateTail();
+            generator.generate();
             persistorClass = generator.getPersistor();
           }
           jdbcPersistor = (Persistor) persistorClass.newInstance();
