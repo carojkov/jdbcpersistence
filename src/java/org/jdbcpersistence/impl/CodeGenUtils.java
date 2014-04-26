@@ -21,7 +21,14 @@
 
 package org.jdbcpersistence.impl;
 
-import java.io.*;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.io.Reader;
+import java.io.Writer;
 
 public class CodeGenUtils
 {
@@ -82,18 +89,14 @@ public class CodeGenUtils
   }
 
   public static void writeToFile(String className, byte[] bytes)
-    throws IOException
   {
-    FileOutputStream fos = null;
+    try (FileOutputStream out
+           = new FileOutputStream(className.replace('/', '_') + ".class");) {
 
-    try {
-      fos = new FileOutputStream(className.replace('/', '_') + ".class");
-      fos.write(bytes);
-      fos.flush();
-    } finally {
-      if (fos != null) {
-        fos.close();
-      }
+      out.write(bytes);
+      out.flush();
+    } catch (Exception e) {
+      throw new RuntimeException(e);
     }
   }
 }
