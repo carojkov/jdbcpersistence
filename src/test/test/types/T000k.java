@@ -23,7 +23,7 @@ public class T000k extends BaseTest
                "CREATE TABLE T000K (ID INT, CLOB_ CLOB, PRIMARY KEY(ID))");
   }
 
-  @Test
+  //@Test
   public void insert() throws SQLException, MalformedURLException
   {
     setVerbose(true);

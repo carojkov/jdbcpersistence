@@ -33,7 +33,7 @@ public class PersistenceClassLoader
     super(parent);
   }
 
-  final Class define(final String name, final byte[] bytes)
+  public final Class define(final String name, final byte[] bytes)
   {
     return super.defineClass(name, bytes, 0, bytes.length);
   }

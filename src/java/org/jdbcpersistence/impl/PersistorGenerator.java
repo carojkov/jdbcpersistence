@@ -63,17 +63,17 @@ public final class PersistorGenerator implements Constants
     = new String[]{Type.getInternalName(SQLException.class),
                    Type.getInternalName(BatchUpdateException.class),
                    Type.getInternalName(RuntimeException.class)};
-  private static final String FN_DUMMY_BYTES = "dba_";
-  private static final String FN_DUMMY_STRING = "ds_";
+  public static final String FN_DUMMY_BYTES = "dba_";
+  public static final String FN_DUMMY_STRING = "ds_";
   private static final String I_C_N_ORA_SQL_CLOB = "oracle/sql/CLOB";
   private static final String I_C_N_ORA_SQL_BLOB = "oracle/sql/BLOB";
-  private static final Method M_JDBCP_INSERT;
-  private static final Method M_JDBCP_BATCH_INSERT;
-  private static final Method M_JDBCP_UPDATE;
-  private static final Method M_JDBCP_BATCH_UPDATE;
-  private static final Method M_JDBCP_DELETE;
-  private static final Method M_JDBCP_BATCH_DELETE;
-  private static final Method M_JDBCP_LOAD;
+  public static final Method M_JDBCP_INSERT;
+  public static final Method M_JDBCP_BATCH_INSERT;
+  public static final Method M_JDBCP_UPDATE;
+  public static final Method M_JDBCP_BATCH_UPDATE;
+  public static final Method M_JDBCP_DELETE;
+  public static final Method M_JDBCP_BATCH_DELETE;
+  public static final Method M_JDBCP_LOAD;
   private static final Method M_JDBCP_LOAD_FROM_RS;
 
   static {
@@ -278,9 +278,9 @@ public final class PersistorGenerator implements Constants
     mw.visitMaxs(7, codeInfo._varindx);
   }
 
-  private static void writeSelect(final Class cl,
-                                  final ClassWriter cw,
-                                  final MappedClass jdbcMap)
+  public static void writeSelect(final Class cl,
+                                 final ClassWriter cw,
+                                 final MappedClass jdbcMap)
   {
     final int valueArrayIdx = 2;
     final CodeVisitor mw
@@ -1573,7 +1573,7 @@ public final class PersistorGenerator implements Constants
     mw.visitMaxs(3, 3);
   }
 
-  private static void writeInsert(final Class cl,
+  public static void writeInsert(final Class cl,
                                   final ClassWriter cw,
                                   final String className,
                                   final MappedClass jdbcMap,
@@ -1949,7 +1949,7 @@ public final class PersistorGenerator implements Constants
     }
   }
 
-  private static void writeUpdate(final Class cl,
+  public static void writeUpdate(final Class cl,
                                   final ClassWriter cw,
                                   final String className,
                                   final MappedClass jdbcMap,
@@ -2669,7 +2669,7 @@ public final class PersistorGenerator implements Constants
     return false;
   }
 
-  private static void writeDelete(final Class cl,
+  public static void writeDelete(final Class cl,
                                   final ClassWriter cw,
                                   final String className,
                                   final MappedClass jdbcMap,
@@ -3579,9 +3579,9 @@ public final class PersistorGenerator implements Constants
            cl == java.net.URL.class;
   }
 
-  private static void writeInit(final ClassWriter cw,
-                                final String className,
-                                Class persistorSuperClass)
+  public static void writeInit(final ClassWriter cw,
+                               final String className,
+                               Class persistorSuperClass)
   {
     final CodeVisitor mw = cw.visitMethod(ACC_PUBLIC,
                                           "<init>",
@@ -3600,8 +3600,8 @@ public final class PersistorGenerator implements Constants
     mw.visitMaxs(1, 1);
   }
 
-  private static void writeStaticInit(final ClassWriter cw,
-                                      final String className)
+  public static void writeStaticInit(final ClassWriter cw,
+                                     final String className)
   {
     final CodeVisitor mw = cw.visitMethod(ACC_STATIC,
                                           "<clinit>",
@@ -3619,101 +3619,6 @@ public final class PersistorGenerator implements Constants
     mw.visitInsn(RETURN);
     // this code uses a maximum of one stack element and 0 local variables
     mw.visitMaxs(1, 0);
-  }
-
-  public static Class generateJDBCPersistor(final Class cl,
-                                            final MappedClass jdbcMap,
-                                            final boolean locatorsUpdateCopy,
-                                            final boolean oracle,
-                                            PersistenceClassLoader classLoader,
-                                            boolean useExecute)
-    throws Exception
-  {
-    Class persistorSuperClass = Object.class;
-
-    if (!Persistor.class.equals(jdbcMap.getPersistorClass())) {
-      persistorSuperClass = jdbcMap.getPersistorClass();
-    }
-
-    final ClassWriter cw = new ClassWriter(false);
-    final String className = "org/jdbcpersistence/generated/" +
-                             CodeGenUtils.getShortName(cl) +
-                             "JDBCPersistor";
-    cw.visit(Constants.V1_5,
-             ACC_PUBLIC | ACC_FINAL,
-             className,
-             Type.getInternalName(persistorSuperClass),
-             new String[]{Type.getInternalName(Persistor.class)},
-             null);
-    cw.visitField(ACC_PRIVATE | ACC_STATIC,
-                  FN_DUMMY_BYTES,
-                  Type.getDescriptor(byte[].class),
-                  null,
-                  null);
-    cw.visitField(ACC_PRIVATE | ACC_STATIC,
-                  FN_DUMMY_STRING,
-                  Type.getDescriptor(String.class),
-                  " ",
-                  null);
-    writeStaticInit(cw, className);
-    writeInit(cw, className, persistorSuperClass);
-    if (!isMethodPresent(persistorSuperClass, M_JDBCP_LOAD)) {
-      writeSelect(cl, cw, jdbcMap);
-    }
-    if (!isMethodPresent(persistorSuperClass, M_JDBCP_INSERT)) {
-      writeInsert(cl,
-                  cw,
-                  className,
-                  jdbcMap,
-                  locatorsUpdateCopy,
-                  oracle,
-                  false,
-                  useExecute);
-    }
-    if (!isMethodPresent(persistorSuperClass, M_JDBCP_BATCH_INSERT)) {
-      writeInsert(cl,
-                  cw,
-                  className,
-                  jdbcMap,
-                  locatorsUpdateCopy,
-                  oracle,
-                  true,
-                  false);
-    }
-    if (!isMethodPresent(persistorSuperClass, M_JDBCP_UPDATE)) {
-      writeUpdate(cl,
-                  cw,
-                  className,
-                  jdbcMap,
-                  locatorsUpdateCopy,
-                  oracle,
-                  false,
-                  useExecute);
-    }
-    if (!isMethodPresent(persistorSuperClass, M_JDBCP_BATCH_UPDATE)) {
-      writeUpdate(cl,
-                  cw,
-                  className,
-                  jdbcMap,
-                  locatorsUpdateCopy,
-                  oracle,
-                  true,
-                  false);
-    }
-    if (!isMethodPresent(persistorSuperClass, M_JDBCP_DELETE)) {
-      writeDelete(cl, cw, className, jdbcMap, false, useExecute);
-    }
-    if (!isMethodPresent(persistorSuperClass, M_JDBCP_BATCH_DELETE)) {
-      writeDelete(cl, cw, className, jdbcMap, true, false);
-    }
-    final byte[] classBytes = cw.toByteArray();
-    if ("true".equalsIgnoreCase(System.getProperty("jdbcpersistence.verbose"))) {
-      CodeGenUtils.writeToFile(className, classBytes);
-      CodeGenUtils.echo(className);
-    }
-    Class result = classLoader.define(className.replace('/', '.'), classBytes);
-    //
-    return result;
   }
 
   public static Class generateResultSetReader(final Class clazz,
@@ -3751,8 +3656,8 @@ public final class PersistorGenerator implements Constants
     return result;
   }
 
-  private static boolean isMethodPresent(Class persistorSuperClass,
-                                         Method method)
+  public static boolean isMethodPresent(Class persistorSuperClass,
+                                        Method method)
   {
     try {
       Method m = persistorSuperClass.getMethod(method.getName(),

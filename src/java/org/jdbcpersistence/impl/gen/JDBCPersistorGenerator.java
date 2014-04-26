@@ -22,10 +22,17 @@
 package org.jdbcpersistence.impl.gen;
 
 import org.jdbcpersistence.MappedClass;
+import org.jdbcpersistence.Persistor;
+import org.jdbcpersistence.impl.CodeGenUtils;
 import org.jdbcpersistence.impl.PersistenceClassLoader;
 import org.jdbcpersistence.impl.PersistorGenerator;
+import org.jdbcpersistence.impl.asm.ClassWriter;
+import org.jdbcpersistence.impl.asm.Constants;
+import org.jdbcpersistence.impl.asm.Type;
 
-public class JDBCPersistorGenerator implements Generator
+import static org.jdbcpersistence.impl.PersistorGenerator.*;
+
+public class JDBCPersistorGenerator implements Generator, Constants
 {
   private Class _bean;
   private Class _persistor;
@@ -38,20 +45,21 @@ public class JDBCPersistorGenerator implements Generator
 
   public JDBCPersistorGenerator(final Class cl,
                                 final MappedClass jdbcMap,
-                                final boolean locatorsUpdateCopy,
-                                final boolean oracle,
+                                final boolean _isLocatorsUpdateCopy,
+                                final boolean isOracle,
                                 PersistenceClassLoader classLoader,
-                                boolean useExecute)
+                                boolean isUseExecute)
   {
     _bean = cl;
     _mappedClass = jdbcMap;
-    _locatorsUpdateCopy = locatorsUpdateCopy;
-    _isOracle = oracle;
+    _locatorsUpdateCopy = _isLocatorsUpdateCopy;
+    _isOracle = isOracle;
     _classLoader = classLoader;
-    _isUseExecute = useExecute;
+    this._isUseExecute = isUseExecute;
   }
 
-  public void generate() {
+  public void generate()
+  {
     generateHead();
     generateBody();
     generateTail();
@@ -60,22 +68,122 @@ public class JDBCPersistorGenerator implements Generator
   @Override
   public void generateHead()
   {
-    try {
-      _persistor = PersistorGenerator.generateJDBCPersistor(_bean,
-                                                            _mappedClass,
-                                                            _locatorsUpdateCopy,
-                                                            _isOracle,
-                                                            _classLoader,
-                                                            false);
-    } catch (Exception e) {
-      throw new RuntimeException(e);
-    }
   }
 
   @Override
   public void generateBody()
   {
+    try {
+      Class persistorSuperClass = Object.class;
 
+      if (!Persistor.class.equals(_mappedClass.getPersistorClass())) {
+        persistorSuperClass = _mappedClass.getPersistorClass();
+      }
+
+      final ClassWriter cw = new ClassWriter(false);
+      final String className = "org/jdbcpersistence/generated/" +
+                               CodeGenUtils.getShortName(_bean) +
+                               "JDBCPersistor";
+      cw.visit(Constants.V1_5,
+               ACC_PUBLIC | ACC_FINAL,
+               className,
+               Type.getInternalName(persistorSuperClass),
+               new String[]{Type.getInternalName(Persistor.class)},
+               null);
+      cw.visitField(ACC_PRIVATE | ACC_STATIC,
+                    PersistorGenerator.FN_DUMMY_BYTES,
+                    Type.getDescriptor(byte[].class),
+                    null,
+                    null);
+      cw.visitField(ACC_PRIVATE | ACC_STATIC,
+                    PersistorGenerator.FN_DUMMY_STRING,
+                    Type.getDescriptor(String.class),
+                    " ",
+                    null);
+
+      PersistorGenerator.writeStaticInit(cw, className);//
+
+      PersistorGenerator.writeInit(cw, className, persistorSuperClass);//
+
+      if (!PersistorGenerator.isMethodPresent(persistorSuperClass,
+                                              PersistorGenerator.M_JDBCP_LOAD)) {
+        PersistorGenerator.writeSelect(_bean, cw, _mappedClass);
+      }
+      if (!PersistorGenerator.isMethodPresent(persistorSuperClass,
+                                              PersistorGenerator.M_JDBCP_INSERT)) {
+        writeInsert(_bean,
+                    cw,
+                    className,
+                    _mappedClass,
+                    _locatorsUpdateCopy,
+                    _isOracle,
+                    false,
+                    _isUseExecute);
+      }
+      if (!PersistorGenerator.isMethodPresent(persistorSuperClass,
+                                              PersistorGenerator.M_JDBCP_BATCH_INSERT)) {
+        writeInsert(_bean,
+                    cw,
+                    className,
+                    _mappedClass,
+                    _locatorsUpdateCopy,
+                    _isOracle,
+                    true,
+                    false);
+      }
+      if (!PersistorGenerator.isMethodPresent(persistorSuperClass,
+                                              PersistorGenerator.M_JDBCP_UPDATE)) {
+        writeUpdate(_bean,
+                    cw,
+                    className,
+                    _mappedClass,
+                    _locatorsUpdateCopy,
+                    _isOracle,
+                    false,
+                    _isUseExecute);
+      }
+      if (!PersistorGenerator.isMethodPresent(persistorSuperClass,
+                                              PersistorGenerator.M_JDBCP_BATCH_UPDATE)) {
+        writeUpdate(_bean,
+                    cw,
+                    className,
+                    _mappedClass,
+                    _locatorsUpdateCopy,
+                    _isOracle,
+                    true,
+                    false);
+      }
+      if (!PersistorGenerator.isMethodPresent(persistorSuperClass,
+                                              PersistorGenerator.M_JDBCP_DELETE)) {
+        writeDelete(_bean,
+                    cw,
+                    className,
+                    _mappedClass,
+                    false,
+                    _isUseExecute);
+      }
+      if (!PersistorGenerator.isMethodPresent(persistorSuperClass,
+                                              PersistorGenerator.M_JDBCP_BATCH_DELETE)) {
+        writeDelete(_bean,
+                    cw,
+                    className,
+                    _mappedClass,
+                    true,
+                    false);
+      }
+      final byte[] classBytes = cw.toByteArray();
+      if ("true".equalsIgnoreCase(System.getProperty("jdbcpersistence.verbose"))) {
+        CodeGenUtils.writeToFile(className, classBytes);
+        CodeGenUtils.echo(className);
+      }
+
+      Class result = _classLoader.define(className.replace('/', '.'),
+                                         classBytes);
+      //
+      _persistor = result;
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
   }
 
   @Override

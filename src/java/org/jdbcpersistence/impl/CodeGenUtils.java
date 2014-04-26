@@ -23,7 +23,7 @@ package org.jdbcpersistence.impl;
 
 import java.io.*;
 
-class CodeGenUtils
+public class CodeGenUtils
 {
   public final static String getShortName(final Class clazz)
   {
