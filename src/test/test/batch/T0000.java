@@ -56,7 +56,34 @@ public class T0000 extends BaseTest
   @Test
   public void update() throws SQLException
   {
+    Connection conn = _persistence.getConnection();
+    T0000Bean[] beans = new T0000Bean[5];
 
+    for (int i = 0; i < 5; i++) {
+      T0000Bean bean = _persistence.newInstance(T0000Bean.class);
+      bean.setId(i);
+      bean.setData("value-" + i);
+      beans[i] = bean;
+    }
+
+    conn.insert(beans);
+    conn.commit();
+
+    for (T0000Bean bean : beans) {
+      bean.setData(bean.getData() + "-x");
+    }
+
+    conn.update(beans);
+    conn.commit();
+
+    for (int i = 0; i < 5; i++) {
+      T0000Bean bean = conn.load(T0000Bean.class, i);
+      Assert.assertNotNull(bean);
+      Assert.assertEquals(i, bean.getId());
+      Assert.assertEquals("value-" + i + "-x", bean.getData());
+    }
+
+    conn.close();
   }
 
   @Test

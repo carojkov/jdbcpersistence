@@ -74,7 +74,7 @@ public class T0000 extends BaseTest
     conn.delete(bean);
     conn.commit();
 
-    bean = (T0000Bean) conn.load(T0000Bean.class, new Integer(1));
+    bean = conn.load(T0000Bean.class, new Integer(1));
 
     Assert.assertNull(bean);
 

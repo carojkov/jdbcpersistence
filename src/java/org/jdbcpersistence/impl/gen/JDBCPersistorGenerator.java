@@ -144,25 +144,30 @@ public class JDBCPersistorGenerator implements Generator, Constants
       }
       if (!PersistorGenerator.isMethodPresent(_persistorSuperClass,
                                               PersistorGenerator.M_JDBCP_UPDATE)) {
-        writeUpdate(_bean,
-                    _classWriter,
-                    _persistorClassName,
-                    _mappedClass,
-                    _isLocatorsUpdateCopy,
-                    _isOracle,
-                    false,
-                    _isUseExecute);
+        UpdateGenerator generator = new UpdateGenerator(_mappedClass,
+                                                        _isLocatorsUpdateCopy,
+                                                        _isOracle,
+                                                        _isUseExecute,
+                                                        false,
+                                                        _bean,
+                                                        _classWriter,
+                                                        _persistorClassName);
+
+        generator.generate();
+
       }
       if (!PersistorGenerator.isMethodPresent(_persistorSuperClass,
                                               PersistorGenerator.M_JDBCP_BATCH_UPDATE)) {
-        writeUpdate(_bean,
-                    _classWriter,
-                    _persistorClassName,
-                    _mappedClass,
-                    _isLocatorsUpdateCopy,
-                    _isOracle,
-                    true,
-                    false);
+        UpdateGenerator generator = new UpdateGenerator(_mappedClass,
+                                                        _isLocatorsUpdateCopy,
+                                                        _isOracle,
+                                                        _isUseExecute,
+                                                        true,
+                                                        _bean,
+                                                        _classWriter,
+                                                        _persistorClassName);
+
+        generator.generate();
       }
       if (!PersistorGenerator.isMethodPresent(_persistorSuperClass,
                                               PersistorGenerator.M_JDBCP_DELETE)) {
