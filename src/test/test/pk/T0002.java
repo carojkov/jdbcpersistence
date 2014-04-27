@@ -9,6 +9,9 @@ import test.BaseTest;
 
 import java.sql.SQLException;
 
+/**
+ * title: @Id.value > PK.zise()
+ */
 public class T0002 extends BaseTest
 {
   @Test

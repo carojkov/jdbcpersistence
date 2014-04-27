@@ -12,6 +12,9 @@ import test.BaseTest;
 
 import java.sql.SQLException;
 
+/**
+ * title: Single column PK
+ */
 public class T0000 extends BaseTest
 {
   @Before

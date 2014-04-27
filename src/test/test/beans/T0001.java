@@ -12,6 +12,9 @@ import test.BaseTest;
 
 import java.sql.SQLException;
 
+/**
+ * title: abstract class
+ */
 public class T0001 extends BaseTest
 {
   @Before

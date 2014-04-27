@@ -59,7 +59,7 @@ public final class PersistorGenerator implements Constants
   public static final String[] INSERT_DELETE_UPDATE_EXCEPTIONS = new String[]{
     Type.getInternalName(SQLException.class),
     Type.getInternalName(RuntimeException.class)};
-  private static final String[] INSERT_DELETE_UPDATE_BATCH_EXCEPTIONS
+  public static final String[] INSERT_DELETE_UPDATE_BATCH_EXCEPTIONS
     = new String[]{Type.getInternalName(SQLException.class),
                    Type.getInternalName(BatchUpdateException.class),
                    Type.getInternalName(RuntimeException.class)};
@@ -1350,355 +1350,16 @@ public final class PersistorGenerator implements Constants
     mw.visitMaxs(3, 3);
   }
 
-  public static void writeInsert(final Class cl,
-                                 final ClassWriter cw,
-                                 final String className,
-                                 final MappedClass jdbcMap,
-                                 final boolean locatorsUpdateCopy,
-                                 final boolean oracle,
-                                 final boolean isBatch,
-                                 final boolean useExecute)
-    throws NoSuchMethodException
+  public static void writeInsert(final Class _bean,
+                                 final ClassWriter _classWriter,
+                                 final String _persistorClassName,
+                                 final MappedClass _mappedClass,
+                                 final boolean _isLocatorsUpdateCopy,
+                                 final boolean _isOracle,
+                                 final boolean _isBatch,
+                                 final boolean _isUseExecute)
+
   {
-    final CodeVisitor mw;
-    if (isBatch) {
-      mw = cw.visitMethod(ACC_PUBLIC,
-                          "insert",
-                          Type.getMethodDescriptor(Type.getType(int[].class),
-                                                   new Type[]{Type.getType(
-                                                     Connection.class),
-                                                              Type.getType(
-                                                                Object[].class)}
-                          ),
-                          INSERT_DELETE_UPDATE_BATCH_EXCEPTIONS,
-                          null
-      );
-    }
-    else {
-      mw = cw.visitMethod(ACC_PUBLIC,
-                          "insert",
-                          Type.getMethodDescriptor(Type.INT_TYPE,
-                                                   new Type[]{Type.getType(
-                                                     Connection.class),
-                                                              Type.getType(
-                                                                Object.class)}
-                          ),
-                          INSERT_DELETE_UPDATE_EXCEPTIONS,
-                          null
-      );
-    }
-    final Label methodStart = new Label();
-    final Label methodEnd = new Label();
-    mw.visitLabel(methodStart);
-    //this can be an array or an object
-    int insertSubjIdx = 2;
-    final CodeInfo codeInfo = new CodeInfo();
-    codeInfo._varindx = 3;
-    //create a constant that denotes conn being passed in
-    final int connIdx = 1;
-    //declare PreparedStatement and assigned it value of null
-    final int psInsertOrUpdateIdx = codeInfo._varindx++;
-    mw.visitInsn(ACONST_NULL);
-    mw.visitVarInsn(ASTORE, psInsertOrUpdateIdx);
-    mw.visitLocalVariable("psInsert",
-                          Type.getDescriptor(PreparedStatement.class),
-                          methodStart,
-                          methodEnd,
-                          psInsertOrUpdateIdx);
-    //
-    int psSelectLobsIdx = -1;
-    int rsSelectLobsIdx = -1;
-    int psUpdateLobsIdx = -1;
-    if (hasLobColumns(jdbcMap)) {
-      psSelectLobsIdx = codeInfo._varindx++;
-      rsSelectLobsIdx = codeInfo._varindx++;
-      mw.visitInsn(ACONST_NULL);
-      mw.visitVarInsn(ASTORE, psSelectLobsIdx);
-      mw.visitLocalVariable("psSelectLobs",
-                            Type.getDescriptor(PreparedStatement.class),
-                            methodStart,
-                            methodEnd,
-                            psSelectLobsIdx);
-      mw.visitInsn(ACONST_NULL);
-      mw.visitVarInsn(ASTORE, rsSelectLobsIdx);
-      mw.visitLocalVariable("rsSelectLobs",
-                            Type.getDescriptor(ResultSet.class),
-                            methodStart,
-                            methodEnd,
-                            rsSelectLobsIdx);
-      if (locatorsUpdateCopy) {
-        psUpdateLobsIdx = codeInfo._varindx++;
-        mw.visitInsn(ACONST_NULL);
-        mw.visitVarInsn(ASTORE, psUpdateLobsIdx);
-        mw.visitLocalVariable("psUpdateLobs",
-                              Type.getDescriptor(PreparedStatement.class),
-                              methodStart,
-                              methodEnd,
-                              psUpdateLobsIdx);
-      }
-    }
-    //
-    final Label beginTryBlock = new Label();
-    final Label endTryBlock = new Label();
-    final Label catchSqlBlock = new Label();
-    final Label catchThrBlock = new Label();
-    final Label finallyExceptionHandler = new Label();
-    //obtain prepared statement
-    mw.visitLabel(beginTryBlock);
-    mw.visitVarInsn(ALOAD, connIdx);
-    mw.visitLdcInsn(SqlStatementFactory.makeInsert(jdbcMap));
-    mw.visitMethodInsn(INVOKEINTERFACE,
-                       Type.getInternalName(java.sql.Connection.class),
-                       MethodsForConnection.prepareStatement.getName(),
-                       Type.getMethodDescriptor(MethodsForConnection.prepareStatement));
-    mw.visitVarInsn(ASTORE, psInsertOrUpdateIdx);
-    //to operate in batch mode an index on the object array is required.
-    final int insObjIdx = codeInfo._varindx++;
-    int batchObjArrayIdx = 0;
-    Label lblBatchUpdate = new Label();
-    Label lblLoopCheckCondition = new Label();
-    if (isBatch) {
-      batchObjArrayIdx = codeInfo._varindx++;
-      Label lblLoopStart = new Label();
-      Label lblLoopEnd = new Label();
-      mw.visitLocalVariable("objArrayIndex",
-                            Type.INT_TYPE.getDescriptor(),
-                            lblLoopStart,
-                            lblLoopEnd,
-                            batchObjArrayIdx);
-      mw.visitLabel(lblLoopStart);
-      mw.visitInsn(ICONST_0);
-      mw.visitVarInsn(ISTORE, batchObjArrayIdx);
-      mw.visitLabel(lblLoopCheckCondition);
-      mw.visitVarInsn(ILOAD, batchObjArrayIdx);
-      mw.visitVarInsn(ALOAD, insertSubjIdx);
-      mw.visitInsn(ARRAYLENGTH);
-      mw.visitJumpInsn(IF_ICMPGE, lblBatchUpdate);
-      mw.visitIntInsn(ALOAD, insertSubjIdx);
-      mw.visitIntInsn(ILOAD, batchObjArrayIdx);
-      mw.visitInsn(AALOAD);
-      mw.visitTypeInsn(CHECKCAST, Type.getInternalName(cl));
-      mw.visitVarInsn(ASTORE, insObjIdx);
-    }
-    else {
-      //make local varible for an object that is being persisted
-      mw.visitVarInsn(ALOAD, insertSubjIdx);
-      mw.visitTypeInsn(CHECKCAST, Type.getInternalName(cl));
-      mw.visitVarInsn(ASTORE, insObjIdx);
-    }
-    int columnIndex = 0;
-    MappedClass.MappedAttribute[] columns = jdbcMap.getColumns();
-    for (int i = 0; i < columns.length; i++) {
-      final MappedClass.MappedAttribute column = columns[i];
-      if (column.getGetter() == null) continue;
-      codeInfo._nextInstruction = null;
-      writeSetPreparedStatementValue(cl,
-                                     className,
-                                     mw,
-                                     null,
-                                     column,
-                                     false,
-                                     psInsertOrUpdateIdx,
-                                     insObjIdx,
-                                     columnIndex,
-                                     codeInfo,
-                                     column.isNullable());
-      columnIndex++;
-      if (codeInfo._nextInstruction != null) {
-        mw.visitLabel(codeInfo._nextInstruction);
-      }
-    }
-    if (isBatch) {
-      mw.visitVarInsn(ALOAD, psInsertOrUpdateIdx);
-      mw.visitMethodInsn(INVOKEINTERFACE,
-                         Type.getInternalName(java.sql.PreparedStatement.class),
-                         MethodsForPreparedStatement.addBatch.getName(),
-                         Type.getMethodDescriptor(MethodsForPreparedStatement.addBatch));
-      mw.visitIincInsn(batchObjArrayIdx, 1);
-      mw.visitJumpInsn(GOTO, lblLoopCheckCondition);
-    }
-    mw.visitLabel(lblBatchUpdate);
-    int resultIdx = codeInfo._varindx++;
-    if (isBatch) {
-      mw.visitLocalVariable("result",
-                            Type.getType(int[].class).getDescriptor(),
-                            methodStart,
-                            methodEnd,
-                            resultIdx);
-    }
-    else {
-      mw.visitLocalVariable("result",
-                            Type.INT_TYPE.getDescriptor(),
-                            methodStart,
-                            methodEnd,
-                            resultIdx);
-    }
-    //
-    if (isBatch) {
-      mw.visitVarInsn(ALOAD, psInsertOrUpdateIdx);
-      mw.visitMethodInsn(INVOKEINTERFACE,
-                         Type.getInternalName(java.sql.Statement.class),
-                         MethodsForPreparedStatement.executeBatch
-                           .getName(),
-                         Type.getMethodDescriptor(MethodsForPreparedStatement.executeBatch)
-      );
-      mw.visitVarInsn(ASTORE, resultIdx);
-    }
-    else {
-      if (useExecute) {
-        mw.visitVarInsn(ALOAD, psInsertOrUpdateIdx);
-        mw.visitMethodInsn(INVOKEINTERFACE,
-                           Type.getInternalName(java.sql.PreparedStatement.class),
-                           MethodsForPreparedStatement.execute.getName(),
-                           Type.getMethodDescriptor(
-                             MethodsForPreparedStatement.execute)
-        );
-        mw.visitInsn(POP);
-        mw.visitVarInsn(ALOAD, psInsertOrUpdateIdx);
-        mw.visitMethodInsn(INVOKEINTERFACE,
-                           Type.getInternalName(java.sql.PreparedStatement.class),
-                           MethodsForPreparedStatement.getUpdateCount
-                             .getName(),
-                           Type.getMethodDescriptor(
-                             MethodsForPreparedStatement.getUpdateCount)
-        );
-        mw.visitVarInsn(ISTORE, resultIdx);
-      }
-      else {
-        mw.visitVarInsn(ALOAD, psInsertOrUpdateIdx);
-        mw.visitMethodInsn(INVOKEINTERFACE,
-                           Type.getInternalName(java.sql.PreparedStatement.class),
-                           MethodsForPreparedStatement.executeUpdate
-                             .getName(),
-                           Type.getMethodDescriptor(
-                             MethodsForPreparedStatement.executeUpdate)
-        );
-        mw.visitVarInsn(ISTORE, resultIdx);
-      }
-    }
-    //
-    if (false && hasLobColumns(jdbcMap)) {
-      writeLobHandler(cl,
-                      className,
-                      mw,
-                      jdbcMap,
-                      insObjIdx,
-                      connIdx,
-                      codeInfo,
-                      psSelectLobsIdx,
-                      rsSelectLobsIdx,
-                      psUpdateLobsIdx,
-                      locatorsUpdateCopy,
-                      oracle);
-    }
-    mw.visitLabel(endTryBlock);
-    //finallyBlockStart is where the actual java code would start
-    final Label finallyBlockStart = new Label();
-    mw.visitJumpInsn(JSR, finallyBlockStart);
-    //endTryBlockBeforeGoToReturn
-    final Label endTryBlockBeforeGoToReturn = new Label();
-    mw.visitLabel(endTryBlockBeforeGoToReturn);
-    mw.visitJumpInsn(GOTO, methodEnd);
-    //
-    //handle SQLException
-    //label catchSqlBlock will also be used as a start PC to add to the Exceptions table for the finally handler
-    // as well as handler PC for any SQL exceptions occuring during try/catch(SQLException)
-    mw.visitLabel(catchSqlBlock);
-    final int sqle = codeInfo._varindx++;
-    mw.visitVarInsn(ASTORE, sqle);
-    mw.visitVarInsn(ALOAD, sqle);
-    mw.visitInsn(ATHROW);
-    //
-    //handle throwable
-    //label catchThrBlock will be used as a handler PC for any Throwable exceptions that might occur during try/catch(Throwable)
-    mw.visitLabel(catchThrBlock);
-    final int thre = codeInfo._varindx++;
-    mw.visitVarInsn(ASTORE, thre);
-    mw.visitTypeInsn(NEW, Type.getInternalName(RuntimeException.class));
-    mw.visitInsn(DUP);
-    mw.visitVarInsn(ALOAD, thre);
-    mw.visitMethodInsn(INVOKESPECIAL,
-                       Type.getInternalName(RuntimeException.class),
-                       "<init>",
-                       Type.getMethodDescriptor(Type.VOID_TYPE,
-                                                new Type[]{Type.getType(
-                                                  Throwable.class)}
-                       )
-    );
-    final int persExcIdx = codeInfo._varindx++;
-    mw.visitVarInsn(ASTORE, persExcIdx);
-    mw.visitVarInsn(ALOAD, persExcIdx);
-    mw.visitInsn(ATHROW);
-    //
-    //finally
-    mw.visitLabel(finallyExceptionHandler);
-    final int finallyExceptionIdx = codeInfo._varindx++;
-    mw.visitVarInsn(ASTORE, finallyExceptionIdx);
-    mw.visitJumpInsn(JSR, finallyBlockStart);
-    final int retIdx = codeInfo._varindx++;
-    final Label finallyBlockRethrow = new Label();
-    mw.visitLabel(finallyBlockRethrow);
-    mw.visitVarInsn(ALOAD, finallyExceptionIdx);
-    mw.visitInsn(ATHROW);
-    mw.visitLabel(finallyBlockStart);
-    mw.visitVarInsn(ASTORE, retIdx);
-    final
-    Method
-      methodClose
-      = SQLUtils.class.getDeclaredMethod("close",
-                                         new Class[]{ResultSet.class,
-                                                     Statement.class}
-    );
-    mw.visitInsn(ACONST_NULL);
-    mw.visitVarInsn(ALOAD, psInsertOrUpdateIdx);
-    mw.visitMethodInsn(INVOKESTATIC,
-                       Type.getInternalName(SQLUtils.class),
-                       methodClose.getName(),
-                       Type.getMethodDescriptor(methodClose));
-    if (psSelectLobsIdx != -1) {
-      mw.visitVarInsn(ALOAD, rsSelectLobsIdx);
-      mw.visitVarInsn(ALOAD, psSelectLobsIdx);
-      mw.visitMethodInsn(INVOKESTATIC,
-                         Type.getInternalName(SQLUtils.class),
-                         methodClose.getName(),
-                         Type.getMethodDescriptor(methodClose));
-    }
-    if (psUpdateLobsIdx != -1) {
-      mw.visitInsn(ACONST_NULL);
-      mw.visitVarInsn(ALOAD, psUpdateLobsIdx);
-      mw.visitMethodInsn(INVOKESTATIC,
-                         Type.getInternalName(SQLUtils.class),
-                         methodClose.getName(),
-                         Type.getMethodDescriptor(methodClose));
-    }
-    mw.visitVarInsn(RET, retIdx);
-    mw.visitMaxs(6, codeInfo._varindx);
-    mw.visitTryCatchBlock(beginTryBlock,
-                          endTryBlock,
-                          catchSqlBlock,
-                          Type.getInternalName(SQLException.class));
-    mw.visitTryCatchBlock(beginTryBlock,
-                          endTryBlock,
-                          catchThrBlock,
-                          Type.getInternalName(Throwable.class));
-    mw.visitTryCatchBlock(beginTryBlock,
-                          endTryBlockBeforeGoToReturn,
-                          finallyExceptionHandler,
-                          null);
-    mw.visitTryCatchBlock(catchSqlBlock,
-                          finallyBlockRethrow,
-                          finallyExceptionHandler,
-                          null);
-    //end of method
-    mw.visitLabel(methodEnd);
-    if (isBatch) {
-      mw.visitVarInsn(ALOAD, resultIdx);
-      mw.visitInsn(ARETURN);
-    }
-    else {
-      mw.visitVarInsn(ILOAD, resultIdx);
-      mw.visitInsn(IRETURN);
-    }
   }
 
   static class VersionControlInfo
@@ -2150,19 +1811,18 @@ public final class PersistorGenerator implements Constants
     }
   }
 
-  private static void writeLobHandler(final Class cl,
-                                      final String className,
-                                      final CodeVisitor mw,
-                                      final MappedClass jdbcMap,
-                                      final int inso,
-                                      final int conn,
-                                      final CodeInfo codeInfo,
-                                      final int pstntSelectLobsIdx,
-                                      final int rsSelectLobsIdx,
-                                      final int pstntUpdateLobsIdx,
-                                      final boolean locatorsUpdateCopy,
-                                      final boolean oracle)
-    throws NoSuchMethodException
+  public static void writeLobHandler(final Class cl,
+                                     final String className,
+                                     final CodeVisitor mw,
+                                     final MappedClass jdbcMap,
+                                     final int inso,
+                                     final int conn,
+                                     final CodeInfo codeInfo,
+                                     final int pstntSelectLobsIdx,
+                                     final int rsSelectLobsIdx,
+                                     final int pstntUpdateLobsIdx,
+                                     final boolean locatorsUpdateCopy,
+                                     final boolean oracle)
   {
     final MappedClass.MappedAttribute[] lobColumns = getLobColumns(
       jdbcMap);
@@ -2175,8 +1835,13 @@ public final class PersistorGenerator implements Constants
                                                      null),
                                                    jdbcMap
     ));
-    final Method target = Connection.class.getMethod("prepareStatement",
-                                                     new Class[]{String.class});
+    final Method target;
+    try {
+      target = Connection.class.getMethod("prepareStatement",
+                                          new Class[]{String.class});
+    } catch (NoSuchMethodException e) {
+      throw new RuntimeException(e);
+    }
     mw.visitMethodInsn(INVOKEINTERFACE,
                        Type.getInternalName(Connection.class),
                        target.getName(),
@@ -2426,7 +2091,7 @@ public final class PersistorGenerator implements Constants
     return result;
   }
 
-  private static boolean hasLobColumns(final MappedClass jdbcMap)
+  public static boolean hasLobColumns(final MappedClass jdbcMap)
   {
     MappedClass.MappedAttribute[] columns = jdbcMap.getColumns();
 
@@ -2749,18 +2414,17 @@ public final class PersistorGenerator implements Constants
     }
   }
 
-  private static void writeSetPreparedStatementValue(final Class cl,
-                                                     final String className,
-                                                     final CodeVisitor mw,
-                                                     VersionControlInfo versionControlInfo,
-                                                     final MappedClass.MappedAttribute column,
-                                                     boolean incValue,
-                                                     final int psIdx,
-                                                     final int beanIdx,
-                                                     final int colPos,
-                                                     final CodeInfo codeInfo,
-                                                     final boolean nullSensetive)
-    throws NoSuchMethodException
+  public static void writeSetPreparedStatementValue(final Class cl,
+                                                    final String className,
+                                                    final CodeVisitor mw,
+                                                    VersionControlInfo versionControlInfo,
+                                                    final MappedClass.MappedAttribute column,
+                                                    boolean incValue,
+                                                    final int psIdx,
+                                                    final int beanIdx,
+                                                    final int colPos,
+                                                    final CodeInfo codeInfo,
+                                                    final boolean nullSensetive)
   {
     final int colSqlType = column.getSqlType();
     final Method getter = column.getGetter();
@@ -2885,7 +2549,6 @@ public final class PersistorGenerator implements Constants
                                                    final CodeInfo codeInfo,
                                                    final int colSqlType,
                                                    final boolean nullSensetive)
-    throws NoSuchMethodException
   {
     Class dateExtendedClass;
     switch (colSqlType) {
@@ -2930,10 +2593,8 @@ public final class PersistorGenerator implements Constants
                          Type.getMethodDescriptor(Type.VOID_TYPE,
                                                   new Type[]{Type.getType(long.class)})
       );
-      Method
-        targetSetter
-        = MethodsForPreparedStatement.findSetter(
-        dateExtendedClass);
+      Method targetSetter
+        = MethodsForPreparedStatement.findSetter(dateExtendedClass);
       mw.visitMethodInsn(INVOKEINTERFACE,
                          Type.getInternalName(PreparedStatement.class),
                          targetSetter.getName(),
@@ -2943,10 +2604,16 @@ public final class PersistorGenerator implements Constants
       mw.visitVarInsn(ALOAD, psIdx);
       mw.visitIntInsn(SIPUSH, colPos + 1);
       mw.visitIntInsn(SIPUSH, colSqlType);
-      targetSetter = PreparedStatement.class.getMethod("setNull",
-                                                       new Class[]{int.class,
-                                                                   int.class}
-      );
+
+      try {
+        targetSetter = PreparedStatement.class.getMethod("setNull",
+                                                         new Class[]{int.class,
+                                                                     int.class}
+        );
+      } catch (NoSuchMethodException e) {
+        new RuntimeException(e);
+      }
+
       mw.visitMethodInsn(INVOKEINTERFACE,
                          Type.getInternalName(PreparedStatement.class),
                          targetSetter.getName(),
@@ -2992,7 +2659,6 @@ public final class PersistorGenerator implements Constants
                                                   final int colPos,
                                                   final CodeInfo codeInfo,
                                                   final boolean nullSensetive)
-    throws NoSuchMethodException
   {
     Label nullHandler = null;
     if (nullSensetive) {
@@ -3030,13 +2696,17 @@ public final class PersistorGenerator implements Constants
                                                 new Type[]{Type.getType(String.class)})
     );
     mw.visitVarInsn(ILOAD, slenidx);
-    Method
-      targetSetter
-      = PreparedStatement.class.getMethod("setCharacterStream",
-                                          new Class[]{int.class,
-                                                      Reader.class,
-                                                      int.class}
-    );
+    Method targetSetter;
+
+    try {
+      targetSetter = PreparedStatement.class.getMethod("setCharacterStream",
+                                                       new Class[]{int.class,
+                                                                   Reader.class,
+                                                                   int.class}
+      );
+    } catch (NoSuchMethodException e) {
+      throw new RuntimeException(e);
+    }
     mw.visitMethodInsn(INVOKEINTERFACE,
                        Type.getInternalName(java.sql.PreparedStatement.class),
                        targetSetter.getName(),
@@ -3047,10 +2717,14 @@ public final class PersistorGenerator implements Constants
       mw.visitVarInsn(ALOAD, psIdx);
       mw.visitIntInsn(SIPUSH, colPos + 1);
       mw.visitIntInsn(SIPUSH, Types.LONGVARCHAR);
-      targetSetter = PreparedStatement.class.getMethod("setNull",
-                                                       new Class[]{int.class,
-                                                                   int.class}
-      );
+      try {
+        targetSetter = PreparedStatement.class.getMethod("setNull",
+                                                         new Class[]{int.class,
+                                                                     int.class}
+        );
+      } catch (NoSuchMethodException e) {
+        throw new RuntimeException(e);
+      }
       mw.visitMethodInsn(INVOKEINTERFACE,
                          Type.getInternalName(PreparedStatement.class),
                          targetSetter.getName(),
@@ -3066,7 +2740,6 @@ public final class PersistorGenerator implements Constants
                                                        final int colPos,
                                                        final CodeInfo codeInfo,
                                                        final boolean nullSensetive)
-    throws NoSuchMethodException
   {
     Label nullHandler = null;
     if (nullSensetive) {
@@ -3101,13 +2774,16 @@ public final class PersistorGenerator implements Constants
                                                 new Type[]{Type.getType(byte[].class)})
     );
     mw.visitVarInsn(ILOAD, balenidx);
-    Method
-      targetSetter
-      = PreparedStatement.class.getMethod("setBinaryStream",
-                                          new Class[]{int.class,
-                                                      InputStream.class,
-                                                      int.class}
-    );
+    Method targetSetter;
+    try {
+      targetSetter = PreparedStatement.class.getMethod("setBinaryStream",
+                                                       new Class[]{int.class,
+                                                                   InputStream.class,
+                                                                   int.class}
+      );
+    } catch (NoSuchMethodException e) {
+      throw new RuntimeException(e);
+    }
     mw.visitMethodInsn(INVOKEINTERFACE,
                        Type.getInternalName(java.sql.PreparedStatement.class),
                        targetSetter.getName(),
@@ -3118,10 +2794,14 @@ public final class PersistorGenerator implements Constants
       mw.visitVarInsn(ALOAD, psIdx);
       mw.visitIntInsn(SIPUSH, colPos + 1);
       mw.visitIntInsn(SIPUSH, Types.LONGVARBINARY);
-      targetSetter = PreparedStatement.class.getMethod("setNull",
-                                                       new Class[]{int.class,
-                                                                   int.class}
-      );
+      try {
+        targetSetter = PreparedStatement.class.getMethod("setNull",
+                                                         new Class[]{int.class,
+                                                                     int.class}
+        );
+      } catch (NoSuchMethodException e) {
+        throw new RuntimeException(e);
+      }
       mw.visitMethodInsn(INVOKEINTERFACE,
                          Type.getInternalName(PreparedStatement.class),
                          targetSetter.getName(),
@@ -3221,7 +2901,6 @@ public final class PersistorGenerator implements Constants
                                           final CodeVisitor mw,
                                           final int psIdx,
                                           final int colPos)
-    throws NoSuchMethodException
   {
     mw.visitVarInsn(ALOAD, psIdx);
     mw.visitIntInsn(SIPUSH, colPos + 1);
@@ -3229,11 +2908,16 @@ public final class PersistorGenerator implements Constants
                       className,
                       FN_DUMMY_STRING,
                       Type.getDescriptor(String.class));
-    final Method targetSetter
-      = PreparedStatement.class.getMethod("setString",
-                                          new Class[]{int.class,
-                                                      String.class}
-    );
+    final Method targetSetter;
+
+    try {
+      targetSetter = PreparedStatement.class.getMethod("setString",
+                                                       new Class[]{int.class,
+                                                                   String.class}
+      );
+    } catch (NoSuchMethodException e) {
+      throw new RuntimeException(e);
+    }
     mw.visitMethodInsn(INVOKEINTERFACE,
                        Type.getInternalName(java.sql.PreparedStatement.class),
                        targetSetter.getName(),
@@ -3244,7 +2928,6 @@ public final class PersistorGenerator implements Constants
                                           final CodeVisitor mw,
                                           final int psIdx,
                                           final int colPos)
-    throws NoSuchMethodException
   {
     mw.visitVarInsn(ALOAD, psIdx);
     mw.visitIntInsn(SIPUSH, colPos + 1);
@@ -3252,11 +2935,15 @@ public final class PersistorGenerator implements Constants
                       className,
                       FN_DUMMY_BYTES,
                       Type.getDescriptor(byte[].class));
-    final Method targetSetter
-      = PreparedStatement.class.getMethod("setBytes",
-                                          new Class[]{int.class,
-                                                      byte[].class}
-    );
+    final Method targetSetter;
+    try {
+      targetSetter = PreparedStatement.class.getMethod("setBytes",
+                                                       new Class[]{int.class,
+                                                                   byte[].class}
+      );
+    } catch (NoSuchMethodException e) {
+      throw new RuntimeException(e);
+    }
     mw.visitMethodInsn(INVOKEINTERFACE,
                        Type.getInternalName(java.sql.PreparedStatement.class),
                        targetSetter.getName(),
@@ -3272,7 +2959,6 @@ public final class PersistorGenerator implements Constants
                                              final CodeInfo codeInfo,
                                              final int colSqlType,
                                              final boolean nullSensetive)
-    throws NoSuchMethodException
   {
     if (nullSensetive) {
       Label nullHandler = null;
@@ -3301,10 +2987,14 @@ public final class PersistorGenerator implements Constants
       mw.visitVarInsn(ALOAD, psIdx);
       mw.visitIntInsn(SIPUSH, colPos + 1);
       mw.visitIntInsn(SIPUSH, colSqlType);
-      targetSetter = PreparedStatement.class.getMethod("setNull",
-                                                       new Class[]{int.class,
-                                                                   int.class}
-      );
+      try {
+        targetSetter = PreparedStatement.class.getMethod("setNull",
+                                                         new Class[]{int.class,
+                                                                     int.class}
+        );
+      } catch (NoSuchMethodException e) {
+        throw new RuntimeException(e);
+      }
       mw.visitMethodInsn(INVOKEINTERFACE,
                          Type.getInternalName(PreparedStatement.class),
                          targetSetter.getName(),

@@ -12,6 +12,9 @@ import test.BaseTest;
 
 import java.sql.SQLException;
 
+/**
+ * title: java.sql.Timestamp->Types.TIMESTAMP
+ */
 public class T0004 extends BaseTest
 {
   @Before

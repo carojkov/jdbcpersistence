@@ -12,6 +12,9 @@ import test.BaseTest;
 
 import java.sql.SQLException;
 
+/**
+ * title: byte[]->Types.VARBINARY
+ */
 public class T000i extends BaseTest
 {
   @Before

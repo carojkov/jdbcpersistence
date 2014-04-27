@@ -35,7 +35,7 @@ import static org.jdbcpersistence.impl.PersistorGenerator.*;
 public class JDBCPersistorGenerator implements Generator, Constants
 {
   private MappedClass _mappedClass;
-  private boolean _locatorsUpdateCopy;
+  private boolean _isLocatorsUpdateCopy;
   private boolean _isOracle;
   private PersistenceClassLoader _classLoader;
   private boolean _isUseExecute;
@@ -55,7 +55,7 @@ public class JDBCPersistorGenerator implements Generator, Constants
   {
     _bean = cl;
     _mappedClass = jdbcMap;
-    _locatorsUpdateCopy = _isLocatorsUpdateCopy;
+    this._isLocatorsUpdateCopy = _isLocatorsUpdateCopy;
     _isOracle = isOracle;
     _classLoader = classLoader;
     this._isUseExecute = isUseExecute;
@@ -82,21 +82,21 @@ public class JDBCPersistorGenerator implements Generator, Constants
                           CodeGenUtils.getShortName(_bean) +
                           "JDBCPersistor";
     _classWriter.visit(Constants.V1_5,
-              ACC_PUBLIC | ACC_FINAL,
-              _persistorClassName,
-              Type.getInternalName(_persistorSuperClass),
-              new String[]{Type.getInternalName(Persistor.class)},
-              null);
+                       ACC_PUBLIC | ACC_FINAL,
+                       _persistorClassName,
+                       Type.getInternalName(_persistorSuperClass),
+                       new String[]{Type.getInternalName(Persistor.class)},
+                       null);
     _classWriter.visitField(ACC_PRIVATE | ACC_STATIC,
-                   PersistorGenerator.FN_DUMMY_BYTES,
-                   Type.getDescriptor(byte[].class),
-                   null,
-                   null);
+                            PersistorGenerator.FN_DUMMY_BYTES,
+                            Type.getDescriptor(byte[].class),
+                            null,
+                            null);
     _classWriter.visitField(ACC_PRIVATE | ACC_STATIC,
-                   PersistorGenerator.FN_DUMMY_STRING,
-                   Type.getDescriptor(String.class),
-                   " ",
-                   null);
+                            PersistorGenerator.FN_DUMMY_STRING,
+                            Type.getDescriptor(String.class),
+                            " ",
+                            null);
 
     PersistorGenerator.writeStaticInit(_classWriter, _persistorClassName);
 
@@ -118,25 +118,29 @@ public class JDBCPersistorGenerator implements Generator, Constants
       }
       if (!PersistorGenerator.isMethodPresent(_persistorSuperClass,
                                               PersistorGenerator.M_JDBCP_INSERT)) {
-        writeInsert(_bean,
-                    _classWriter,
-                    _persistorClassName,
-                    _mappedClass,
-                    _locatorsUpdateCopy,
-                    _isOracle,
-                    false,
-                    _isUseExecute);
+        InsertGenerator generator = new InsertGenerator(_mappedClass,
+                                                        _isLocatorsUpdateCopy,
+                                                        _isOracle,
+                                                        _isUseExecute,
+                                                        false,
+                                                        _bean,
+                                                        _classWriter,
+                                                        _persistorClassName);
+
+        generator.generate();
       }
       if (!PersistorGenerator.isMethodPresent(_persistorSuperClass,
                                               PersistorGenerator.M_JDBCP_BATCH_INSERT)) {
-        writeInsert(_bean,
-                    _classWriter,
-                    _persistorClassName,
-                    _mappedClass,
-                    _locatorsUpdateCopy,
-                    _isOracle,
-                    true,
-                    false);
+        InsertGenerator generator = new InsertGenerator(_mappedClass,
+                                                        _isLocatorsUpdateCopy,
+                                                        _isOracle,
+                                                        _isUseExecute,
+                                                        true,
+                                                        _bean,
+                                                        _classWriter,
+                                                        _persistorClassName);
+
+        generator.generate();
       }
       if (!PersistorGenerator.isMethodPresent(_persistorSuperClass,
                                               PersistorGenerator.M_JDBCP_UPDATE)) {
@@ -144,7 +148,7 @@ public class JDBCPersistorGenerator implements Generator, Constants
                     _classWriter,
                     _persistorClassName,
                     _mappedClass,
-                    _locatorsUpdateCopy,
+                    _isLocatorsUpdateCopy,
                     _isOracle,
                     false,
                     _isUseExecute);
@@ -155,7 +159,7 @@ public class JDBCPersistorGenerator implements Generator, Constants
                     _classWriter,
                     _persistorClassName,
                     _mappedClass,
-                    _locatorsUpdateCopy,
+                    _isLocatorsUpdateCopy,
                     _isOracle,
                     true,
                     false);

@@ -12,6 +12,9 @@ import test.BaseTest;
 
 import java.sql.SQLException;
 
+/**
+ * title: long->Types.BIGINT
+ */
 public class T000e extends BaseTest
 {
   @Before

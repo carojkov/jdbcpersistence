@@ -14,6 +14,9 @@ import java.net.MalformedURLException;
 import java.sql.SQLException;
 import java.sql.Types;
 
+/**
+ * title: java.io.Reader & java.io.Writer->Types.CLOB
+ */
 public class T000k extends BaseTest
 {
   @Before

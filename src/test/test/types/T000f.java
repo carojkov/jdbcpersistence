@@ -12,6 +12,9 @@ import test.BaseTest;
 
 import java.sql.SQLException;
 
+/**
+ * title: java.lang.Byte->Types.SMALLINT
+ */
 public class T000f extends BaseTest
 {
   @Before

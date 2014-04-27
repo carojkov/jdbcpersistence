@@ -14,6 +14,9 @@ import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
+/**
+ * title: java.sql.Date->Types.DATE
+ */
 public class T0002 extends BaseTest
 {
   @Before

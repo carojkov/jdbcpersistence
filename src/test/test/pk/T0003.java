@@ -9,6 +9,9 @@ import test.BaseTest;
 
 import java.sql.SQLException;
 
+/**
+ * title: Bad ID1@Id.value == ID2@Id.value
+ */
 public class T0003 extends BaseTest
 {
   @Test

@@ -12,6 +12,9 @@ import test.BaseTest;
 
 import java.sql.SQLException;
 
+/**
+ * title: String->Types.VARCHAR
+ */
 public class T0000 extends BaseTest
 {
   @Before
