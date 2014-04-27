@@ -28,7 +28,7 @@ import org.jdbcpersistence.impl.asm.CodeVisitor;
 import org.jdbcpersistence.impl.asm.Constants;
 import org.jdbcpersistence.impl.asm.Label;
 import org.jdbcpersistence.impl.asm.Type;
-import org.jdbcpersistence.impl.gen.Generator;
+import org.jdbcpersistence.impl.gen.CodeInfo;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -56,7 +56,7 @@ import java.util.List;
 
 public final class PersistorGenerator implements Constants
 {
-  private static final String[] INSERT_DELETE_UPDATE_EXCEPTIONS = new String[]{
+  public static final String[] INSERT_DELETE_UPDATE_EXCEPTIONS = new String[]{
     Type.getInternalName(SQLException.class),
     Type.getInternalName(RuntimeException.class)};
   private static final String[] INSERT_DELETE_UPDATE_BATCH_EXCEPTIONS
@@ -278,237 +278,14 @@ public final class PersistorGenerator implements Constants
     mw.visitMaxs(7, codeInfo._varindx);
   }
 
-  public static void writeSelect(final Class cl,
-                                 final ClassWriter cw,
-                                 final MappedClass jdbcMap)
-  {
-    final int valueArrayIdx = 2;
-    final CodeVisitor mw
-      = cw.visitMethod(ACC_PUBLIC, "load",
-                       Type.getMethodDescriptor(Type.getType(Object.class),
-                                                new Type[]{Type.getType(
-                                                  Connection.class), Type.getType(
-                                                  Object[].class)}
-                       ),
-                       INSERT_DELETE_UPDATE_EXCEPTIONS,
-                       null
-    );
-    if (jdbcMap.getIdentifyingColumns().length == 0) {
-      writeThrowNoPKException(mw, jdbcMap);
-      return;
-    }
-    final Label methodStart = new Label();
-    final Label methodEnd = new Label();
-    mw.visitLabel(methodStart);
-    //
-    final CodeInfo codeInfo = new CodeInfo();
-    codeInfo._varindx = 3;
-    //get java.sql.JDBCConnection from JDBCPersistence and store it in conn local variable
-    final int conn = 1;
-    //declare PreparedStatement and assign it value of null
-    final int psSelectIdx = codeInfo._varindx++;
-    mw.visitInsn(ACONST_NULL);
-    mw.visitVarInsn(ASTORE, psSelectIdx);
-    mw.visitLocalVariable("psSelect",
-                          Type.getDescriptor(PreparedStatement.class),
-                          methodStart,
-                          methodEnd,
-                          psSelectIdx);
-    //declare ResultSet and assign it value of null
-    final int rsSelectIdx = codeInfo._varindx++;
-    mw.visitInsn(ACONST_NULL);
-    mw.visitVarInsn(ASTORE, rsSelectIdx);
-    mw.visitLocalVariable("rsSelect",
-                          Type.getDescriptor(ResultSet.class),
-                          methodStart,
-                          methodEnd,
-                          psSelectIdx);
-    final int resultIdx = codeInfo._varindx++;
-    mw.visitInsn(ACONST_NULL);
-    mw.visitVarInsn(ASTORE, resultIdx);
-    mw.visitLocalVariable("result",
-                          Type.getDescriptor(cl),
-                          methodStart,
-                          methodEnd,
-                          resultIdx);
-    //
-    final Label beginTryBlock = new Label();
-    final Label endTryBlock = new Label();
-    final Label catchSqlBlock = new Label();
-    final Label catchThrBlock = new Label();
-    final Label finallyExceptionHandler = new Label();
-    //obtain prepared statement
-    mw.visitLabel(beginTryBlock);
-    mw.visitVarInsn(ALOAD, conn);
-    mw.visitLdcInsn(SqlStatementFactory.makeSelect(jdbcMap));
-    mw.visitMethodInsn(INVOKEINTERFACE,
-                       Type.getInternalName(java.sql.Connection.class),
-                       MethodsForConnection.prepareStatement.getName(),
-                       Type.getMethodDescriptor(MethodsForConnection.prepareStatement));
-    mw.visitVarInsn(ASTORE, psSelectIdx);
-    //set best row identifier values
-    MappedClass.MappedAttribute[] identifyingColumns
-      = jdbcMap.getIdentifyingColumns();
-
-    final int length = identifyingColumns.length;
-    for (int i = 0; i < length; i++) {
-      MappedClass.MappedAttribute column = identifyingColumns[i];
-      writeSetBestIdentifierValueForSelect(mw,
-                                           column,
-                                           psSelectIdx,
-                                           i,
-                                           valueArrayIdx);
-    }
-    //
-    mw.visitVarInsn(ALOAD, psSelectIdx);
-    mw.visitMethodInsn(INVOKEINTERFACE,
-                       Type.getInternalName(PreparedStatement.class),
-                       MethodsForPreparedStatement.executeQuery.getName(),
-                       Type.getMethodDescriptor(MethodsForPreparedStatement.executeQuery));
-    mw.visitInsn(DUP);//duplicate local variable result set
-    mw.visitVarInsn(ASTORE, rsSelectIdx);
-    mw.visitLocalVariable("rsSelect",
-                          Type.getDescriptor(ResultSet.class),
-                          methodStart,
-                          methodEnd,
-                          rsSelectIdx);
-    mw.visitMethodInsn(INVOKEINTERFACE,
-                       Type.getInternalName(ResultSet.class),
-                       MethodsForResultSet.next.getName(),
-                       Type.getMethodDescriptor(MethodsForResultSet.next));
-    mw.visitJumpInsn(IFEQ, endTryBlock);
-    //create result and set its properties
-    mw.visitTypeInsn(NEW, Type.getInternalName(cl));
-    mw.visitInsn(DUP);
-    mw.visitMethodInsn(INVOKESPECIAL,
-                       Type.getInternalName(cl),
-                       "<init>",
-                       "()V");
-    mw.visitVarInsn(ASTORE, resultIdx);
-    //
-    for (int i = 0; i < length; i++) {
-      MappedClass.MappedAttribute column = identifyingColumns[i];
-      writeSetBeanPropertyFromArray(cl,
-                                    mw,
-                                    column,
-                                    resultIdx,
-                                    i,
-                                    valueArrayIdx);
-    }
-    MappedClass.MappedAttribute[] regularColumns
-      = jdbcMap.getRegularColumns();
-
-    int columnIndex = 0;
-
-    for (int i = 0; i < regularColumns.length; i++) {
-      final MappedClass.MappedAttribute column = regularColumns[i];
-      if (column.getSetter() == null)
-        continue;
-
-      codeInfo._nextInstruction = null;
-      writeSetBeanPropertyFromResultSet(cl,
-                                        mw,
-                                        column,
-                                        codeInfo,
-                                        rsSelectIdx,
-                                        resultIdx,
-                                        columnIndex,
-                                        false);
-      columnIndex++;
-      if (codeInfo._nextInstruction != null) {
-        mw.visitLabel(codeInfo._nextInstruction);
-      }
-    }
-    mw.visitLabel(endTryBlock);
-    //finallyBlockStart is where the actual java code would start
-    final Label finallyBlockStart = new Label();
-    mw.visitJumpInsn(JSR, finallyBlockStart);
-    //endTryBlockBeforeGoToReturn
-    final Label endTryBlockBeforeGoToReturn = new Label();
-    mw.visitLabel(endTryBlockBeforeGoToReturn);
-    mw.visitJumpInsn(GOTO, methodEnd);
-    //
-    //handle SQLException
-    //label catchSqlBlock will also be used as a start PC to add to the Exceptions table for the finally handler
-    // as well as handler PC for any SQL exceptions occuring during try/catch(SQLException)
-    mw.visitLabel(catchSqlBlock);
-    final int sqle = codeInfo._varindx++;
-    mw.visitVarInsn(ASTORE, sqle);
-    mw.visitVarInsn(ALOAD, sqle);
-    mw.visitInsn(ATHROW);
-    //
-    //handle throwable
-    //label catchThrBlock will be used as a handler PC for any Throwable exceptions that might occur during try/catch(Throwable)
-    mw.visitLabel(catchThrBlock);
-    final int thre = codeInfo._varindx++;
-    mw.visitVarInsn(ASTORE, thre);
-    mw.visitTypeInsn(NEW, Type.getInternalName(RuntimeException.class));
-    mw.visitInsn(DUP);
-    mw.visitVarInsn(ALOAD, thre);
-    mw.visitMethodInsn(INVOKESPECIAL,
-                       Type.getInternalName(RuntimeException.class),
-                       "<init>",
-                       Type.getMethodDescriptor(Type.VOID_TYPE,
-                                                new Type[]{Type.getType(
-                                                  Throwable.class)}
-                       )
-    );
-    final int persExcIdx = codeInfo._varindx++;
-    mw.visitVarInsn(ASTORE, persExcIdx);
-    mw.visitVarInsn(ALOAD, persExcIdx);
-    mw.visitInsn(ATHROW);
-    //
-    //finally
-    mw.visitLabel(finallyExceptionHandler);
-    final int finallyExceptionIdx = codeInfo._varindx++;
-    mw.visitVarInsn(ASTORE, finallyExceptionIdx);
-    mw.visitJumpInsn(JSR, finallyBlockStart);
-    final int retIdx = codeInfo._varindx++;
-    final Label finallyBlockRethrow = new Label();
-    mw.visitLabel(finallyBlockRethrow);
-    mw.visitVarInsn(ALOAD, finallyExceptionIdx);
-    mw.visitInsn(ATHROW);
-    mw.visitLabel(finallyBlockStart);
-    mw.visitVarInsn(ASTORE, retIdx);
-    mw.visitVarInsn(ALOAD, rsSelectIdx);
-    mw.visitVarInsn(ALOAD, psSelectIdx);
-    mw.visitMethodInsn(INVOKESTATIC,
-                       Type.getInternalName(SQLUtils.class),
-                       MethodsForSqlUtil.M_UTL_close.getName(),
-                       Type.getMethodDescriptor(MethodsForSqlUtil.M_UTL_close));
-    mw.visitVarInsn(RET, retIdx);
-    mw.visitMaxs(6, codeInfo._varindx);
-    mw.visitTryCatchBlock(beginTryBlock,
-                          endTryBlock,
-                          catchSqlBlock,
-                          Type.getInternalName(SQLException.class));
-    mw.visitTryCatchBlock(beginTryBlock,
-                          endTryBlock,
-                          catchThrBlock,
-                          Type.getInternalName(Throwable.class));
-    mw.visitTryCatchBlock(beginTryBlock,
-                          endTryBlockBeforeGoToReturn,
-                          finallyExceptionHandler,
-                          null);
-    mw.visitTryCatchBlock(catchSqlBlock,
-                          finallyBlockRethrow,
-                          finallyExceptionHandler,
-                          null);
-    //end of method
-    mw.visitLabel(methodEnd);
-    mw.visitVarInsn(ALOAD, resultIdx);
-    mw.visitInsn(ARETURN);
-    mw.visitMaxs(7, codeInfo._varindx);
-  }
-
-  private static void writeSetBeanPropertyFromResultSet(final Class cl,
-                                                        final CodeVisitor mw,
-                                                        MappedClass.MappedAttribute column,
-                                                        CodeInfo codeInfo,
-                                                        final int rsIdx,
-                                                        final int beanIdx,
-                                                        final int colPos,
-                                                        boolean useColumnName)
+  public static void writeSetBeanPropertyFromResultSet(final Class cl,
+                                                       final CodeVisitor mw,
+                                                       MappedClass.MappedAttribute column,
+                                                       CodeInfo codeInfo,
+                                                       final int rsIdx,
+                                                       final int beanIdx,
+                                                       final int colPos,
+                                                       boolean useColumnName)
   {
     final int colSqlType = column.getSqlType();
     final Method getter = column.getGetter();
@@ -1177,12 +954,12 @@ public final class PersistorGenerator implements Constants
                        Type.getMethodDescriptor(setter));
   }
 
-  private static void writeSetBeanPropertyFromArray(final Class cl,
-                                                    final CodeVisitor mw,
-                                                    final MappedClass.MappedAttribute column,
-                                                    final int beanIdx,
-                                                    final int colPos,
-                                                    final int valueArrayIdx)
+  public static void writeSetBeanPropertyFromArray(final Class cl,
+                                                   final CodeVisitor mw,
+                                                   final MappedClass.MappedAttribute column,
+                                                   final int beanIdx,
+                                                   final int colPos,
+                                                   final int valueArrayIdx)
   {
     final Method getter = column.getGetter();
     final Method setter = column.getSetter();
@@ -1315,11 +1092,11 @@ public final class PersistorGenerator implements Constants
                        Type.getMethodDescriptor(setter));
   }
 
-  private static void writeSetBestIdentifierValueForSelect(final CodeVisitor mw,
-                                                           final MappedClass.MappedAttribute column,
-                                                           final int psIdx,
-                                                           final int colPos,
-                                                           final int valueArrayIdx)
+  public static void writeSetBestIdentifierValueForSelect(final CodeVisitor mw,
+                                                          final MappedClass.MappedAttribute column,
+                                                          final int psIdx,
+                                                          final int colPos,
+                                                          final int valueArrayIdx)
   {
     final int colSqlType = column.getSqlType();
     final Method getter = column.getGetter();
@@ -1537,8 +1314,8 @@ public final class PersistorGenerator implements Constants
                        Type.getMethodDescriptor(targetSetter));
   }
 
-  private static void writeThrowNoPKException(CodeVisitor mw,
-                                              MappedClass jdbcMap)
+  public static void writeThrowNoPKException(CodeVisitor mw,
+                                             MappedClass jdbcMap)
   {
     mw.visitTypeInsn(NEW, Type.getInternalName(IllegalArgumentException.class));
     mw.visitInsn(DUP);
@@ -1574,13 +1351,13 @@ public final class PersistorGenerator implements Constants
   }
 
   public static void writeInsert(final Class cl,
-                                  final ClassWriter cw,
-                                  final String className,
-                                  final MappedClass jdbcMap,
-                                  final boolean locatorsUpdateCopy,
-                                  final boolean oracle,
-                                  final boolean isBatch,
-                                  final boolean useExecute)
+                                 final ClassWriter cw,
+                                 final String className,
+                                 final MappedClass jdbcMap,
+                                 final boolean locatorsUpdateCopy,
+                                 final boolean oracle,
+                                 final boolean isBatch,
+                                 final boolean useExecute)
     throws NoSuchMethodException
   {
     final CodeVisitor mw;
@@ -1950,13 +1727,13 @@ public final class PersistorGenerator implements Constants
   }
 
   public static void writeUpdate(final Class cl,
-                                  final ClassWriter cw,
-                                  final String className,
-                                  final MappedClass jdbcMap,
-                                  final boolean locatorsUpdateCopy,
-                                  final boolean oracle,
-                                  boolean isBatch,
-                                  boolean useExecute)
+                                 final ClassWriter cw,
+                                 final String className,
+                                 final MappedClass jdbcMap,
+                                 final boolean locatorsUpdateCopy,
+                                 final boolean oracle,
+                                 boolean isBatch,
+                                 boolean useExecute)
     throws NoSuchMethodException
   {
     final CodeVisitor mw;
@@ -2670,11 +2447,11 @@ public final class PersistorGenerator implements Constants
   }
 
   public static void writeDelete(final Class cl,
-                                  final ClassWriter cw,
-                                  final String className,
-                                  final MappedClass jdbcMap,
-                                  final boolean isBatch,
-                                  final boolean useExecute)
+                                 final ClassWriter cw,
+                                 final String className,
+                                 final MappedClass jdbcMap,
+                                 final boolean isBatch,
+                                 final boolean useExecute)
     throws NoSuchMethodException
   {
     final CodeVisitor mw;
@@ -3698,8 +3475,3 @@ public final class PersistorGenerator implements Constants
   }
 }
 
-final class CodeInfo
-{
-  int _varindx = 0;
-  Label _nextInstruction;
-}

@@ -32,7 +32,7 @@ import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
 
-final class MethodsForPreparedStatement
+public final class MethodsForPreparedStatement
 {
   public static Method setBoolean;
   public static Method setByte;

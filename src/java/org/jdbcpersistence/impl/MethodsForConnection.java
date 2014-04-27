@@ -24,7 +24,7 @@ package org.jdbcpersistence.impl;
 import java.lang.reflect.Method;
 import java.sql.Connection;
 
-class MethodsForConnection
+public class MethodsForConnection
 {
   public static final Method prepareStatement;
 

@@ -19,33 +19,12 @@
  *    You can contact me by email jdbcpersistence   a t   gmail    d o t    com
  * */
 
-package org.jdbcpersistence.impl;
+package org.jdbcpersistence.impl.gen;
 
-import java.lang.reflect.Method;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import org.jdbcpersistence.impl.asm.Label;
 
-public class MethodsForSqlUtil
+public final class CodeInfo
 {
-  public static Method M_UTL_close;
-
-  static {
-    initialize();
-  }
-
-  private static void initialize()
-  {
-    try {
-      initializeReflectedMethods();
-    } catch (NoSuchMethodException e) {
-      throw new RuntimeException(e);
-    }
-  }
-
-  private static void initializeReflectedMethods()
-    throws NoSuchMethodException
-  {
-    M_UTL_close = SQLUtils.class.getDeclaredMethod("close",
-                                                   new Class[]{ResultSet.class, Statement.class});
-  }
+  public int _varindx = 0;
+  public Label _nextInstruction;
 }

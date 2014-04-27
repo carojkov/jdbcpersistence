@@ -31,7 +31,7 @@ import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
 
-class MethodsForResultSet
+public class MethodsForResultSet
 {
   public static Method getObjectByColumnIndex;
   public static Method getBooleanByColumnIndex;
