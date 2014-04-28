@@ -13,7 +13,7 @@ import test.BaseTest;
 import java.sql.SQLException;
 
 /**
- * title: insert []
+ * title: Array of T0000Bean
  */
 
 public class T0000 extends BaseTest
@@ -89,7 +89,28 @@ public class T0000 extends BaseTest
   @Test
   public void delete() throws SQLException
   {
+    Connection conn = _persistence.getConnection();
+    T0000Bean[] beans = new T0000Bean[5];
 
+    for (int i = 0; i < 5; i++) {
+      T0000Bean bean = _persistence.newInstance(T0000Bean.class);
+      bean.setId(i);
+      bean.setData("value-" + i);
+      beans[i] = bean;
+    }
+
+    conn.insert(beans);
+    conn.commit();
+
+    conn.delete(beans);
+    conn.commit();
+
+    for (int i = 0; i < 5; i++) {
+      T0000Bean bean = conn.load(T0000Bean.class, i);
+      Assert.assertNull(bean);
+    }
+
+    conn.close();
   }
 
   @After

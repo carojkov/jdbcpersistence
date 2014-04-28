@@ -171,21 +171,26 @@ public class JDBCPersistorGenerator implements Generator, Constants
       }
       if (!PersistorGenerator.isMethodPresent(_persistorSuperClass,
                                               PersistorGenerator.M_JDBCP_DELETE)) {
-        writeDelete(_bean,
-                    _classWriter,
-                    _persistorClassName,
-                    _mappedClass,
-                    false,
-                    _isUseExecute);
+
+        DeleteGenerator generator = new DeleteGenerator(_mappedClass,
+                                                        _isUseExecute,
+                                                        false,
+                                                        _bean,
+                                                        _classWriter,
+                                                        _persistorClassName);
+
+        generator.generate();
       }
       if (!PersistorGenerator.isMethodPresent(_persistorSuperClass,
                                               PersistorGenerator.M_JDBCP_BATCH_DELETE)) {
-        writeDelete(_bean,
-                    _classWriter,
-                    _persistorClassName,
-                    _mappedClass,
-                    true,
-                    false);
+        DeleteGenerator generator = new DeleteGenerator(_mappedClass,
+                                                        _isUseExecute,
+                                                        true,
+                                                        _bean,
+                                                        _classWriter,
+                                                        _persistorClassName);
+
+        generator.generate();
       }
     } catch (Exception e) {
       throw new RuntimeException(e);
