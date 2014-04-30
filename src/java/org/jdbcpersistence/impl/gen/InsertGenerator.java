@@ -42,7 +42,6 @@ import java.sql.Statement;
 
 public class InsertGenerator implements Generator, Constants
 {
-
   private MappedClass _mappedClass;
   private boolean _isLocatorsUpdateCopy;
   private boolean _isOracle;

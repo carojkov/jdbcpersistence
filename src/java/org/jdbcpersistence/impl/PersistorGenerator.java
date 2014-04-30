@@ -29,6 +29,7 @@ import org.jdbcpersistence.impl.asm.Constants;
 import org.jdbcpersistence.impl.asm.Label;
 import org.jdbcpersistence.impl.asm.Type;
 import org.jdbcpersistence.impl.gen.CodeInfo;
+import org.jdbcpersistence.impl.gen.ResultSetReaderGenerator;
 import org.jdbcpersistence.impl.gen.VersionControlInfo;
 
 import java.io.ByteArrayInputStream;
@@ -75,7 +76,7 @@ public final class PersistorGenerator implements Constants
   public static final Method M_JDBCP_DELETE;
   public static final Method M_JDBCP_BATCH_DELETE;
   public static final Method M_JDBCP_LOAD;
-  private static final Method M_JDBCP_LOAD_FROM_RS;
+  public static final Method M_JDBCP_LOAD_FROM_RS;
 
   static {
     try {
@@ -120,10 +121,10 @@ public final class PersistorGenerator implements Constants
     }
   }
 
-  private static void writeSelectFromResultSet(final Class cl,
-                                               final ClassWriter cw,
-                                               final MappedClass jdbcMap,
-                                               String[] columnNames)
+  public static void writeSelectFromResultSet(final Class cl,
+                                              final ClassWriter cw,
+                                              final MappedClass jdbcMap,
+                                              String[] columnNames)
   {
     final CodeVisitor mw = cw.visitMethod(ACC_PUBLIC,
                                           "read",
@@ -2334,30 +2335,12 @@ public final class PersistorGenerator implements Constants
                                               PersistenceClassLoader cl)
     throws Exception
   {
-    Class persistorSuperClass = Object.class;
-    final ClassWriter cw = new ClassWriter(false);
-    final String className = "org/jdbcpersistence/generated/" +
-                             CodeGenUtils.getShortName(clazz) +
-                             "JDBCResultSetReader_" +
-                             makeClassName(query);
-    cw.visit(Constants.V1_3,
-             ACC_PUBLIC | ACC_FINAL,
-             className,
-             Type.getInternalName(persistorSuperClass),
-             new String[]{Type.getInternalName(ResultSetReader.class)},
-             null);
-    writeInit(cw, className, persistorSuperClass);
-    if (!isMethodPresent(persistorSuperClass, M_JDBCP_LOAD_FROM_RS)) {
-      writeSelectFromResultSet(clazz, cw, jdbcMap, columnNames);
-    }
-    final byte[] classBytes = cw.toByteArray();
-    if ("true".equalsIgnoreCase(System.getProperty("jdbcpersistence.verbose"))) {
-      CodeGenUtils.writeToFile(className, classBytes);
-      CodeGenUtils.echo(className);
-    }
-    Class result = cl.define(className.replace('/', '.'), classBytes);
-    //
-    return result;
+    ResultSetReaderGenerator generator
+      = new ResultSetReaderGenerator(clazz, jdbcMap, columnNames, query, locatorsUpdateCopy, oracle, cl);
+
+    generator.generate();
+
+    return generator.getReader();
   }
 
   public static boolean isMethodPresent(Class persistorSuperClass,
@@ -2388,17 +2371,6 @@ public final class PersistorGenerator implements Constants
     return method.getReturnType() == void.class &&
            paramTypes.length > 0 &&
            paramTypes[0] == Writer.class;
-  }
-
-  private static final String makeClassName(String sql)
-  {
-    char[] temp = sql.toCharArray();
-    for (int i = 0; i < temp.length; i++) {
-      char c = temp[i];
-      if (Character.isLetterOrDigit(c) || c == '_') continue;
-      temp[i] = '_';
-    }
-    return new String(temp);
   }
 }
 

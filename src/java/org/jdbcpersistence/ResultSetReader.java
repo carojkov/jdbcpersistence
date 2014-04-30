@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * An interface that is used by the <code>org.jdbcpersistence.JDBCQuery</code>
  * to read data from a <code>java.sql.ResultSet</code> returned by that
- * <code>JDBCQuery</code> User: alex Date: Aug 23, 2006 Time: 9:00:37 PM
+ * <code>Query</code> User: alex Date: Aug 23, 2006 Time: 9:00:37 PM
  *
  * @see Query
  */
