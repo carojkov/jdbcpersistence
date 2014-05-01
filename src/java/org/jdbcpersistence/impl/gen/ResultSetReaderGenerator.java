@@ -1,3 +1,24 @@
+/**
+ * JDBCPersistence framework for java
+ *   Copyright (C) 2004-2014 Alex Rojkov
+ *
+ *    This library is free software; you can redistribute it and/or
+ *    modify it under the terms of the GNU Lesser General Public
+ *    License as published by the Free Software Foundation; either
+ *    version 2.1 of the License, or (at your option) any later version.
+ *
+ *    This library is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *    Lesser General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Lesser General Public
+ *    License along with this library; if not, write to the Free Software
+ *    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ *    You can contact me by email jdbcpersistence   a t   gmail    d o t    com
+ * */
+
 package org.jdbcpersistence.impl.gen;
 
 import org.jdbcpersistence.MappedClass;
@@ -11,31 +32,42 @@ import org.jdbcpersistence.impl.asm.Type;
 
 public class ResultSetReaderGenerator implements Generator, Constants
 {
-  private final Class clazz;
-  private final MappedClass jdbcMap;
-  private String[] columnNames;
-  private String query;
-  private final boolean locatorsUpdateCopy;
-  private final boolean oracle;
-  private PersistenceClassLoader cl;
+  private final Class _bean;
+  private final MappedClass _mappedClass;
+  private String[] _columnNames;
+  private String _query;
+  private final boolean _isLocatorsUpdateCopy;
+  private final boolean _isOracle;
+  private PersistenceClassLoader _classLoader;
+
+  private final Class _readerSuperClass;
+  private final ClassWriter _classWriter;
+  private final String _readerClassName;
 
   private Class _reader;
 
-  public ResultSetReaderGenerator(Class clazz,
-                                  MappedClass jdbcMap,
+  public ResultSetReaderGenerator(Class bean,
+                                  MappedClass _mappedClass,
                                   String[] columnNames,
                                   String query,
-                                  boolean locatorsUpdateCopy,
-                                  boolean oracle,
-                                  PersistenceClassLoader cl)
+                                  boolean _isLocatorsUpdateCopy,
+                                  boolean _isOracle,
+                                  PersistenceClassLoader _classLoader)
   {
-    this.clazz = clazz;
-    this.jdbcMap = jdbcMap;
-    this.columnNames = columnNames;
-    this.query = query;
-    this.locatorsUpdateCopy = locatorsUpdateCopy;
-    this.oracle = oracle;
-    this.cl = cl;
+    this._bean = bean;
+    this._mappedClass = _mappedClass;
+    this._columnNames = columnNames;
+    this._query = query;
+    this._isLocatorsUpdateCopy = _isLocatorsUpdateCopy;
+    this._isOracle = _isOracle;
+    this._classLoader = _classLoader;
+
+    _readerSuperClass = Object.class;
+    _classWriter = new ClassWriter(false);
+    _readerClassName = "org/jdbcpersistence/generated/" +
+                       CodeGenUtils.getShortName(bean) +
+                       "JDBCResultSetReader_" +
+                       makeClassName(query);
   }
 
   public void generate()
@@ -48,39 +80,42 @@ public class ResultSetReaderGenerator implements Generator, Constants
   @Override
   public void generateHead()
   {
+    _classWriter.visit(Constants.V1_3,
+                       ACC_PUBLIC | ACC_FINAL,
+                       _readerClassName,
+                       Type.getInternalName(_readerSuperClass),
+                       new String[]{Type.getInternalName(ResultSetReader.class)},
+                       null);
 
   }
 
   @Override
   public void generateBody()
   {
-    Class persistorSuperClass = Object.class;
-    final ClassWriter cw = new ClassWriter(false);
-    final String className = "org/jdbcpersistence/generated/" +
-                             CodeGenUtils.getShortName(clazz) +
-                             "JDBCResultSetReader_" +
-                             makeClassName(query);
-    cw.visit(Constants.V1_3,
-             ACC_PUBLIC | ACC_FINAL,
-             className,
-             Type.getInternalName(persistorSuperClass),
-             new String[]{Type.getInternalName(ResultSetReader.class)},
-             null);
-    PersistorGenerator.writeInit(cw, className, persistorSuperClass);
-    if (!PersistorGenerator.isMethodPresent(persistorSuperClass,
+
+    PersistorGenerator.writeInit(_classWriter,
+                                 _readerClassName,
+                                 _readerSuperClass);
+
+    if (!PersistorGenerator.isMethodPresent(_readerSuperClass,
                                             PersistorGenerator.M_JDBCP_LOAD_FROM_RS)) {
-      PersistorGenerator.writeSelectFromResultSet(clazz,
-                                                  cw,
-                                                  jdbcMap,
-                                                  columnNames);
-    }
-    final byte[] classBytes = cw.toByteArray();
-    if ("true".equalsIgnoreCase(System.getProperty("jdbcpersistence.verbose"))) {
-      CodeGenUtils.writeToFile(className, classBytes);
-      CodeGenUtils.echo(className);
+      SelectFromResultSetGenerator generator
+        = new SelectFromResultSetGenerator(_bean,
+                                           _classWriter,
+                                           _mappedClass,
+                                           _columnNames);
+
+      generator.generate();
     }
 
-    _reader = cl.define(className.replace('/', '.'), classBytes);
+    final byte[] classBytes = _classWriter.toByteArray();
+    if ("true".equalsIgnoreCase(System.getProperty("jdbcpersistence.verbose"))) {
+      CodeGenUtils.writeToFile(_readerClassName, classBytes);
+      CodeGenUtils.echo(_readerClassName);
+    }
+
+    _reader = _classLoader.define(_readerClassName.replace('/', '.'),
+                                  classBytes);
   }
 
   @Override

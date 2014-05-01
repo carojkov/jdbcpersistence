@@ -1,3 +1,4 @@
 *.class
 *.jad
 *.log
+\.idea/*
