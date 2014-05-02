@@ -32,7 +32,7 @@ import java.lang.reflect.Method;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-final class IOUtils
+public final class IOUtils
 {
   public final static int BUFFER_SIZE = 4096;
   public final static Method M_READ_FROM_READER_TO_STRING;
