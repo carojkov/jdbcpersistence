@@ -118,14 +118,16 @@ final class ConnectionImpl extends ConnectionWrapper
     return jdbcPersistor.load(_conn, primaryKey);
   }
 
-  public List executeQuery(Query query, List result, Object... params)
+  public <T> List<T> executeQuery(Query<T> query,
+                                  List<T> result,
+                                  Object... params)
     throws SQLException
   {
     String q = query.getQuery();
 
     _log.finest("Executing query: " + query);
 
-    result = (result == null ? new ArrayList() : result);
+    result = (result == null ? new ArrayList<T>() : result);
 
     Class resultClass = query.getResultType();
     PreparedStatement ps = null;
@@ -224,9 +226,10 @@ final class ConnectionImpl extends ConnectionWrapper
 
       rs = ps.executeQuery();
 
-      if (java.util.List.class.equals(resultClass)) {
+      if (resultClass.isPrimitive() || JavaTypesMap.isPrimitiveWrapper(
+        resultClass)) {
         while (rs.next())
-          result.add(rs.getObject(1));
+          result.add((T) rs.getObject(1));
 
         return result;
       }
@@ -244,7 +247,7 @@ final class ConnectionImpl extends ConnectionWrapper
           for (int i = 0; i < colcount; i++)
             map.put(columnNames[i], rs.getObject(i + 1));
 
-          result.add(map);
+          result.add((T) map);
         }
 
         return result;

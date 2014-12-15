@@ -28,10 +28,16 @@ import java.util.Map;
 class JavaTypesMap
 {
   public static final Map<Class,Class> toWrapperMap;
+  public static final Map<Class,Class> toPrimitiveMap;
 
   public static Class toWrapper(Class primitive)
   {
     return toWrapperMap.get(primitive);
+  }
+
+  public static boolean isPrimitiveWrapper(Class c)
+  {
+    return toPrimitiveMap.containsKey(c);
   }
 
   static {
@@ -46,5 +52,13 @@ class JavaTypesMap
     map.put(double.class, Double.class);
 
     toWrapperMap = Collections.unmodifiableMap(map);
+
+    map = new HashMap<Class,Class>();
+
+    for (Map.Entry<Class,Class> entry : toWrapperMap.entrySet()) {
+      map.put(entry.getValue(), entry.getKey());
+    }
+
+    toPrimitiveMap = Collections.unmodifiableMap(map);
   }
 }

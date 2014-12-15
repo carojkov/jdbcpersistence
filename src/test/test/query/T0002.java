@@ -12,27 +12,27 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * title: Basic ResultSetReader
+ * title: Read into a List
  */
-public class T0000 extends BaseTest
+public class T0002 extends BaseTest
 {
   @Before
   public void myInit() throws SQLException
   {
-    dropCreate("DROP TABLE T0000",
-               "CREATE TABLE T0000 (ID INT, DATA VARCHAR(16), PRIMARY KEY(ID))");
+    dropCreate("DROP TABLE T0002",
+               "CREATE TABLE T0002 (ID INT, DATA VARCHAR(16), PRIMARY KEY(ID))");
 
-    _persistence.register(T0000Bean.class);
+    _persistence.register(T0002Bean.class);
   }
 
   @Test
   public void query() throws SQLException
   {
     Connection conn = _persistence.getConnection();
-    T0000Bean[] beans = new T0000Bean[5];
+    T0002Bean[] beans = new T0002Bean[5];
 
     for (int i = 0; i < 5; i++) {
-      T0000Bean bean = _persistence.newInstance(T0000Bean.class);
+      T0002Bean bean = _persistence.newInstance(T0002Bean.class);
       bean.setId(i);
       bean.setData("value-" + i);
       beans[i] = bean;
@@ -41,16 +41,15 @@ public class T0000 extends BaseTest
     conn.insert(beans);
     conn.commit();
 
-    Query<T0000Bean> query = new Query<>("SELECT * FROM T0000",
-                                         T0000Bean.class,
-                                         null);
-    List<T0000Bean> list = new ArrayList<>();
+    Query<Integer> query = new Query<>("SELECT * FROM T0002",
+                                       Integer.class,
+                                       null);
+    List<Integer> list = new ArrayList<>();
     conn.executeQuery(query, list);
 
     for (int i = 0; i < list.size(); i++) {
-      T0000Bean bean = list.get(i);
-      Assert.assertEquals(i, bean.getId());
-      Assert.assertEquals("value-" + i, bean.getData());
+      Integer x = list.get(i);
+      Assert.assertEquals(i, x.intValue());
     }
 
     conn.close();
@@ -62,8 +61,8 @@ public class T0000 extends BaseTest
 
   }
 
-  @Entity(name = "T0000")
-  public static interface T0000Bean
+  @Entity(name = "T0002")
+  public static interface T0002Bean
   {
     @Column(name = "ID")
     @Id()

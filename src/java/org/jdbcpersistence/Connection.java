@@ -160,7 +160,9 @@ public interface Connection
    *                      during the insert propogates up the call chain
    * @see Query
    */
-  public List executeQuery(Query query, List result, Object... params)
+  public <T> List<T> executeQuery(Query<T> query,
+                                  List<T> result,
+                                  Object... params)
     throws SQLException;
 
   /**

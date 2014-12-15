@@ -46,7 +46,7 @@ package org.jdbcpersistence;
 public class Query<T>
 {
   protected String _query;
-  private final Class _resultType;
+  private final Class<T> _resultType;
   private final Class _jdbcQueryReaderClass;
   private final boolean _nullable;
 
@@ -69,10 +69,10 @@ public class Query<T>
    * return.
    *
    * @param query                SQL statement
-   * @param resultType           regitered persistent class or <code>java.utils.Map</code>
+   * @param resultType           registered persistent class or <code>java.utils.Map</code>
    * @param jdbcQueryReaderClass
    */
-  public Query(String query, Class resultType, Class jdbcQueryReaderClass)
+  public Query(String query, Class<T> resultType, Class jdbcQueryReaderClass)
   {
     this(query, resultType, jdbcQueryReaderClass, false);
   }
@@ -84,13 +84,13 @@ public class Query<T>
    * return.
    *
    * @param query                SQL statement
-   * @param resultType           regitered persistent class or <code>java.utils.Map</code>
+   * @param resultType           registered persistent class or <code>java.utils.Map</code>
    * @param jdbcQueryReaderClass
    * @param nullable             when true, query String is changed by placing IS NULL for
    *                             null values in params @see executeQuery
    */
   public Query(String query,
-               Class resultType,
+               Class<T> resultType,
                Class jdbcQueryReaderClass,
                boolean nullable)
   {
@@ -105,7 +105,7 @@ public class Query<T>
    *
    * @return Class
    */
-  public Class getResultType()
+  public Class<T> getResultType()
   {
     return _resultType;
   }

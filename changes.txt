@@ -37,7 +37,7 @@ From version 1.0 to version 2.0
 
 Added support for generating readers from user queries
 
-Added support for versioned colums
+Added support for versioned columns
 
 Added support for views
 
