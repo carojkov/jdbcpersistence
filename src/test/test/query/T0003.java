@@ -12,27 +12,27 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * title: Read Primitives into a List
+ * title: Read String Primitives into a List
  */
-public class T0002 extends BaseTest
+public class T0003 extends BaseTest
 {
   @Before
   public void myInit() throws SQLException
   {
-    dropCreate("DROP TABLE T0002",
-               "CREATE TABLE T0002 (ID INT, DATA VARCHAR(16), PRIMARY KEY(ID))");
+    dropCreate("DROP TABLE T0003",
+               "CREATE TABLE T0003 (ID INT, DATA VARCHAR(16), PRIMARY KEY(ID))");
 
-    _persistence.register(T0002Bean.class);
+    _persistence.register(T0003Bean.class);
   }
 
   @Test
   public void query() throws SQLException
   {
     Connection conn = _persistence.getConnection();
-    T0002Bean[] beans = new T0002Bean[5];
+    T0003Bean[] beans = new T0003Bean[5];
 
     for (int i = 0; i < 5; i++) {
-      T0002Bean bean = _persistence.newInstance(T0002Bean.class);
+      T0003Bean bean = _persistence.newInstance(T0003Bean.class);
       bean.setId(i);
       bean.setData("value-" + i);
       beans[i] = bean;
@@ -41,15 +41,15 @@ public class T0002 extends BaseTest
     conn.insert(beans);
     conn.commit();
 
-    Query<Integer> query = new Query<>("SELECT ID FROM T0002",
-                                       Integer.class,
+    Query<String> query = new Query<>("SELECT DATA FROM T0003",
+                                       String.class,
                                        null);
-    List<Integer> list = new ArrayList<>();
+    List<String> list = new ArrayList<>();
     conn.executeQuery(query, list);
 
     for (int i = 0; i < list.size(); i++) {
-      Integer x = list.get(i);
-      Assert.assertEquals(i, x.intValue());
+      String s = list.get(i);
+      Assert.assertEquals("value-" + i, s);
     }
 
     conn.close();
@@ -61,8 +61,8 @@ public class T0002 extends BaseTest
 
   }
 
-  @Entity(name = "T0002")
-  public static interface T0002Bean
+  @Entity(name = "T0003")
+  public static interface T0003Bean
   {
     @Column(name = "ID")
     @Id()

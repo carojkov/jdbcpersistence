@@ -50,6 +50,7 @@ class JavaTypesMap
     map.put(long.class, Long.class);
     map.put(float.class, Float.class);
     map.put(double.class, Double.class);
+    map.put(String.class, String.class);
 
     toWrapperMap = Collections.unmodifiableMap(map);
 
