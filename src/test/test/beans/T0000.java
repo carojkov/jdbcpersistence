@@ -35,7 +35,7 @@ public class T0000 extends BaseTest
     conn.insert(bean);
     conn.commit();
 
-    bean = (T0000Bean) conn.load(T0000Bean.class, 1);
+    bean = conn.load(T0000Bean.class, 1);
 
     Assert.assertNotNull(bean);
     Assert.assertEquals(1, bean.getId());

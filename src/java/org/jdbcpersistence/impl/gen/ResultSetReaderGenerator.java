@@ -26,9 +26,9 @@ import org.jdbcpersistence.ResultSetReader;
 import org.jdbcpersistence.impl.CodeGenUtils;
 import org.jdbcpersistence.impl.PersistenceClassLoader;
 import org.jdbcpersistence.impl.PersistorGenerator;
-import org.jdbcpersistence.impl.asm.ClassWriter;
-import org.jdbcpersistence.impl.asm.Constants;
-import org.jdbcpersistence.impl.asm.Type;
+import org.objectweb.asm.ClassWriter;
+import org.objectweb.asm.Constants;
+import org.objectweb.asm.Type;
 
 public class ResultSetReaderGenerator implements Generator, Constants
 {

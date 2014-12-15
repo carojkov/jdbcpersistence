@@ -21,7 +21,7 @@
 
 package org.jdbcpersistence.impl.gen;
 
-import org.jdbcpersistence.impl.asm.Label;
+import org.objectweb.asm.Label;
 
 public final class CodeInfo
 {

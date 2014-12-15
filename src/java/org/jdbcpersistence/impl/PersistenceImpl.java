@@ -22,23 +22,14 @@
 package org.jdbcpersistence.impl;
 
 import org.jdbcpersistence.Connection;
-import org.jdbcpersistence.Entity;
-import org.jdbcpersistence.MappedClass;
-import org.jdbcpersistence.Persistence;
-import org.jdbcpersistence.Persistor;
-import org.jdbcpersistence.Query;
-import org.jdbcpersistence.ResultSetReader;
+import org.jdbcpersistence.*;
 import org.jdbcpersistence.impl.gen.JDBCPersistorGenerator;
 
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 import java.lang.reflect.Modifier;
-import java.sql.DatabaseMetaData;
-import java.sql.Driver;
-import java.sql.DriverManager;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;

@@ -25,11 +25,7 @@ import org.jdbcpersistence.Persistor;
 import org.jdbcpersistence.Query;
 import org.jdbcpersistence.ResultSetReader;
 
-import java.sql.BatchUpdateException;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

@@ -24,11 +24,7 @@ package org.jdbcpersistence.impl.gen;
 import org.jdbcpersistence.MappedClass;
 import org.jdbcpersistence.impl.MethodsForResultSet;
 import org.jdbcpersistence.impl.PersistorGenerator;
-import org.jdbcpersistence.impl.asm.ClassWriter;
-import org.jdbcpersistence.impl.asm.CodeVisitor;
-import org.jdbcpersistence.impl.asm.Constants;
-import org.jdbcpersistence.impl.asm.Label;
-import org.jdbcpersistence.impl.asm.Type;
+import org.objectweb.asm.*;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

@@ -26,11 +26,9 @@ import org.jdbcpersistence.Persistor;
 import org.jdbcpersistence.impl.CodeGenUtils;
 import org.jdbcpersistence.impl.PersistenceClassLoader;
 import org.jdbcpersistence.impl.PersistorGenerator;
-import org.jdbcpersistence.impl.asm.ClassWriter;
-import org.jdbcpersistence.impl.asm.Constants;
-import org.jdbcpersistence.impl.asm.Type;
-
-import static org.jdbcpersistence.impl.PersistorGenerator.*;
+import org.objectweb.asm.ClassWriter;
+import org.objectweb.asm.Constants;
+import org.objectweb.asm.Type;
 
 public class JDBCPersistorGenerator implements Generator, Constants
 {

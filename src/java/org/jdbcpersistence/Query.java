@@ -41,7 +41,6 @@ package org.jdbcpersistence;
  * @see Connection#executeQuery(Query, java.util.List, Object...)
  * @see Connection#executeUpdate(Query, Object[])
  * @see Persistence
- *
  */
 
 public class Query<T>

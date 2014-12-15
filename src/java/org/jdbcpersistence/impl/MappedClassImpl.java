@@ -20,11 +20,7 @@
  * */
 package org.jdbcpersistence.impl;
 
-import org.jdbcpersistence.Column;
-import org.jdbcpersistence.Entity;
-import org.jdbcpersistence.Id;
-import org.jdbcpersistence.MappedClass;
-import org.jdbcpersistence.Persistor;
+import org.jdbcpersistence.*;
 
 import java.io.Reader;
 import java.io.Writer;
@@ -32,13 +28,7 @@ import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.sql.Types;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * The MappedClass class associates ('maps') a entities with a table and

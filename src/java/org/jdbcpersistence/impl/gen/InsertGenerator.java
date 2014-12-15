@@ -22,23 +22,11 @@
 package org.jdbcpersistence.impl.gen;
 
 import org.jdbcpersistence.MappedClass;
-import org.jdbcpersistence.impl.MethodsForConnection;
-import org.jdbcpersistence.impl.MethodsForPreparedStatement;
-import org.jdbcpersistence.impl.PersistorGenerator;
-import org.jdbcpersistence.impl.SQLUtils;
-import org.jdbcpersistence.impl.SqlStatementFactory;
-import org.jdbcpersistence.impl.asm.ClassWriter;
-import org.jdbcpersistence.impl.asm.CodeVisitor;
-import org.jdbcpersistence.impl.asm.Constants;
-import org.jdbcpersistence.impl.asm.Label;
-import org.jdbcpersistence.impl.asm.Type;
+import org.jdbcpersistence.impl.*;
+import org.objectweb.asm.*;
 
 import java.lang.reflect.Method;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 
 public class InsertGenerator implements Generator, Constants
 {

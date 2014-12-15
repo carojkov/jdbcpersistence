@@ -23,36 +23,16 @@ package org.jdbcpersistence.impl;
 import org.jdbcpersistence.MappedClass;
 import org.jdbcpersistence.Persistor;
 import org.jdbcpersistence.ResultSetReader;
-import org.jdbcpersistence.impl.asm.ClassWriter;
-import org.jdbcpersistence.impl.asm.CodeVisitor;
-import org.jdbcpersistence.impl.asm.Constants;
-import org.jdbcpersistence.impl.asm.Label;
-import org.jdbcpersistence.impl.asm.Type;
 import org.jdbcpersistence.impl.gen.CodeInfo;
 import org.jdbcpersistence.impl.gen.ResultSetReaderGenerator;
 import org.jdbcpersistence.impl.gen.VersionControlInfo;
+import org.objectweb.asm.*;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.Reader;
-import java.io.StringReader;
-import java.io.Writer;
+import java.io.*;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.net.URL;
-import java.sql.BatchUpdateException;
-import java.sql.Blob;
-import java.sql.Clob;
-import java.sql.Connection;
-import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.sql.Time;
-import java.sql.Timestamp;
-import java.sql.Types;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -2177,7 +2157,13 @@ public final class PersistorGenerator implements Constants
     throws Exception
   {
     ResultSetReaderGenerator generator
-      = new ResultSetReaderGenerator(clazz, jdbcMap, columnNames, query, locatorsUpdateCopy, oracle, cl);
+      = new ResultSetReaderGenerator(clazz,
+                                     jdbcMap,
+                                     columnNames,
+                                     query,
+                                     locatorsUpdateCopy,
+                                     oracle,
+                                     cl);
 
     generator.generate();
 
